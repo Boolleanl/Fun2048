@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,13 +8,62 @@
     tools:context=".MainActivity"
     tools:showIn="@layout/app_bar_main">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-</android.support.constraint.ConstraintLayout>
+        <TextView
+            android:id="@+id/title_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="2048"
+            android:textSize="112sp" />
+
+        <Button
+            android:id="@+id/new_game_button"
+            android:layout_width="196dp"
+            android:layout_height="42dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="24dp"
+            android:text="新游戏"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/continue_game_button"
+            android:layout_width="196dp"
+            android:layout_height="42dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="24dp"
+            android:text="继续游戏"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/score_button"
+            android:layout_width="196dp"
+            android:layout_height="42dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="24dp"
+            android:text="最高分"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/quit_button"
+            android:layout_width="196dp"
+            android:layout_height="42dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="24dp"
+            android:text="退出"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/author_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="24dp"
+            android:text="by: Boollean" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
