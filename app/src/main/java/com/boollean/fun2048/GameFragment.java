@@ -16,6 +16,8 @@ public class GameFragment extends Fragment {
 
     private static final String TAG = "GameFragment";
 
+    private static final GameFragment mGameFragment = new GameFragment();
+
     @BindView(R.id.score_view)
     TextView scoreView;
 
@@ -25,10 +27,10 @@ public class GameFragment extends Fragment {
     /**
      * 获取实例。
      *
-     * @return 一个新的GameFragment实例。
+     * @return 获取GameFragment实例。
      */
-    public static GameFragment newInstance() {
-        return new GameFragment();
+    public static GameFragment getInstance() {
+        return mGameFragment;
     }
 
     @Override
@@ -40,8 +42,8 @@ public class GameFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_game,container,false);
-        ButterKnife.bind(this,view);
+        View view = inflater.inflate(R.layout.fragment_game, container, false);
+        ButterKnife.bind(this, view);
         initView(view);
         refreshView();
         return view;

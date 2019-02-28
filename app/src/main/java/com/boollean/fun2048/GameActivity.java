@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -23,12 +24,11 @@ public class GameActivity extends AppCompatActivity {
     private static final float FLIP_DISTANCE = 48;      //滑动判定距离
     private static final String TAG = "GameActivity";
 
-    private static OperationTask mOperationTask;
-
     private GameFragment mGameFragment;
     private GestureDetector mDetector;
-    private Integer[] i = new Integer[1];
 
+    private static Handler mHandler;
+    private static OperationThread operationThread;
     private SharedPreferences mPreferences;
 
     /**
@@ -39,7 +39,9 @@ public class GameActivity extends AppCompatActivity {
      */
 
     public static Intent newIntent(Context context) {
-        mOperationTask = new OperationTask();
+        mHandler = new Handler();
+        operationThread = new OperationThread();
+        OperationFactory.newGame();
         Intent i = new Intent(context, GameActivity.class);
         return i;
     }
@@ -50,7 +52,9 @@ public class GameActivity extends AppCompatActivity {
      * @return 游戏界面的Activity，紧接上次游戏的进程。
      */
     public static Intent newIntent(Context context, int[][] n) {
-        mOperationTask = new OperationTask(n);
+        mHandler = new Handler();
+        operationThread = new OperationThread();
+        OperationFactory.continueGame(n);
         Intent i = new Intent(context, GameActivity.class);
         return i;
     }
@@ -58,16 +62,13 @@ public class GameActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_game);
+        setContentView(R.layout.activity_general);
 
         FragmentManager fm = getSupportFragmentManager();
         fm.findFragmentById(R.id.fragment_container);
 
-        mGameFragment = GameFragment.newInstance();
+        mGameFragment = GameFragment.getInstance();
         fm.beginTransaction().add(R.id.fragment_container, mGameFragment).commit();
-
-        i[0] = 0;
-        mOperationTask.execute(i);  //启动运算线程。
 
         //滑动方向判定。
         mDetector = new GestureDetector(this, new GestureDetector.OnGestureListener() {
@@ -96,41 +97,36 @@ public class GameActivity extends AppCompatActivity {
 
             @Override
             public boolean onFling(MotionEvent e1, MotionEvent e2, float v, float v1) {
-
                 if (e1.getY() - e2.getY() > e1.getX() - e2.getX()
                         && e1.getY() - e2.getY() > e2.getX() - e1.getX()
                         && e1.getY() - e2.getY() > FLIP_DISTANCE) {
                     //Up，向上滑动。
-                    i[0] = 1;
-                    mOperationTask.doInBackground(i);
-                    refreshView();
+                    operationThread.setAction(1);
+                    mHandler.post(operationThread);
                     return true;
                 }
                 if (e2.getY() - e1.getY() > e1.getX() - e2.getX()
                         && e2.getY() - e1.getY() > e2.getX() - e1.getX()
                         && e2.getY() - e1.getY() > FLIP_DISTANCE) {
                     //Down，向下滑动。
-                    i[0] = 2;
-                    mOperationTask.doInBackground(i);
-                    refreshView();
+                    operationThread.setAction(2);
+                    mHandler.post(operationThread);
                     return true;
                 }
                 if (e1.getX() - e2.getX() > e1.getY() - e2.getY()
                         && e1.getX() - e2.getX() > e2.getY() - e1.getY()
                         && e1.getX() - e2.getX() > FLIP_DISTANCE) {
                     //Left，向左滑动。
-                    i[0] = 3;
-                    mOperationTask.doInBackground(i);
-                    refreshView();
+                    operationThread.setAction(3);
+                    mHandler.post(operationThread);
                     return true;
                 }
                 if (e2.getX() - e1.getX() > e1.getY() - e2.getY()
                         && e2.getX() - e1.getX() > e2.getY() - e1.getY()
                         && e2.getX() - e1.getX() > FLIP_DISTANCE) {
                     //Right，向右滑动。
-                    i[0] = 4;
-                    mOperationTask.doInBackground(i);
-                    refreshView();
+                    operationThread.setAction(4);
+                    mHandler.post(operationThread);
                     return true;
                 }
 

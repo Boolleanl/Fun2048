@@ -104,7 +104,6 @@ public class OperationFactory {
     public static void actionUp() {
         int[][] numbers = mNumberItem.getNumbers();
         int[][] ns = calculate(numbers, numbers);
-
         mNumberItem.setNumbers(ns);
     }
 
