@@ -1,6 +1,6 @@
 package com.boollean.fun2048;
 
-import android.widget.ImageView;
+import android.graphics.Bitmap;
 
 public class User {
     private static final String TAG = "User";
@@ -11,7 +11,7 @@ public class User {
 
     private int gender;
 
-    private ImageView avatar;
+    private Bitmap avatar;
 
     public static User getInstance() {
         synchronized (User.class) {
@@ -22,7 +22,7 @@ public class User {
         return instance;
     }
 
-    public User(String name, int gender, ImageView avatar) {
+    public User(String name, int gender, Bitmap avatar) {
         this.name = name;
         this.gender = gender;
         this.avatar = avatar;
@@ -36,7 +36,7 @@ public class User {
         return gender;
     }
 
-    public ImageView getAvatar() {
+    public Bitmap getAvatar() {
         return avatar;
     }
 
@@ -48,7 +48,7 @@ public class User {
         this.gender = gender;
     }
 
-    public void setAvatar(ImageView avatar) {
+    public void setAvatar(Bitmap avatar) {
         this.avatar = avatar;
     }
 }

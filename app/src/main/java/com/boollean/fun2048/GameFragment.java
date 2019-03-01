@@ -1,5 +1,6 @@
 package com.boollean.fun2048;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -83,7 +84,31 @@ public class GameFragment extends Fragment {
         int a = 0;
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
+                if (num[i][j] == 2) {
+                    mTextViews[a].setBackgroundColor(Color.parseColor("#FFDEAD"));
+                } else if (num[i][j] == 4) {
+                    mTextViews[a].setBackgroundColor(Color.parseColor("#FFF68F"));
+                } else if (num[i][j] == 8) {
+                    mTextViews[a].setBackgroundColor(Color.parseColor("#FF8247"));
+                } else if (num[i][j] == 16) {
+                    mTextViews[a].setBackgroundColor(Color.parseColor("#FF6A6A"));
+                } else if (num[i][j] == 32) {
+                    mTextViews[a].setBackgroundColor(Color.parseColor("#FF3030"));
+                } else if (num[i][j] == 64) {
+                    mTextViews[a].setBackgroundColor(Color.parseColor("#FF6347"));
+                } else if (num[i][j] == 128) {
+                    mTextViews[a].setBackgroundColor(Color.parseColor("#FF6EB4"));
+                } else if (num[i][j] == 256) {
+                    mTextViews[a].setBackgroundColor(Color.parseColor("#8B4789"));
+                }
+                //TODO:添加更多颜色
                 mTextViews[a].setText(String.valueOf(num[i][j]));
+
+                if (num[i][j] == 0) {
+                    mTextViews[a].setBackgroundColor(Color.parseColor("#FAF0E6"));
+                    mTextViews[a].setText("");
+                }
+
                 a++;
             }
         }

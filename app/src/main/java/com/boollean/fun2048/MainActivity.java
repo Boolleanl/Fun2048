@@ -7,7 +7,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.android.material.navigation.NavigationView;
 
@@ -29,6 +32,8 @@ public class MainActivity extends AppCompatActivity
 
     private static final String TAG = "MainActivity";
 
+    private User mUser = User.getInstance();
+
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.drawer_layout)
@@ -43,6 +48,11 @@ public class MainActivity extends AppCompatActivity
     Button scoreButton;
     @BindView(R.id.quit_button)
     Button quitButton;
+
+    private View headerView;
+    private ImageView avatarImageView;
+    private TextView nameTextView;
+
     private NumberItem mNumberItem = NumberItem.getInstance();  //获取单例。
     private SharedPreferences mPreferences;
 
@@ -52,7 +62,10 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         ButterKnife.bind(this);
+        initView();
+    }
 
+    private void initView() {
         setSupportActionBar(toolbar);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -60,6 +73,33 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
 
         navigationView.setNavigationItemSelectedListener(this);
+
+        headerView = navigationView.getHeaderView(0);
+        avatarImageView = headerView.findViewById(R.id.round_avatar_image_view);
+        if (mUser.getAvatar() != null) {
+            avatarImageView.setImageBitmap(mUser.getAvatar());
+        } else if (mUser.getAvatar() == null) {
+            avatarImageView.setImageResource(R.mipmap.ic_launcher_round);
+        }
+
+        nameTextView = headerView.findViewById(R.id.name_text_view);
+        if (mUser.getName() != null) {
+            nameTextView.setText(mUser.getName());
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (mUser.getAvatar() != null) {
+            avatarImageView.setImageBitmap(mUser.getAvatar());
+        } else if (mUser.getAvatar() == null) {
+            avatarImageView.setImageResource(R.mipmap.ic_launcher_round);
+        }
+
+        if (mUser.getName() != null) {
+            nameTextView.setText(mUser.getName());
+        }
     }
 
     @OnClick(R.id.new_game_button)

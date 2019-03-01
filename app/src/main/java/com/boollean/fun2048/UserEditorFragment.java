@@ -1,8 +1,14 @@
 package com.boollean.fun2048;
 
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +20,9 @@ import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -21,9 +30,21 @@ import androidx.fragment.app.FragmentActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static android.app.Activity.RESULT_CANCELED;
+
 public class UserEditorFragment extends Fragment {
 
     private static final String TAG = "UserEditorFragment";
+
+    private static final int CODE_GALLERY_REQUEST = 0xa1;
+    private static final int CODE_RESULT_REQUEST = 0xa2;
+
+    private String mExtStorDir;
+    private Uri mUriPath;
+    private static final String CROP_IMAGE_FILE_NAME = "avatar.jpg";
+
+    private static int output_X = 160;
+    private static int output_Y = 160;
 
     @BindView(R.id.gender_radio_group)
     RadioGroup genderRadioGroup;
@@ -36,7 +57,9 @@ public class UserEditorFragment extends Fragment {
 
     private String name = null;
     private int gender = 0;
-    private ImageView imageView = null;
+    private Bitmap bitmap = null;
+
+    private User mUser = User.getInstance();
 
     private static SaveInformationTask mSaveInformationTask;
 
@@ -77,38 +100,141 @@ public class UserEditorFragment extends Fragment {
             }
         });
 
+        if (mUser.getAvatar() != null) {
+            avatarImageView.setImageBitmap(mUser.getAvatar());
+        }
+        avatarImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mExtStorDir = Environment.getExternalStorageDirectory().toString();
+                Intent intentFromGallery = new Intent(Intent.ACTION_PICK, null);
+                intentFromGallery.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+                startActivityForResult(intentFromGallery, CODE_GALLERY_REQUEST);
+            }
+        });
+
         completeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                name = userNameEditText.getText().toString();
-                imageView = avatarImageView;
-                mSaveInformationTask = new SaveInformationTask(name, gender, imageView, getActivity());
-                mSaveInformationTask.execute();
-                //Snackbar.make(v,"完成",Snackbar.LENGTH_SHORT).show();
+                name = userNameEditText.getText().toString().trim();
+                if (isAvailableName(name)) {
+                    mSaveInformationTask = new SaveInformationTask(name, gender, bitmap, getActivity());
+                    mSaveInformationTask.execute();
+                }
             }
         });
     }
+
+    private boolean isAvailableName(String s) {
+        if (s.isEmpty()) {
+            userNameEditText.setError("昵称不能为空");
+            userNameEditText.setFocusable(true);
+            userNameEditText.setFocusableInTouchMode(true);
+            userNameEditText.requestFocus();
+            return false;
+        }
+        if (s.length() > 14) {
+            userNameEditText.setError("昵称不能大于14个字");
+            userNameEditText.setFocusable(true);
+            userNameEditText.setFocusableInTouchMode(true);
+            userNameEditText.requestFocus();
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_CANCELED) {
+            Toast.makeText(getActivity(), "取消", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        switch (requestCode) {
+            case CODE_GALLERY_REQUEST: {
+                cropRawPhoto(data.getData());
+                break;
+            }
+            case CODE_RESULT_REQUEST: {
+                try {
+                    bitmap = BitmapFactory.decodeStream(getContext().getContentResolver().openInputStream(mUriPath));
+                    setImageToHeadView(data, bitmap);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                break;
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void cropRawPhoto(Uri uri) {
+        Intent intent = new Intent("com.android.camera.action.CROP");
+        intent.setDataAndType(uri, "image/*");
+
+        // 设置裁剪
+        intent.putExtra("crop", "true");
+
+        // aspectX , aspectY :宽高的比例
+        intent.putExtra("aspectX", 1);
+        intent.putExtra("aspectY", 1);
+
+        // outputX , outputY : 裁剪图片宽高
+        intent.putExtra("outputX", output_X);
+        intent.putExtra("outputY", output_Y);
+        intent.putExtra("return-data", true);
+
+        String mLinshi = System.currentTimeMillis() + CROP_IMAGE_FILE_NAME;
+        File mFile = new File(mExtStorDir, mLinshi);
+        mUriPath = Uri.parse("file://" + mFile.getAbsolutePath());
+
+        //将裁剪好的图输出到所建文件中
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, mUriPath);
+        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
+        intent.putExtra("return-data", false);
+        startActivityForResult(intent, CODE_RESULT_REQUEST);
+    }
+
+    private void setImageToHeadView(Intent intent, Bitmap bitmap) {
+        try {
+            if (intent != null) {
+                avatarImageView.setImageBitmap(bitmap);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+//    public static boolean hasSdcard() {
+//        String state = Environment.getExternalStorageState();
+//        if (state.equals(Environment.MEDIA_MOUNTED)) {
+//            // 有存储的SDCard
+//            return true;
+//        } else {
+//            return false;
+//        }
+//    }
 
     private static class SaveInformationTask extends AsyncTask<User, Process, Void> {
 
         private User mUser = User.getInstance();
         private String mName;
         private int mGender;
-        private ImageView mImageView;
+        private Bitmap mAvatar;
         private Context context;
 
-        public SaveInformationTask(String name, int gender, ImageView imageView, FragmentActivity v) {
+        public SaveInformationTask(String name, int gender, Bitmap bitmap, FragmentActivity activity) {
             mName = name;
             mGender = gender;
-            mImageView = imageView;
-            context = v;
+            mAvatar = bitmap;
+            context = activity;
         }
 
         @Override
         protected Void doInBackground(User... users) {
             mUser.setName(mName);
             mUser.setGender(mGender);
-            mUser.setAvatar(mImageView);
+            mUser.setAvatar(mAvatar);
             //TODO 网络数据传输
             return null;
         }
