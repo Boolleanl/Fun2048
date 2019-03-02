@@ -40,8 +40,10 @@ public class MainActivity extends AppCompatActivity
     DrawerLayout drawer;
     @BindView(R.id.nav_view)
     NavigationView navigationView;
-    @BindView(R.id.new_game_button)
-    Button newGameButton;
+    @BindView(R.id.new_game_four_button)
+    Button newGamefourButton;
+    @BindView(R.id.new_game_five_button)
+    Button newGamefiveButton;
     @BindView(R.id.continue_game_button)
     Button continueButton;
     @BindView(R.id.score_button)
@@ -53,7 +55,7 @@ public class MainActivity extends AppCompatActivity
     private ImageView avatarImageView;
     private TextView nameTextView;
 
-    private NumberItem mNumberItem = NumberItem.getInstance();  //获取单例。
+    private NumberItem mNumberItem = NumberItem.getInstanceFour();  //获取单例。
     private SharedPreferences mPreferences;
 
     @Override
@@ -102,9 +104,15 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @OnClick(R.id.new_game_button)
-    void newGame() {
-        Intent intent = GameActivity.newIntent(this);
+    @OnClick(R.id.new_game_four_button)
+    void newGameFour() {
+        Intent intent = GameActivity.newIntent(this,4);
+        startActivity(intent);
+    }
+
+    @OnClick(R.id.new_game_five_button)
+    void newGameFive() {
+        Intent intent = GameActivity.newIntent(this,5);
         startActivity(intent);
     }
 

@@ -1,22 +1,32 @@
 package com.boollean.fun2048;
 
 public class NumberItem {
-    private static volatile NumberItem instance = null;
+    private static volatile NumberItem instanceFour = null;
+    private static volatile NumberItem instanceFive = null;
     private int score;  //分数。
     private int BEST_SCORE;     //最高分。
     private int[][] numbers;    //用于操作的二维数组。
 
-    private NumberItem() {
-        numbers = new int[4][4];
+    private NumberItem(int i) {
+        numbers = new int[i][i];
     }
 
-    public static NumberItem getInstance() {
+    public static NumberItem getInstanceFour() {
         synchronized (NumberItem.class) {
-            if (instance == null) {
-                instance = new NumberItem();
+            if (instanceFour == null) {
+                instanceFour = new NumberItem(4);
             }
         }
-        return instance;
+        return instanceFour;
+    }
+
+    public static NumberItem getInstanceFive() {
+        synchronized (NumberItem.class) {
+            if (instanceFive == null) {
+                instanceFive = new NumberItem(5);
+            }
+        }
+        return instanceFive;
     }
 
     public int[][] getNumbers() {

@@ -22,40 +22,49 @@
             android:textSize="112sp" />
 
         <Button
-            android:id="@+id/new_game_button"
-            android:layout_width="196dp"
-            android:layout_height="42dp"
+            android:id="@+id/new_game_four_button"
+            android:layout_width="220dp"
+            android:layout_height="48dp"
             android:layout_gravity="center"
             android:layout_marginTop="24dp"
-            android:text="新游戏"
-            android:textSize="18sp" />
+            android:text="新游戏4X4"
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/new_game_five_button"
+            android:layout_width="220dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:text="新游戏5X5"
+            android:textSize="20sp" />
 
         <Button
             android:id="@+id/continue_game_button"
-            android:layout_width="196dp"
-            android:layout_height="42dp"
+            android:layout_width="220dp"
+            android:layout_height="48dp"
             android:layout_gravity="center"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="20dp"
             android:text="继续游戏"
-            android:textSize="18sp" />
+            android:textSize="20sp" />
 
         <Button
             android:id="@+id/score_button"
-            android:layout_width="196dp"
-            android:layout_height="42dp"
+            android:layout_width="220dp"
+            android:layout_height="48dp"
             android:layout_gravity="center"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="20dp"
             android:text="最高分"
-            android:textSize="18sp" />
+            android:textSize="20sp" />
 
         <Button
             android:id="@+id/quit_button"
-            android:layout_width="196dp"
-            android:layout_height="42dp"
+            android:layout_width="220dp"
+            android:layout_height="48dp"
             android:layout_gravity="center"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="20dp"
             android:text="退出"
-            android:textSize="18sp" />
+            android:textSize="20sp" />
 
         <TextView
             android:id="@+id/author_text_view"

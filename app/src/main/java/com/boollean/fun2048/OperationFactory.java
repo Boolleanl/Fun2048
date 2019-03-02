@@ -18,11 +18,18 @@ public class OperationFactory {
     public OperationFactory() {
     }
 
-    public static void newGame() {
-        mNumberItem = NumberItem.getInstance();
-        numbers = createNumbers();
+    public static void newGameFour() {
+        mNumberItem = NumberItem.getInstanceFour();
+        numbers = createNumbers(4);
         mNumberItem.setNumbers(numbers);
-        nowScore(mNumberItem.getNumbers());
+        nowScore(mNumberItem.getNumbers(),4);
+    }
+
+    public static void newGameFive() {
+        mNumberItem = NumberItem.getInstanceFive();
+        numbers = createNumbers(5);
+        mNumberItem.setNumbers(numbers);
+        nowScore(mNumberItem.getNumbers(),5);
     }
 
     /**
@@ -30,10 +37,10 @@ public class OperationFactory {
      *
      * @return 起始二维数组。
      */
-    public static int[][] createNumbers() {
-        int[][] ns = new int[4][4];
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
+    public static int[][] createNumbers(int which) {
+        int[][] ns = new int[which][which];
+        for (int i = 0; i < which; i++) {
+            for (int j = 0; j < which; j++) {
                 ns[i][j] = createRandomNumber();
             }
         }
@@ -46,11 +53,11 @@ public class OperationFactory {
      * @param ns 当前一步的二维数组。
      * @return 当前分数。
      */
-    public static int nowScore(int[][] ns) {
+    public static int nowScore(int[][] ns,int which) {
         int s = 0;
         if (null != ns) {
-            for (int i = 0; i < 4; i++) {
-                for (int j = 0; j < 4; j++) {
+            for (int i = 0; i < which; i++) {
+                for (int j = 0; j < which; j++) {
                     s += ns[i][j];
                 }
             }
@@ -66,12 +73,12 @@ public class OperationFactory {
      * @return 0、2或者4。
      */
     public static int createRandomNumber() {
-        int i = (int) (Math.random() * 3);
-        if (i == 0) {
+        int i = (int) (Math.random() * 4);
+        if (i == 0||i==1) {
             num = 0;
-        } else if (i == 1) {
-            num = 2;
         } else if (i == 2) {
+            num = 2;
+        } else if (i == 3) {
             num = 4;
         }
         return num;
@@ -94,203 +101,232 @@ public class OperationFactory {
      * @param n 上次最后一步的二维数组。
      */
     public static void continueGame(int[][] n) {
-        mNumberItem = NumberItem.getInstance();
+        mNumberItem = NumberItem.getInstanceFour();
         mNumberItem.setNumbers(n);
     }
 
     /**
      * 向上滑动时调用的方法。
      */
-    public static void actionUp() {
+    public static void actionUp(int which) {
         int[][] numbers = mNumberItem.getNumbers();
-        int[][] ns = calculate(numbers, numbers);
+        int[][] ns = null;
+        if(which == 4){
+            ns = calculateFourNumbers(numbers,numbers);
+        }else if(which == 5){
+            ns = calculateFiveNumbers(numbers, numbers);
+        }
         mNumberItem.setNumbers(ns);
+    }
+
+    private static int[][] calculateFiveNumbers(int[][] preNumbers, int[][] nums) {
+        //TODO:完善5X5的算法。
+        if (preNumbers != null) {
+            for (int i = 0; i < 5; i++) {
+
+            }
+        }
+                return nums;
     }
 
     /**
      * 运算算法，分别根据穷举的情况来选择是否相加，是否移动，是否生成新的2或4。
      *
-     * @param numbers    需要运算的二维数组。
-     * @param preNumbers 与前一个参数一样。
+     * @param preNumbers    需要运算的二维数组。
      * @return 运算后的二维数组。
      */
-    private static int[][] calculate(int[][] numbers, int[][] preNumbers) {
+    private static int[][] calculateFourNumbers(int[][] preNumbers,int[][] nums) {
         if (preNumbers != null) {
             for (int i = 0; i < 4; i++) {
 
                 if (preNumbers[0][i] == preNumbers[1][i] && preNumbers[2][i] == preNumbers[3][i]) {
                     if (preNumbers[0][i] == 0) {
-                        numbers[0][i] = doubleValue(preNumbers[2][i]);
-                        numbers[1][i] = createRandomNumber();
-                        numbers[2][i] = 0;
-                        numbers[3][i] = 0;
+                        nums[0][i] = doubleValue(preNumbers[2][i]);
+                        nums[1][i] = createRandomNumber();
+                        nums[2][i] = 0;
+                        nums[3][i] = 0;
                     } else if (preNumbers[0][i] != 0 && preNumbers[2][i] != 0) {
-                        numbers[0][i] = doubleValue(preNumbers[0][i]);
-                        numbers[1][i] = doubleValue(preNumbers[2][i]);
-                        numbers[2][i] = createRandomNumber();
-                        numbers[3][i] = 0;
+                        nums[0][i] = doubleValue(preNumbers[0][i]);
+                        nums[1][i] = doubleValue(preNumbers[2][i]);
+//
+                        nums[2][i] = 0;
+                        nums[3][i] = 0;
                     } else if (preNumbers[0][i] != 0 && preNumbers[2][i] == 0) {
-                        numbers[0][i] = doubleValue(preNumbers[0][i]);
-                        numbers[1][i] = createRandomNumber();
-                        numbers[2][i] = 0;
-                        numbers[3][i] = 0;
+                        nums[0][i] = doubleValue(preNumbers[0][i]);
+                        nums[1][i] = createRandomNumber();
+                        nums[2][i] = 0;
+                        nums[3][i] = 0;
                     }
                 } else if (preNumbers[0][i] == preNumbers[1][i] && preNumbers[2][i] != preNumbers[3][i]) {
                     if (preNumbers[0][i] == 0 && preNumbers[2][i] == 0) {
-                        numbers[0][i] = preNumbers[3][i];
-                        numbers[1][i] = createRandomNumber();
-                        numbers[2][i] = 0;
-                        numbers[3][i] = 0;
+                        nums[0][i] = preNumbers[3][i];
+                        nums[1][i] = createRandomNumber();
+                        nums[2][i] = 0;
+                        nums[3][i] = 0;
                     } else if (preNumbers[0][i] == 0 && preNumbers[2][i] != 0 && preNumbers[3][i] == 0) {
-                        numbers[0][i] = preNumbers[2][i];
-                        numbers[1][i] = createRandomNumber();
-                        numbers[2][i] = 0;
-                        numbers[3][i] = 0;
+                        nums[0][i] = preNumbers[2][i];
+                        nums[1][i] = createRandomNumber();
+                        nums[2][i] = 0;
+                        nums[3][i] = 0;
                     } else if (preNumbers[0][i] == 0 && preNumbers[2][i] != 0 && preNumbers[3][i] != 0) {
-                        numbers[0][i] = preNumbers[2][i];
-                        numbers[1][i] = preNumbers[3][i];
-                        numbers[2][i] = createRandomNumber();
-                        numbers[3][i] = 0;
+                        nums[0][i] = preNumbers[2][i];
+                        nums[1][i] = preNumbers[3][i];
+//
+                        nums[2][i] = 0;
+                        nums[3][i] = 0;
                     } else if (preNumbers[0][i] != 0 && preNumbers[2][i] == 0) {
-                        numbers[0][i] = doubleValue(preNumbers[0][i]);
-                        numbers[1][i] = preNumbers[3][i];
-                        numbers[2][i] = createRandomNumber();
-                        numbers[3][i] = 0;
+                        nums[0][i] = doubleValue(preNumbers[0][i]);
+                        nums[1][i] = preNumbers[3][i];
+//
+                        nums[2][i] = 0;
+                        nums[3][i] = 0;
                     } else if (preNumbers[0][i] != 0 && preNumbers[2][i] != 0 && preNumbers[3][i] == 0) {
-                        numbers[0][i] = doubleValue(preNumbers[0][i]);
-                        numbers[1][i] = preNumbers[2][i];
-                        numbers[2][i] = createRandomNumber();
-                        numbers[3][i] = 0;
+                        nums[0][i] = doubleValue(preNumbers[0][i]);
+                        nums[1][i] = preNumbers[2][i];
+//
+                        nums[2][i] = 0;
+                        nums[3][i] = 0;
                     } else {
-                        numbers[0][i] = doubleValue(preNumbers[0][i]);
-                        numbers[1][i] = preNumbers[2][i];
-                        numbers[2][i] = preNumbers[3][i];
-                        numbers[3][i] = createRandomNumber();
+                        nums[0][i] = doubleValue(preNumbers[0][i]);
+                        nums[1][i] = preNumbers[2][i];
+                        nums[2][i] = preNumbers[3][i];
+//
+                        nums[3][i] = 0;
                     }
                 } else if (preNumbers[0][i] != preNumbers[1][i] && preNumbers[1][i] == preNumbers[2][i]) {
                     if (preNumbers[0][i] == 0 && preNumbers[3][i] == 0) {
-                        numbers[0][i] = doubleValue(preNumbers[1][i]);
-                        numbers[1][i] = createRandomNumber();
-                        numbers[2][i] = 0;
-                        numbers[3][i] = 0;
+                        nums[0][i] = doubleValue(preNumbers[1][i]);
+                        nums[1][i] = createRandomNumber();
+                        nums[2][i] = 0;
+                        nums[3][i] = 0;
                     } else if (preNumbers[0][i] == 0 && preNumbers[3][i] != 0) {
-                        numbers[0][i] = doubleValue(preNumbers[1][i]);
-                        numbers[1][i] = preNumbers[3][i];
-                        numbers[2][i] = createRandomNumber();
-                        numbers[3][i] = 0;
+                        nums[0][i] = doubleValue(preNumbers[1][i]);
+                        nums[1][i] = preNumbers[3][i];
+//
+                        nums[2][i] = 0;
+                        nums[3][i] = 0;
                     } else if (preNumbers[0][i] != 0 && preNumbers[1][i] == 0 && preNumbers[2][i] == 0 && preNumbers[3][i] == 0) {
-                        numbers[1][i] = createRandomNumber();
+                        nums[1][i] = createRandomNumber();
                     } else if (preNumbers[0][i] != 0 && preNumbers[1][i] == 0 && preNumbers[3][i] == 0) {
-                        numbers[1][i] = createRandomNumber();
-                        numbers[2][i] = 0;
-                        numbers[3][i] = 0;
+                        nums[1][i] = createRandomNumber();
+                        nums[2][i] = 0;
+                        nums[3][i] = 0;
                     } else if (preNumbers[0][i] != 0 && preNumbers[1][i] == 0 && preNumbers[0][i] == preNumbers[3][i]) {
-                        numbers[0][i] = doubleValue(preNumbers[0][i]);
-                        numbers[1][i] = createRandomNumber();
-                        numbers[2][i] = 0;
-                        numbers[3][i] = 0;
+                        nums[0][i] = doubleValue(preNumbers[0][i]);
+                        nums[1][i] = createRandomNumber();
+                        nums[2][i] = 0;
+                        nums[3][i] = 0;
                     } else if (preNumbers[0][i] != 0 && preNumbers[1][i] == 0 && preNumbers[0][i] != preNumbers[3][i]) {
-                        numbers[1][i] = preNumbers[3][i];
-                        numbers[2][i] = createRandomNumber();
-                        numbers[3][i] = 0;
+                        nums[1][i] = preNumbers[3][i];
+                        nums[2][i] = createRandomNumber();
+                        nums[3][i] = 0;
                     } else if (preNumbers[0][i] != 0 && preNumbers[1][i] != 0 && preNumbers[3][i] == 0) {
-                        numbers[1][i] = doubleValue(preNumbers[1][i]);
-                        numbers[2][i] = createRandomNumber();
-                        numbers[3][i] = 0;
+                        nums[1][i] = doubleValue(preNumbers[1][i]);
+                        nums[2][i] = createRandomNumber();
+                        nums[3][i] = 0;
                     } else {
-                        numbers[1][i] = doubleValue(preNumbers[1][i]);
-                        numbers[2][i] = preNumbers[3][i];
-                        numbers[3][i] = createRandomNumber();
+                        nums[1][i] = doubleValue(preNumbers[1][i]);
+                        nums[2][i] = preNumbers[3][i];
+//
+                        nums[3][i] = 0;
                     }
                 } else if (preNumbers[0][i] != preNumbers[1][i] && preNumbers[1][i] != preNumbers[2][i]
                         && preNumbers[2][i] == preNumbers[3][i]) {
                     if (preNumbers[0][i] == 0 && preNumbers[2][i] != 0) {
-                        numbers[0][i] = preNumbers[1][i];
-                        numbers[1][i] = doubleValue(preNumbers[2][i]);
-                        numbers[2][i] = createRandomNumber();
-                        numbers[3][i] = 0;
+                        nums[0][i] = preNumbers[1][i];
+                        nums[1][i] = doubleValue(preNumbers[2][i]);
+//
+                        nums[2][i] = 0;
+                        nums[3][i] = 0;
                     } else if (preNumbers[0][i] == 0 && preNumbers[2][i] == 0) {
-                        numbers[0][i] = preNumbers[1][i];
-                        numbers[1][i] = createRandomNumber();
-                        numbers[2][i] = 0;
-                        numbers[3][i] = 0;
+                        nums[0][i] = preNumbers[1][i];
+                        nums[1][i] = createRandomNumber();
+                        nums[2][i] = 0;
+                        nums[3][i] = 0;
                     } else if (preNumbers[0][i] != 0 && preNumbers[1][i] != 0 && preNumbers[2][i] == 0) {
-                        numbers[2][i] = createRandomNumber();
-                        numbers[3][i] = 0;
+                        nums[2][i] = createRandomNumber();
+                        nums[3][i] = 0;
                     } else if (preNumbers[0][i] != 0 && preNumbers[1][i] != 0 && preNumbers[2][i] != 0) {
-                        numbers[2][i] = doubleValue(preNumbers[2][i]);
-                        numbers[3][i] = createRandomNumber();
+                        nums[2][i] = doubleValue(preNumbers[2][i]);
+                        nums[3][i] = createRandomNumber();
                     } else if (preNumbers[0][i] == preNumbers[2][i]) {
-                        numbers[0][i] = doubleValue(preNumbers[0][i]);
-                        numbers[1][i] = preNumbers[3][i];
-                        numbers[2][i] = createRandomNumber();
-                        numbers[3][i] = 0;
+                        nums[0][i] = doubleValue(preNumbers[0][i]);
+                        nums[1][i] = preNumbers[3][i];
+//
+                        nums[2][i] = 0;
+                        nums[3][i] = 0;
                     } else {
-                        numbers[1][i] = doubleValue(preNumbers[2][i]);
-                        numbers[2][i] = createRandomNumber();
-                        numbers[3][i] = 0;
+                        nums[1][i] = doubleValue(preNumbers[2][i]);
+                        nums[2][i] = createRandomNumber();
+                        nums[3][i] = 0;
                     }
                 } else if (preNumbers[0][i] != preNumbers[1][i] && preNumbers[1][i] != preNumbers[2][i]
                         && preNumbers[2][i] != preNumbers[3][i]) {
                     if (preNumbers[0][i] == 0 && preNumbers[2][i] == 0 && preNumbers[1][i] == preNumbers[3][i]) {
-                        numbers[0][i] = doubleValue(preNumbers[1][i]);
-                        numbers[1][i] = createRandomNumber();
-                        numbers[2][i] = 0;
-                        numbers[3][i] = 0;
+                        nums[0][i] = doubleValue(preNumbers[1][i]);
+                        nums[1][i] = createRandomNumber();
+                        nums[2][i] = 0;
+                        nums[3][i] = 0;
                     } else if (preNumbers[0][i] == 0 && preNumbers[2][i] == 0 && preNumbers[1][i] != preNumbers[3][i]) {
-                        numbers[0][i] = preNumbers[1][i];
-                        numbers[1][i] = preNumbers[3][i];
-                        numbers[2][i] = createRandomNumber();
-                        numbers[3][i] = 0;
+                        nums[0][i] = preNumbers[1][i];
+                        nums[1][i] = preNumbers[3][i];
+//
+                        nums[2][i] = 0;
+                        nums[3][i] = 0;
                     } else if (preNumbers[0][i] == 0 && preNumbers[2][i] != 0 && preNumbers[3][i] == 0) {
-                        numbers[0][i] = preNumbers[1][i];
-                        numbers[1][i] = preNumbers[2][i];
-                        numbers[2][i] = createRandomNumber();
-                        numbers[3][i] = 0;
+                        nums[0][i] = preNumbers[1][i];
+                        nums[1][i] = preNumbers[2][i];
+
+                        nums[2][i] = 0;
+                        nums[3][i] = 0;
                     } else if (preNumbers[0][i] == 0 && preNumbers[2][i] != 0 && preNumbers[3][i] != 0) {
-                        numbers[0][i] = preNumbers[1][i];
-                        numbers[1][i] = preNumbers[2][i];
-                        numbers[2][i] = preNumbers[3][i];
-                        numbers[3][i] = createRandomNumber();
+                        nums[0][i] = preNumbers[1][i];
+                        nums[1][i] = preNumbers[2][i];
+                        nums[2][i] = preNumbers[3][i];
+//
+                        nums[3][i] = 0;
                     } else if (preNumbers[1][i] == 0 && preNumbers[0][i] == preNumbers[2][i] && preNumbers[3][i] == 0) {
-                        numbers[0][i] = doubleValue(preNumbers[0][i]);
-                        numbers[1][i] = createRandomNumber();
-                        numbers[2][i] = 0;
-                        numbers[3][i] = 0;
+                        nums[0][i] = doubleValue(preNumbers[0][i]);
+                        nums[1][i] = createRandomNumber();
+                        nums[2][i] = 0;
+                        nums[3][i] = 0;
                     } else if (preNumbers[1][i] == 0 && preNumbers[0][i] == preNumbers[2][i] && preNumbers[3][i] != 0) {
-                        numbers[0][i] = doubleValue(preNumbers[0][i]);
-                        numbers[1][i] = preNumbers[3][i];
-                        numbers[2][i] = createRandomNumber();
-                        numbers[3][i] = 0;
+                        nums[0][i] = doubleValue(preNumbers[0][i]);
+                        nums[1][i] = preNumbers[3][i];
+//
+                        nums[2][i] = 0;
+                        nums[3][i] = 0;
                     } else if (preNumbers[1][i] == 0 && preNumbers[0][i] != preNumbers[2][i]) {
-                        numbers[1][i] = preNumbers[2][i];
-                        numbers[2][i] = preNumbers[3][i];
-                        numbers[3][i] = createRandomNumber();
+                        nums[1][i] = preNumbers[2][i];
+                        nums[2][i] = preNumbers[3][i];
+//
+                        nums[3][i] = 0;
                     } else if (preNumbers[2][i] == 0 && preNumbers[1][i] == preNumbers[3][i]) {
-                        numbers[1][i] = doubleValue(preNumbers[1][i]);
-                        numbers[2][i] = createRandomNumber();
-                        numbers[3][i] = 0;
+                        nums[1][i] = doubleValue(preNumbers[1][i]);
+                        nums[2][i] = createRandomNumber();
+                        nums[3][i] = 0;
                     } else if (preNumbers[2][i] == 0 && preNumbers[1][i] != preNumbers[3][i]) {
-                        numbers[2][i] = preNumbers[3][i];
-                        numbers[3][i] = createRandomNumber();
+                        nums[2][i] = preNumbers[3][i];
+                        nums[3][i] = createRandomNumber();
                     } else if (preNumbers[1][i] == 0 && preNumbers[3][i] == 0 && preNumbers[0][i] != preNumbers[2][i]) {
-                        numbers[1][i] = preNumbers[2][i];
-                        numbers[2][i] = createRandomNumber();
+                        nums[1][i] = preNumbers[2][i];
+                        nums[2][i] = createRandomNumber();
                     } else if (preNumbers[0][i] == 0 && preNumbers[3][i] == 0) {
-                        numbers[0][i] = preNumbers[1][i];
-                        numbers[1][i] = preNumbers[2][i];
-                        numbers[2][i] = createRandomNumber();
+                        nums[0][i] = preNumbers[1][i];
+                        nums[1][i] = preNumbers[2][i];
+//
+                        nums[2][i] = 0;
                     } else if (preNumbers[0][i] != 0 && preNumbers[1][i] != 0 && preNumbers[2][i] != 0 && preNumbers[3][i] == 0) {
-                        numbers[3][i] = createRandomNumber();
+                        nums[3][i] = createRandomNumber();
                     } else {
                     }
                 }
             }
         }
 
-        nowScore(numbers);
+        nowScore(nums,4);
 
-        return numbers;
+        return nums;
     }
 
     /**
@@ -306,14 +342,14 @@ public class OperationFactory {
     /**
      * 向下滑动时调用的方法。
      */
-    public static void actionDown() {
-        int[][] preNumbers = new int[4][4];
+    public static void actionDown(int which) {
+        int[][] preNumbers = new int[which][which];
         int[][] ns = mNumberItem.getNumbers();
         preNumbers = transformDown(preNumbers, ns); //矩阵转置。
 
-        int[][] numbers = preNumbers;
-        ns = calculate(preNumbers, numbers);    //判定运算的算法。
-        numbers = new int[4][4];
+        ns = calculateFourNumbers(preNumbers,preNumbers);    //判定运算的算法。
+
+        int[][] numbers = new int[which][which];
         numbers = transformDown(numbers, ns);   //运算结束后转置回来。
 
         mNumberItem.setNumbers(numbers);
@@ -340,15 +376,15 @@ public class OperationFactory {
     /**
      * 想做滑动时调用。
      */
-    public static void actionLeft() {
+    public static void actionLeft(int which) {
 
-        int[][] preNumbers = new int[4][4];
+        int[][] preNumbers = new int[which][which];
         int[][] ns = mNumberItem.getNumbers();
         preNumbers = transformToLeft(preNumbers, ns);   //矩阵转置。
 
-        int[][] numbers = preNumbers;
-        ns = calculate(preNumbers, numbers);    //运算。
-        numbers = new int[4][4];
+        ns = calculateFourNumbers(preNumbers,preNumbers);    //运算。
+
+        int[][] numbers = new int[which][which];
         numbers = transformFromLeft(numbers, ns);   //转换回来。
 
         mNumberItem.setNumbers(numbers);
@@ -393,14 +429,13 @@ public class OperationFactory {
     /**
      * 向下滑动时调用。
      */
-    public static void actionRight() {
-        int[][] preNumbers = new int[4][4];
+    public static void actionRight(int which) {
+        int[][] preNumbers = new int[which][which];
         int[][] ns = mNumberItem.getNumbers();
         preNumbers = transformToRight(preNumbers, ns);  //矩阵转置
 
-        int[][] numbers = preNumbers;
-        ns = calculate(numbers, preNumbers);    //运算
-        numbers = new int[4][4];
+        ns = calculateFourNumbers(preNumbers,preNumbers);    //运算
+        int[][] numbers = new int[which][which];
         numbers = transformFromRight(numbers, ns);  //转置回来。
 
         mNumberItem.setNumbers(numbers);

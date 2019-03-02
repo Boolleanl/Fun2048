@@ -21,10 +21,12 @@ import androidx.fragment.app.FragmentManager;
 
 public class GameActivity extends AppCompatActivity {
 
+    private static int whichGame;
     private static final float FLIP_DISTANCE = 48;      //滑动判定距离
     private static final String TAG = "GameActivity";
 
-    private GameFragment mGameFragment;
+    private GameFourFragment mGameFourFragment;
+    private GameFiveFragment mGameFiveFragment;
     private GestureDetector mDetector;
 
     private static Handler mHandler;
@@ -38,10 +40,15 @@ public class GameActivity extends AppCompatActivity {
      * @return 游戏界面的Activity，重新初始化NumberItem。
      */
 
-    public static Intent newIntent(Context context) {
+    public static Intent newIntent(Context context,int which) {
+        whichGame = which;
         mHandler = new Handler();
-        operationThread = new OperationThread();
-        OperationFactory.newGame();
+        operationThread = new OperationThread(which);
+        if(which == 4){
+            OperationFactory.newGameFour();
+        }else if(which == 5){
+            OperationFactory.newGameFive();
+        }
         Intent i = new Intent(context, GameActivity.class);
         return i;
     }
@@ -53,7 +60,7 @@ public class GameActivity extends AppCompatActivity {
      */
     public static Intent newIntent(Context context, int[][] n) {
         mHandler = new Handler();
-        operationThread = new OperationThread();
+        operationThread = new OperationThread(whichGame);
         OperationFactory.continueGame(n);
         Intent i = new Intent(context, GameActivity.class);
         return i;
@@ -67,8 +74,14 @@ public class GameActivity extends AppCompatActivity {
         FragmentManager fm = getSupportFragmentManager();
         fm.findFragmentById(R.id.fragment_container);
 
-        mGameFragment = GameFragment.getInstance();
-        fm.beginTransaction().add(R.id.fragment_container, mGameFragment).commit();
+        if(whichGame == 4){
+            mGameFourFragment = GameFourFragment.getInstance();
+            fm.beginTransaction().add(R.id.fragment_container, mGameFourFragment).commit();
+        }else if(whichGame == 5){
+            mGameFiveFragment = GameFiveFragment.getInstance();
+            fm.beginTransaction().add(R.id.fragment_container, mGameFiveFragment).commit();
+        }
+
 
         //滑动方向判定。
         mDetector = new GestureDetector(this, new GestureDetector.OnGestureListener() {
@@ -139,8 +152,8 @@ public class GameActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        saveLastNumbers(NumberItem.getInstance().getNumbers()); //记录最后一步的情况。
-        saveBestScore(NumberItem.getInstance().getBestScore()); //记录最高分。
+        saveLastNumbers(NumberItem.getInstanceFour().getNumbers()); //记录最后一步的情况。
+        saveBestScore(NumberItem.getInstanceFour().getBestScore()); //记录最高分。
     }
 
     /**
@@ -195,7 +208,7 @@ public class GameActivity extends AppCompatActivity {
      * 每次滑动后，调用刷新函数。
      */
     private void refreshView() {
-        mGameFragment.refreshView();
+        mGameFourFragment.refreshView();
     }
 
     @Override
