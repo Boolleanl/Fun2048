@@ -114,20 +114,109 @@ public class OperationFactory {
         if(which == 4){
             ns = calculateFourNumbers(numbers,numbers);
         }else if(which == 5){
-            ns = calculateFiveNumbers(numbers, numbers);
+            ns = wipe(numbers);
         }
         mNumberItem.setNumbers(ns);
     }
 
-    private static int[][] calculateFiveNumbers(int[][] preNumbers, int[][] nums) {
-        //TODO:完善5X5的算法。
-        if (preNumbers != null) {
+    private static int[][] wipe(int[][] nums){
+        if (null != nums) {
             for (int i = 0; i < 5; i++) {
+                    if (nums[0][i] == 0 && nums[1][i] == 0 && nums[2][i] == 0 && nums[3][i] == 0 && nums[4][i] == 0) {
+                        break;
+                    } else if (nums[0][i] == 0) {
+                        nums[0][i] = nums[1][i];
+                        nums[1][i] = nums[2][i];
+                        nums[2][i] = nums[3][i];
+                        nums[3][i] = nums[4][i];
+                        nums[4][i] = 0;
+                        wipe(nums);
+                    }
+                    if (nums[1][i] == 0 && nums[2][i] == 0 && nums[3][i] == 0 && nums[4][i] == 0) {
+                        break;
+                    } else if (nums[1][i] == 0) {
+                        nums[1][i] = nums[2][i];
+                        nums[2][i] = nums[3][i];
+                        nums[3][i] = nums[4][i];
+                        nums[4][i] = 0;
+                        wipe(nums);
+                    }
+                    if (nums[2][i] == 0 && nums[3][i] == 0 && nums[4][i] == 0) {
+                        break;
+                    } else if (nums[2][i] == 0) {
+                        nums[2][i] = nums[3][i];
+                        nums[3][i] = nums[4][i];
+                        nums[4][i] = 0;
+                        wipe(nums);
+                    }
+                    if (nums[3][i] == 0 && nums[4][i] == 0) {
+                        break;
+                    } else if (nums[3][i] == 0) {
+                        nums[3][i] = nums[4][i];
+                        nums[4][i] = 0;
+                    }
 
             }
         }
-                return nums;
+        return nums;
     }
+
+//    private static int[][] calculateFiveNumbers(int[][] preNumbers, int[][] nums) {
+//        //TODO:完善5X5的算法。
+//        if (null != preNumbers) {
+//            for (int i = 0; i < 5; i++) {
+//
+//
+//                //0____
+//                if(preNumbers[0][i]==0){
+//                    //00___
+//                    if(preNumbers[1][i]==0){
+//                        //000__
+//                        if(preNumbers[2][i]==0){
+//                            //0000_
+//                            if(preNumbers[3][i]==0){
+//                                //00000
+//                                if(preNumbers[4][i]==0){
+//                                    nums[0][i]=createRandomNumber();
+//                                }else {//0000A
+//                                    nums[0][i]=preNumbers[4][i];
+//                                    nums[4][i]=createRandomNumber();
+//                                }
+//                            }else {//000A0 000AA 000AB
+//                                if(preNumbers[3][i]==preNumbers[4][i]){//000AA
+//                                    nums[0][i] = doubleValue(preNumbers[3][i]);
+//                                    nums[3][i] = 0;
+//                                    nums[4][i] = 0;
+//                                }else {//000A0 000AB
+//                                    nums[0][i] = preNumbers[3][i];
+//                                    nums[1][i] = preNumbers[4][i];
+//                                    nums[3][i] = 0;
+//                                    nums[4][i] = 0;
+//                                }
+//                            }
+//                        }else {//00___
+//                            if(preNumbers[3][i]==0&&preNumbers[4][i]==0){//00A00
+//                                nums[0][i]= preNumbers[2][i];
+//                                nums[1][i] = createRandomNumber();
+//                                nums[2][i] = 0;
+//                            }else if(preNumbers[2][i]==preNumbers[3][i]||(preNumbers[2][i]==preNumbers[4][i]&&preNumbers[3][i]==0)){
+//                                //00AA0 00AAA 00AAB 00A0A
+//                                nums[0][i]=doubleValue(preNumbers[2][i]);
+//                                nums[1][i]=preNumbers[4][i];
+//                                nums[2][i]=0;
+//                                nums[3][i]=0;
+//                                nums[4][i]=0;
+//                            }else if(preNumbers[2][i]==preNumbers[4][i]&&preNumbers[3][i]!=0){// 00ABA
+//
+//                            }
+//                        }
+//
+//                    }
+//                }
+//            }
+//        }
+//                return nums;
+//    }
 
     /**
      * 运算算法，分别根据穷举的情况来选择是否相加，是否移动，是否生成新的2或4。
@@ -142,7 +231,8 @@ public class OperationFactory {
                 if (preNumbers[0][i] == preNumbers[1][i] && preNumbers[2][i] == preNumbers[3][i]) {
                     if (preNumbers[0][i] == 0) {
                         nums[0][i] = doubleValue(preNumbers[2][i]);
-                        nums[1][i] = createRandomNumber();
+                        //
+                        nums[1][i] = 0;
                         nums[2][i] = 0;
                         nums[3][i] = 0;
                     } else if (preNumbers[0][i] != 0 && preNumbers[2][i] != 0) {
@@ -153,7 +243,8 @@ public class OperationFactory {
                         nums[3][i] = 0;
                     } else if (preNumbers[0][i] != 0 && preNumbers[2][i] == 0) {
                         nums[0][i] = doubleValue(preNumbers[0][i]);
-                        nums[1][i] = createRandomNumber();
+                        //
+                        nums[1][i] = 0;
                         nums[2][i] = 0;
                         nums[3][i] = 0;
                     }
@@ -196,7 +287,8 @@ public class OperationFactory {
                 } else if (preNumbers[0][i] != preNumbers[1][i] && preNumbers[1][i] == preNumbers[2][i]) {
                     if (preNumbers[0][i] == 0 && preNumbers[3][i] == 0) {
                         nums[0][i] = doubleValue(preNumbers[1][i]);
-                        nums[1][i] = createRandomNumber();
+                        //
+                        nums[1][i] = 0;
                         nums[2][i] = 0;
                         nums[3][i] = 0;
                     } else if (preNumbers[0][i] == 0 && preNumbers[3][i] != 0) {
@@ -213,7 +305,8 @@ public class OperationFactory {
                         nums[3][i] = 0;
                     } else if (preNumbers[0][i] != 0 && preNumbers[1][i] == 0 && preNumbers[0][i] == preNumbers[3][i]) {
                         nums[0][i] = doubleValue(preNumbers[0][i]);
-                        nums[1][i] = createRandomNumber();
+                        //
+                        nums[1][i] = 0;
                         nums[2][i] = 0;
                         nums[3][i] = 0;
                     } else if (preNumbers[0][i] != 0 && preNumbers[1][i] == 0 && preNumbers[0][i] != preNumbers[3][i]) {
@@ -222,7 +315,8 @@ public class OperationFactory {
                         nums[3][i] = 0;
                     } else if (preNumbers[0][i] != 0 && preNumbers[1][i] != 0 && preNumbers[3][i] == 0) {
                         nums[1][i] = doubleValue(preNumbers[1][i]);
-                        nums[2][i] = createRandomNumber();
+                        //
+                        nums[2][i] = 0;
                         nums[3][i] = 0;
                     } else {
                         nums[1][i] = doubleValue(preNumbers[1][i]);
@@ -248,7 +342,8 @@ public class OperationFactory {
                         nums[3][i] = 0;
                     } else if (preNumbers[0][i] != 0 && preNumbers[1][i] != 0 && preNumbers[2][i] != 0) {
                         nums[2][i] = doubleValue(preNumbers[2][i]);
-                        nums[3][i] = createRandomNumber();
+                        //
+                        nums[3][i] = 0;
                     } else if (preNumbers[0][i] == preNumbers[2][i]) {
                         nums[0][i] = doubleValue(preNumbers[0][i]);
                         nums[1][i] = preNumbers[3][i];
@@ -257,14 +352,16 @@ public class OperationFactory {
                         nums[3][i] = 0;
                     } else {
                         nums[1][i] = doubleValue(preNumbers[2][i]);
-                        nums[2][i] = createRandomNumber();
+                        //
+                        nums[2][i] = 0;
                         nums[3][i] = 0;
                     }
                 } else if (preNumbers[0][i] != preNumbers[1][i] && preNumbers[1][i] != preNumbers[2][i]
                         && preNumbers[2][i] != preNumbers[3][i]) {
                     if (preNumbers[0][i] == 0 && preNumbers[2][i] == 0 && preNumbers[1][i] == preNumbers[3][i]) {
                         nums[0][i] = doubleValue(preNumbers[1][i]);
-                        nums[1][i] = createRandomNumber();
+                        //
+                        nums[1][i] = 0;
                         nums[2][i] = 0;
                         nums[3][i] = 0;
                     } else if (preNumbers[0][i] == 0 && preNumbers[2][i] == 0 && preNumbers[1][i] != preNumbers[3][i]) {
@@ -287,7 +384,8 @@ public class OperationFactory {
                         nums[3][i] = 0;
                     } else if (preNumbers[1][i] == 0 && preNumbers[0][i] == preNumbers[2][i] && preNumbers[3][i] == 0) {
                         nums[0][i] = doubleValue(preNumbers[0][i]);
-                        nums[1][i] = createRandomNumber();
+                        //
+                        nums[1][i] = 0;
                         nums[2][i] = 0;
                         nums[3][i] = 0;
                     } else if (preNumbers[1][i] == 0 && preNumbers[0][i] == preNumbers[2][i] && preNumbers[3][i] != 0) {
@@ -303,7 +401,8 @@ public class OperationFactory {
                         nums[3][i] = 0;
                     } else if (preNumbers[2][i] == 0 && preNumbers[1][i] == preNumbers[3][i]) {
                         nums[1][i] = doubleValue(preNumbers[1][i]);
-                        nums[2][i] = createRandomNumber();
+                        //
+                        nums[2][i] = 0;
                         nums[3][i] = 0;
                     } else if (preNumbers[2][i] == 0 && preNumbers[1][i] != preNumbers[3][i]) {
                         nums[2][i] = preNumbers[3][i];
@@ -345,12 +444,15 @@ public class OperationFactory {
     public static void actionDown(int which) {
         int[][] preNumbers = new int[which][which];
         int[][] ns = mNumberItem.getNumbers();
-        preNumbers = transformDown(preNumbers, ns); //矩阵转置。
-
-        ns = calculateFourNumbers(preNumbers,preNumbers);    //判定运算的算法。
+        preNumbers = transformDown(preNumbers, ns,which); //矩阵转置。
+        if(which == 4){
+            ns = calculateFourNumbers(preNumbers,preNumbers);
+        }else if(which == 5){
+            ns = wipe(preNumbers);
+        }
 
         int[][] numbers = new int[which][which];
-        numbers = transformDown(numbers, ns);   //运算结束后转置回来。
+        numbers = transformDown(numbers, ns,which);   //运算结束后转置回来。
 
         mNumberItem.setNumbers(numbers);
     }
@@ -363,12 +465,22 @@ public class OperationFactory {
      *                   但有时不用改变数字，所以保持不变能避免一些运算。
      * @return 转置后的数组。
      */
-    private static int[][] transformDown(int[][] preNumbers, int[][] n) {
-        for (int i = 0; i < 4; i++) {
-            preNumbers[0][i] = n[3][i];
-            preNumbers[1][i] = n[2][i];
-            preNumbers[2][i] = n[1][i];
-            preNumbers[3][i] = n[0][i];
+    private static int[][] transformDown(int[][] preNumbers, int[][] n,int which) {
+        if (which == 4) {
+            for (int i = 0; i < 4; i++) {
+                preNumbers[0][i] = n[3][i];
+                preNumbers[1][i] = n[2][i];
+                preNumbers[2][i] = n[1][i];
+                preNumbers[3][i] = n[0][i];
+            }
+        }else if(which ==5){
+            for (int i = 0; i < 5; i++) {
+                preNumbers[0][i] = n[4][i];
+                preNumbers[1][i] = n[3][i];
+                preNumbers[2][i] = n[2][i];
+                preNumbers[3][i] = n[1][i];
+                preNumbers[4][i] = n[0][i];
+            }
         }
         return preNumbers;
     }
@@ -380,12 +492,16 @@ public class OperationFactory {
 
         int[][] preNumbers = new int[which][which];
         int[][] ns = mNumberItem.getNumbers();
-        preNumbers = transformToLeft(preNumbers, ns);   //矩阵转置。
+        preNumbers = transformToLeft(preNumbers, ns,which);   //矩阵转置。
 
-        ns = calculateFourNumbers(preNumbers,preNumbers);    //运算。
+        if(which == 4){
+            ns = calculateFourNumbers(preNumbers,preNumbers);
+        }else if(which == 5){
+            ns = wipe(preNumbers);
+        }
 
         int[][] numbers = new int[which][which];
-        numbers = transformFromLeft(numbers, ns);   //转换回来。
+        numbers = transformFromLeft(numbers, ns,which);   //转换回来。
 
         mNumberItem.setNumbers(numbers);
     }
@@ -398,12 +514,22 @@ public class OperationFactory {
      *                   但有时不用改变数字，所以保持不变能避免一些运算。
      * @return 转置后的数组。
      */
-    private static int[][] transformToLeft(int[][] preNumbers, int[][] n) {
-        for (int i = 0; i < 4; i++) {
-            preNumbers[i][0] = n[3][i];
-            preNumbers[i][1] = n[2][i];
-            preNumbers[i][2] = n[1][i];
-            preNumbers[i][3] = n[0][i];
+    private static int[][] transformToLeft(int[][] preNumbers, int[][] n,int which) {
+        if(which == 4){
+            for (int i = 0; i < 4; i++) {
+                preNumbers[i][0] = n[3][i];
+                preNumbers[i][1] = n[2][i];
+                preNumbers[i][2] = n[1][i];
+                preNumbers[i][3] = n[0][i];
+            }
+        }else if(which == 5){
+            for (int i = 0; i < 5; i++) {
+                preNumbers[i][0] = n[4][i];
+                preNumbers[i][1] = n[3][i];
+                preNumbers[i][2] = n[2][i];
+                preNumbers[i][3] = n[1][i];
+                preNumbers[i][4] = n[0][i];
+            }
         }
         return preNumbers;
     }
@@ -416,12 +542,22 @@ public class OperationFactory {
      *                   但有时不用改变数字，所以保持不变能避免一些运算。
      * @return 转置后的数组。
      */
-    private static int[][] transformFromLeft(int[][] preNumbers, int[][] n) {
-        for (int i = 0; i < 4; i++) {
-            preNumbers[0][i] = n[i][3];
-            preNumbers[1][i] = n[i][2];
-            preNumbers[2][i] = n[i][1];
-            preNumbers[3][i] = n[i][0];
+    private static int[][] transformFromLeft(int[][] preNumbers, int[][] n,int which) {
+        if(which==4){
+            for (int i = 0; i < 4; i++) {
+                preNumbers[0][i] = n[i][3];
+                preNumbers[1][i] = n[i][2];
+                preNumbers[2][i] = n[i][1];
+                preNumbers[3][i] = n[i][0];
+            }
+        }else if(which == 5){
+            for (int i = 0; i < 5; i++) {
+                preNumbers[0][i] = n[i][4];
+                preNumbers[1][i] = n[i][3];
+                preNumbers[2][i] = n[i][2];
+                preNumbers[3][i] = n[i][1];
+                preNumbers[4][i] = n[i][0];
+            }
         }
         return preNumbers;
     }
@@ -432,11 +568,16 @@ public class OperationFactory {
     public static void actionRight(int which) {
         int[][] preNumbers = new int[which][which];
         int[][] ns = mNumberItem.getNumbers();
-        preNumbers = transformToRight(preNumbers, ns);  //矩阵转置
+        preNumbers = transformToRight(preNumbers, ns,which);  //矩阵转置
 
-        ns = calculateFourNumbers(preNumbers,preNumbers);    //运算
+        if(which == 4){
+            ns = calculateFourNumbers(preNumbers,preNumbers);
+        }else if(which == 5){
+            ns = wipe(preNumbers);
+        }
+
         int[][] numbers = new int[which][which];
-        numbers = transformFromRight(numbers, ns);  //转置回来。
+        numbers = transformFromRight(numbers, ns,which);  //转置回来。
 
         mNumberItem.setNumbers(numbers);
     }
@@ -449,12 +590,22 @@ public class OperationFactory {
      *                   但有时不用改变数字，所以保持不变能避免一些运算。
      * @return 转置后的数组。
      */
-    private static int[][] transformToRight(int[][] preNumbers, int[][] n) {
-        for (int i = 0; i < 4; i++) {
-            preNumbers[0][i] = n[i][3];
-            preNumbers[1][i] = n[i][2];
-            preNumbers[2][i] = n[i][1];
-            preNumbers[3][i] = n[i][0];
+    private static int[][] transformToRight(int[][] preNumbers, int[][] n,int which) {
+        if(which == 4){
+            for (int i = 0; i < 4; i++) {
+                preNumbers[0][i] = n[i][3];
+                preNumbers[1][i] = n[i][2];
+                preNumbers[2][i] = n[i][1];
+                preNumbers[3][i] = n[i][0];
+            }
+        }else if(which==5){
+            for (int i = 0; i < 5; i++) {
+                preNumbers[0][i] = n[i][4];
+                preNumbers[1][i] = n[i][3];
+                preNumbers[2][i] = n[i][2];
+                preNumbers[3][i] = n[i][1];
+                preNumbers[4][i] = n[i][0];
+            }
         }
         return preNumbers;
     }
@@ -467,12 +618,22 @@ public class OperationFactory {
      *                   但有时不用改变数字，所以保持不变能避免一些运算。
      * @return 转置后的数组。
      */
-    private static int[][] transformFromRight(int[][] preNumbers, int[][] n) {
-        for (int i = 0; i < 4; i++) {
-            preNumbers[i][0] = n[3][i];
-            preNumbers[i][1] = n[2][i];
-            preNumbers[i][2] = n[1][i];
-            preNumbers[i][3] = n[0][i];
+    private static int[][] transformFromRight(int[][] preNumbers, int[][] n,int which) {
+        if(which == 4){
+            for (int i = 0; i < 4; i++) {
+                preNumbers[i][0] = n[3][i];
+                preNumbers[i][1] = n[2][i];
+                preNumbers[i][2] = n[1][i];
+                preNumbers[i][3] = n[0][i];
+            }
+        }else if(which == 5){
+            for (int i = 0; i < 5; i++) {
+                preNumbers[i][0] = n[4][i];
+                preNumbers[i][1] = n[3][i];
+                preNumbers[i][2] = n[2][i];
+                preNumbers[i][3] = n[1][i];
+                preNumbers[i][4] = n[0][i];
+            }
         }
         return preNumbers;
     }

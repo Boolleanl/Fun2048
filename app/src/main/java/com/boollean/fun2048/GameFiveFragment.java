@@ -45,7 +45,7 @@ public class GameFiveFragment extends MyBaseFragment {
         View view = inflater.inflate(R.layout.fragment_five_game, container, false);
         ButterKnife.bind(this, view);
         initView(view);
-        refreshView(s,5,mNumberItem,mTextViews);
+        refreshView();
         return view;
     }
 
@@ -92,8 +92,8 @@ public class GameFiveFragment extends MyBaseFragment {
      * 每次滑动后调用，刷新每个TextView里的数字。
      */
     @Override
-    public void refreshView(String s, int which, NumberItem item, TextView[] mTextViews) {
+    public void refreshView() {
         s = String.valueOf(mNumberItem.getScore());
-        super.refreshView(s, which, item, mTextViews);
+        super.refreshView(s, 5, mNumberItem, mTextViews);
     }
 }
