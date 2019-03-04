@@ -3,6 +3,7 @@ package com.boollean.fun2048;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -21,9 +22,11 @@ import androidx.fragment.app.FragmentManager;
 
 public class GameActivity extends AppCompatActivity {
 
+    private static final String TAG = "GameActivity";
     private static int whichGame;
     private static final float FLIP_DISTANCE = 48;      //滑动判定距离
-    private static final String TAG = "GameActivity";
+    private SoundPool mSoundPool;
+    private int soundID;
 
     private GameFourFragment mGameFourFragment;
     private GameFiveFragment mGameFiveFragment;
@@ -74,6 +77,9 @@ public class GameActivity extends AppCompatActivity {
         FragmentManager fm = getSupportFragmentManager();
         fm.findFragmentById(R.id.fragment_container);
 
+        mSoundPool = new SoundPool.Builder().build();
+        soundID = mSoundPool.load(this,R.raw.fusion_sound,1);
+
         if(whichGame == 4){
             mGameFourFragment = GameFourFragment.getInstance();
             fm.beginTransaction().add(R.id.fragment_container, mGameFourFragment).commit();
@@ -116,6 +122,7 @@ public class GameActivity extends AppCompatActivity {
                     //Up，向上滑动。
                     operationThread.setAction(1);
                     mHandler.post(operationThread);
+                    mSoundPool.play(soundID,0.2f,0.2f,0,1,1);
                     return true;
                 }
                 if (e2.getY() - e1.getY() > e1.getX() - e2.getX()
@@ -124,6 +131,7 @@ public class GameActivity extends AppCompatActivity {
                     //Down，向下滑动。
                     operationThread.setAction(2);
                     mHandler.post(operationThread);
+                    mSoundPool.play(soundID,0.2f,0.2f,0,1,1);
                     return true;
                 }
                 if (e1.getX() - e2.getX() > e1.getY() - e2.getY()
@@ -132,6 +140,7 @@ public class GameActivity extends AppCompatActivity {
                     //Left，向左滑动。
                     operationThread.setAction(3);
                     mHandler.post(operationThread);
+                    mSoundPool.play(soundID,0.2f,0.2f,0,1,1);
                     return true;
                 }
                 if (e2.getX() - e1.getX() > e1.getY() - e2.getY()
@@ -140,6 +149,7 @@ public class GameActivity extends AppCompatActivity {
                     //Right，向右滑动。
                     operationThread.setAction(4);
                     mHandler.post(operationThread);
+                    mSoundPool.play(soundID,0.2f,0.2f,0,1,1);
                     return true;
                 }
 

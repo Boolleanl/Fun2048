@@ -24,7 +24,7 @@ public class MyBaseFragment extends Fragment {
                 if (num[i][j] == 2) {
                     mTextViews[a].setBackgroundColor(Color.parseColor("#FFDEAD"));
                 } else if (num[i][j] == 4) {
-                    mTextViews[a].setBackgroundColor(Color.parseColor("#FFF68F"));
+                    mTextViews[a].setBackgroundColor(Color.parseColor("#7CCD7C"));
                 } else if (num[i][j] == 8) {
                     mTextViews[a].setBackgroundColor(Color.parseColor("#FF8247"));
                 } else if (num[i][j] == 16) {
@@ -40,9 +40,13 @@ public class MyBaseFragment extends Fragment {
                 } else if (num[i][j] == 512) {
                     mTextViews[a].setBackgroundColor(Color.parseColor("#9B30FF"));
                 } else if (num[i][j] == 1024) {
-                    mTextViews[a].setBackgroundColor(Color.parseColor("#0000FF"));
+                    mTextViews[a].setBackgroundColor(Color.parseColor("#6A5ACD"));
                 } else if (num[i][j] == 2048) {
                     mTextViews[a].setBackgroundColor(Color.parseColor("#FF0000"));
+                }else if (num[i][j] == 4096) {
+                    mTextViews[a].setBackgroundColor(Color.parseColor("#006400"));
+                }else if (num[i][j] == 8192) {
+                    mTextViews[a].setBackgroundColor(Color.parseColor("#EEC900"));
                 }
                 //TODO:添加更多颜色
                 mTextViews[a].setText(String.valueOf(num[i][j]));
