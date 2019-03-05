@@ -16,7 +16,7 @@ public class GameFourFragment extends MyBaseFragment {
 
     private static final GameFourFragment M_GAME_FOUR_FRAGMENT = new GameFourFragment();
 
-    private String s;
+    private String s;      //游戏分数显示区域的全局变量
 
     private TextView[] mTextViews;
     private NumberItem mNumberItem;
@@ -24,7 +24,7 @@ public class GameFourFragment extends MyBaseFragment {
     /**
      * 获取实例。
      *
-     * @return 获取GameFragment实例。
+     * @return 获取GameFourFragment实例。
      */
     public static GameFourFragment getInstance() {
         return M_GAME_FOUR_FRAGMENT;

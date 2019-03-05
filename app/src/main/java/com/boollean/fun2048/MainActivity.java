@@ -31,9 +31,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = "MainActivity";
-
-    private User mUser = User.getInstance();
-
+    public static boolean volumeSwitch = true;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
     @BindView(R.id.drawer_layout)
@@ -50,13 +48,16 @@ public class MainActivity extends AppCompatActivity
     Button scoreButton;
     @BindView(R.id.quit_button)
     Button quitButton;
+    private MenuItem volumeOnItem;
+    private MenuItem volumeOffItem;
 
-    private View headerView;
-    private ImageView avatarImageView;
-    private TextView nameTextView;
+    private User mUser = User.getInstance();    //获取用户的单一实例
+    private View headerView;    //侧滑菜单头部
+    private ImageView avatarImageView;      //用以显示用户头像
+    private TextView nameTextView;      //用以显示用户名
 
-    private NumberItem mNumberItem = NumberItem.getInstanceFour();  //获取单例。
     private SharedPreferences mPreferences;
+    private int whichGame;  //游戏模式的全局变量
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,22 +107,33 @@ public class MainActivity extends AppCompatActivity
 
     @OnClick(R.id.new_game_four_button)
     void newGameFour() {
-        Intent intent = GameActivity.newIntent(this,4);
+        whichGame = 4;
+        Intent intent = GameActivity.newIntent(this, whichGame);
         startActivity(intent);
     }
 
     @OnClick(R.id.new_game_five_button)
     void newGameFive() {
-        Intent intent = GameActivity.newIntent(this,5);
+        whichGame = 5;
+        Intent intent = GameActivity.newIntent(this, whichGame);
         startActivity(intent);
     }
 
     @OnClick(R.id.continue_game_button)
     void continueGame() {
+        whichGame = getLastMode();
         int[][] n = getLastNumbers();
-        mNumberItem.setNumbers(n);
-        Intent intent = GameActivity.newIntent(this, n);
+        Intent intent = GameActivity.newIntent(this, whichGame, n);
         startActivity(intent);
+    }
+
+    /**
+     * 获取上次退出时游玩的游戏模式
+     */
+    private int getLastMode() {
+        mPreferences = getApplicationContext().getSharedPreferences("SAVE_DATA", MODE_PRIVATE);
+        int which = mPreferences.getInt("LAST_MODE", 0);
+        return which;
     }
 
     /**
@@ -130,14 +142,14 @@ public class MainActivity extends AppCompatActivity
      * @return 上次最后一步的二维数组。
      */
     private int[][] getLastNumbers() {
-        mPreferences = getApplicationContext().getSharedPreferences("SAVE_LAST_NUMBERS", MODE_PRIVATE);
-        int[][] n = new int[4][4];
+        mPreferences = getApplicationContext().getSharedPreferences("SAVE_DATA", MODE_PRIVATE);
+        int[][] n = new int[whichGame][whichGame];
         try {
             JSONArray jsonArray = new JSONArray(mPreferences.getString("LAST_NUMBERS", ""));
             Log.i(TAG, jsonArray.toString());
             int a = 0;
-            for (int i = 0; i < 4; i++) {
-                for (int j = 0; j < 4; j++) {
+            for (int i = 0; i < whichGame; i++) {
+                for (int j = 0; j < whichGame; j++) {
                     n[i][j] = jsonArray.getInt(a);
                     a++;
                 }
@@ -151,7 +163,9 @@ public class MainActivity extends AppCompatActivity
     @OnClick(R.id.score_button)
     void score() {
         AlertDialog dialog = new AlertDialog.Builder(this)
-                .setMessage("当前最高分:" + String.valueOf(getBestScore()))
+                .setMessage(
+                        "4X4模式最高分:" + String.valueOf(getBestScore(4))
+                                + "\n" + "5X5模式最高分:" + String.valueOf(getBestScore(5)))
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -166,11 +180,16 @@ public class MainActivity extends AppCompatActivity
      *
      * @return 目前所有游戏的最高分数。
      */
-    private int getBestScore() {
-        mPreferences = getApplicationContext().getSharedPreferences("SAVE_BEST_SCORE", MODE_PRIVATE);
+    private int getBestScore(int which) {
+        mPreferences = getApplicationContext().getSharedPreferences("SAVE_DATA", MODE_PRIVATE);
         int s = 0;
         try {
-            s = mPreferences.getInt("BEST_SCORE", 0);
+            if (which == 4) {
+                s = mPreferences.getInt("BEST_SCORE_FOR_FOUR", 0);
+            } else if (which == 5) {
+
+                s = mPreferences.getInt("BEST_SCORE_FOR_FIVE", 0);
+            }
             Log.i(TAG, String.valueOf(s));
         } catch (Exception e) {
             e.printStackTrace();
@@ -210,6 +229,9 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+
+        volumeOnItem = menu.findItem(R.id.action_volume_on);
+        volumeOffItem = menu.findItem(R.id.action_volume_off);
         return true;
     }
 
@@ -221,10 +243,18 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_volume_on) {
+            volumeSwitch = false;
+            volumeOnItem.setVisible(false);
+            volumeOffItem.setVisible(true);
             return true;
         }
-
+        if (id == R.id.action_volume_off) {
+            volumeSwitch = true;
+            volumeOffItem.setVisible(false);
+            volumeOnItem.setVisible(true);
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 

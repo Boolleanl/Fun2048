@@ -7,11 +7,15 @@ public class User {
 
     private static volatile User instance = null;
 
-    private String name;
+    private String name;    //用户名
+    private int gender; //性别
+    private Bitmap avatar;  //头像
 
-    private int gender;
-
-    private Bitmap avatar;
+    public User(String name, int gender, Bitmap avatar) {
+        this.name = name;
+        this.gender = gender;
+        this.avatar = avatar;
+    }
 
     public static User getInstance() {
         synchronized (User.class) {
@@ -22,30 +26,24 @@ public class User {
         return instance;
     }
 
-    public User(String name, int gender, Bitmap avatar) {
-        this.name = name;
-        this.gender = gender;
-        this.avatar = avatar;
-    }
-
     public String getName() {
         return name;
-    }
-
-    public int getGender() {
-        return gender;
-    }
-
-    public Bitmap getAvatar() {
-        return avatar;
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
+    public int getGender() {
+        return gender;
+    }
+
     public void setGender(int gender) {
         this.gender = gender;
+    }
+
+    public Bitmap getAvatar() {
+        return avatar;
     }
 
     public void setAvatar(Bitmap avatar) {

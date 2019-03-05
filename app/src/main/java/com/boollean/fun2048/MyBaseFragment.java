@@ -2,8 +2,13 @@ package com.boollean.fun2048;
 
 import android.graphics.Color;
 import android.widget.TextView;
+
 import androidx.fragment.app.Fragment;
 import butterknife.BindView;
+
+/**
+ * 游戏界面的父类，定义了通用的刷新每个格子颜色和数值数据的方法
+ */
 
 public class MyBaseFragment extends Fragment {
 
@@ -15,7 +20,7 @@ public class MyBaseFragment extends Fragment {
     /**
      * 每次滑动后调用，刷新每个TextView里的数字。
      */
-    public void refreshView(String s,int which,NumberItem item,TextView[] mTextViews) {
+    public void refreshView(String s, int which, NumberItem item, TextView[] mTextViews) {
         scoreView.setText(s);
         int[][] num = item.getNumbers();
         int a = 0;
@@ -43,9 +48,9 @@ public class MyBaseFragment extends Fragment {
                     mTextViews[a].setBackgroundColor(Color.parseColor("#6A5ACD"));
                 } else if (num[i][j] == 2048) {
                     mTextViews[a].setBackgroundColor(Color.parseColor("#FF0000"));
-                }else if (num[i][j] == 4096) {
+                } else if (num[i][j] == 4096) {
                     mTextViews[a].setBackgroundColor(Color.parseColor("#006400"));
-                }else if (num[i][j] == 8192) {
+                } else if (num[i][j] == 8192) {
                     mTextViews[a].setBackgroundColor(Color.parseColor("#EEC900"));
                 }
                 //TODO:添加更多颜色
@@ -60,7 +65,7 @@ public class MyBaseFragment extends Fragment {
         }
     }
 
-    public void refreshView(){
+    public void refreshView() {
 
     }
 }

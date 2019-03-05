@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -12,10 +12,10 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="性别"
-            android:textSize="22sp"
             android:layout_gravity="center"
-            android:layout_marginLeft="20dp" />
+            android:layout_marginLeft="20dp"
+            android:text="性别"
+            android:textSize="22sp" />
 
         <RadioGroup
             android:id="@+id/gender_radio_group"
@@ -27,34 +27,34 @@
                 android:id="@+id/male_radio_button"
                 android:layout_width="80dp"
                 android:layout_height="60dp"
+                android:layout_marginLeft="20dp"
                 android:text="男"
-                android:textSize="20sp"
-                android:layout_marginLeft="20dp" />
+                android:textSize="20sp" />
 
             <RadioButton
                 android:id="@+id/female_radio_button"
                 android:layout_width="80dp"
                 android:layout_height="60dp"
+                android:layout_marginLeft="10dp"
                 android:text="女"
-                android:textSize="20sp"
-                android:layout_marginLeft="10dp" />
+                android:textSize="20sp" />
 
             <RadioButton
                 android:id="@+id/secret_radio_button"
                 android:layout_width="100dp"
                 android:layout_height="60dp"
+                android:layout_marginLeft="10dp"
                 android:checked="true"
                 android:text="保密"
-                android:textSize="20sp"
-                android:layout_marginLeft="10dp" />
+                android:textSize="20sp" />
         </RadioGroup>
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginTop="5dp"
         android:layout_marginLeft="10dp"
+        android:layout_marginTop="5dp"
         android:layout_marginRight="10dp"
         android:background="#999999" />
 
@@ -67,10 +67,10 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="昵称"
-            android:textSize="22sp"
             android:layout_gravity="center"
-            android:layout_marginLeft="20dp" />
+            android:layout_marginLeft="20dp"
+            android:text="昵称"
+            android:textSize="22sp" />
 
         <EditText
             android:id="@+id/user_name_edit_text"
@@ -78,17 +78,17 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
-            android:textSize="20sp"
-            android:singleLine="true"
+            android:ellipsize="end"
             android:maxLength="14"
-            android:ellipsize="end" />
+            android:singleLine="true"
+            android:textSize="20sp" />
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginTop="5dp"
         android:layout_marginLeft="10dp"
+        android:layout_marginTop="5dp"
         android:layout_marginRight="10dp"
         android:background="#999999" />
 
@@ -100,17 +100,17 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="头像"
-            android:textSize="22sp"
             android:layout_gravity="center"
-            android:layout_marginLeft="20dp" />
+            android:layout_marginLeft="20dp"
+            android:text="头像"
+            android:textSize="22sp" />
 
         <ImageView
             android:id="@+id/user_avatar_image_view"
             android:layout_width="160dp"
             android:layout_height="160dp"
-            android:layout_marginLeft="50dp"
             android:layout_gravity="center"
+            android:layout_marginLeft="50dp"
             android:background="#aaaaaa" />
 
 
@@ -120,10 +120,10 @@
         android:id="@+id/user_information_complete_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="完成"
-        android:textSize="24sp"
-        android:layout_marginTop="40dp"
         android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp" />
+        android:layout_marginTop="40dp"
+        android:layout_marginRight="20dp"
+        android:text="完成"
+        android:textSize="24sp" />
 
 </LinearLayout>

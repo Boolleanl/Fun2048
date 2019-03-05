@@ -2,8 +2,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/action_volume_on"
+        android:icon="@drawable/ic_volume_on"
         android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
+        android:title="volume_on"
+        android:visible="true"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_volume_off"
+        android:icon="@drawable/ic_volume_off"
+        android:orderInCategory="100"
+        android:title="volume_off"
+        android:visible="false"
+        app:showAsAction="ifRoom" />
 </menu>

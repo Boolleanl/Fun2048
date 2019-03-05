@@ -5,9 +5,9 @@ public class OperationThread extends Thread {
     private GameFourFragment gameFourFragment = GameFourFragment.getInstance();
     private GameFiveFragment gameFiveFragment = GameFiveFragment.getInstance();
 
-    private int whichGame;
+    private int whichGame;  //游戏模式标志
 
-    private int action = 0;
+    private int action = 0; //滑动方向标志，初始化为0。  上1，下2， 左3， 右4。
 
     public OperationThread(int which) {
         this.whichGame = which;
@@ -19,8 +19,8 @@ public class OperationThread extends Thread {
 
     @Override
     public void run() {
-        switch (whichGame){
-            case 4:{
+        switch (whichGame) {//判断是哪个游戏模式
+            case 4: {
                 switch (action) {
                     case 1:
                         OperationFactory.actionUp(whichGame);   //上滑调用。

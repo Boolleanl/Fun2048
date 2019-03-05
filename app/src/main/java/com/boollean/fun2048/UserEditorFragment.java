@@ -18,8 +18,6 @@ import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import com.google.android.material.snackbar.Snackbar;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 
@@ -38,14 +36,10 @@ public class UserEditorFragment extends Fragment {
 
     private static final int CODE_GALLERY_REQUEST = 0xa1;
     private static final int CODE_RESULT_REQUEST = 0xa2;
-
-    private String mExtStorDir;
-    private Uri mUriPath;
     private static final String CROP_IMAGE_FILE_NAME = "avatar.jpg";
-
     private static int output_X = 160;
     private static int output_Y = 160;
-
+    private static SaveInformationTask mSaveInformationTask;
     @BindView(R.id.gender_radio_group)
     RadioGroup genderRadioGroup;
     @BindView(R.id.user_name_edit_text)
@@ -54,14 +48,12 @@ public class UserEditorFragment extends Fragment {
     ImageView avatarImageView;
     @BindView(R.id.user_information_complete_button)
     Button completeButton;
-
+    private String mExtStorDir;
+    private Uri mUriPath;
     private String name = null;
     private int gender = 0;
     private Bitmap bitmap = null;
-
     private User mUser = User.getInstance();
-
-    private static SaveInformationTask mSaveInformationTask;
 
     public static UserEditorFragment newInstance() {
         return new UserEditorFragment();
@@ -76,6 +68,11 @@ public class UserEditorFragment extends Fragment {
         return view;
     }
 
+    /**
+     * 初始化用户信息设置界面
+     *
+     * @param view
+     */
     private void initView(View view) {
         genderRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -84,17 +81,14 @@ public class UserEditorFragment extends Fragment {
                 switch (radioButtonId) {
                     case R.id.secret_radio_button:
                         gender = 0;
-                        Snackbar.make(view, "0", Snackbar.LENGTH_SHORT).show();
                         break;
 
                     case R.id.male_radio_button:
                         gender = 1;
-                        Snackbar.make(view, "1", Snackbar.LENGTH_SHORT).show();
                         break;
 
                     case R.id.female_radio_button:
                         gender = 2;
-                        Snackbar.make(view, "2", Snackbar.LENGTH_SHORT).show();
                         break;
                 }
             }
@@ -125,6 +119,12 @@ public class UserEditorFragment extends Fragment {
         });
     }
 
+    /**
+     * 判断用户名是否可用
+     *
+     * @param s 需要判断的用户名
+     * @return
+     */
     private boolean isAvailableName(String s) {
         if (s.isEmpty()) {
             userNameEditText.setError("昵称不能为空");
@@ -140,6 +140,7 @@ public class UserEditorFragment extends Fragment {
             userNameEditText.requestFocus();
             return false;
         }
+        //TODO 加入用户名已存在的判断
         return true;
     }
 
@@ -168,6 +169,11 @@ public class UserEditorFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    /**
+     * 选择用户头像
+     *
+     * @param uri
+     */
     private void cropRawPhoto(Uri uri) {
         Intent intent = new Intent("com.android.camera.action.CROP");
         intent.setDataAndType(uri, "image/*");
@@ -195,6 +201,12 @@ public class UserEditorFragment extends Fragment {
         startActivityForResult(intent, CODE_RESULT_REQUEST);
     }
 
+    /**
+     * 更新首页侧滑菜单栏的用户头像
+     *
+     * @param intent
+     * @param bitmap 头像文件
+     */
     private void setImageToHeadView(Intent intent, Bitmap bitmap) {
         try {
             if (intent != null) {
@@ -215,6 +227,9 @@ public class UserEditorFragment extends Fragment {
 //        }
 //    }
 
+    /**
+     * 保存用户信息的线程
+     */
     private static class SaveInformationTask extends AsyncTask<User, Process, Void> {
 
         private User mUser = User.getInstance();

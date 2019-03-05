@@ -1,6 +1,5 @@
 package com.boollean.fun2048;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,8 +8,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class GameFiveFragment extends MyBaseFragment {
@@ -19,7 +16,7 @@ public class GameFiveFragment extends MyBaseFragment {
 
     private static final GameFiveFragment M_GAME_FIVE_FRAGMENT = new GameFiveFragment();
 
-    private String s;
+    private String s;   //游戏分数显示区域的全局变量
 
     private TextView[] mTextViews;
     private NumberItem mNumberItem;
@@ -27,7 +24,7 @@ public class GameFiveFragment extends MyBaseFragment {
     /**
      * 获取实例。
      *
-     * @return 获取GameFragment实例。
+     * @return 获取GameFiveFragment实例。
      */
     public static GameFiveFragment getInstance() {
         return M_GAME_FIVE_FRAGMENT;
