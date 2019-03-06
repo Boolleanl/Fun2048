@@ -21,7 +21,7 @@ public class UserEditorActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_general);
+        setContentView(R.layout.activity_common);
 
         FragmentManager fm = getSupportFragmentManager();
         fm.findFragmentById(R.id.fragment_container);

@@ -25,9 +25,15 @@
         </activity>
         <activity
             android:name=".GameActivity"
+            android:label="游玩游戏"
             android:parentActivityName=".MainActivity"></activity>
         <activity
             android:name=".UserEditorActivity"
+            android:label="用户资料"
+            android:parentActivityName=".MainActivity"></activity>
+        <activity
+            android:name=".MessageActivity"
+            android:label="留言板"
             android:parentActivityName=".MainActivity"></activity>
     </application>
 

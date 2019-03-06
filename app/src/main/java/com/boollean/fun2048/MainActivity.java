@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.navigation.NavigationView;
 
@@ -38,10 +39,8 @@ public class MainActivity extends AppCompatActivity
     DrawerLayout drawer;
     @BindView(R.id.nav_view)
     NavigationView navigationView;
-    @BindView(R.id.new_game_four_button)
-    Button newGamefourButton;
-    @BindView(R.id.new_game_five_button)
-    Button newGamefiveButton;
+    @BindView(R.id.new_game_button)
+    Button newGameButton;
     @BindView(R.id.continue_game_button)
     Button continueButton;
     @BindView(R.id.score_button)
@@ -105,18 +104,31 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @OnClick(R.id.new_game_four_button)
-    void newGameFour() {
-        whichGame = 4;
-        Intent intent = GameActivity.newIntent(this, whichGame);
-        startActivity(intent);
-    }
-
-    @OnClick(R.id.new_game_five_button)
-    void newGameFive() {
-        whichGame = 5;
-        Intent intent = GameActivity.newIntent(this, whichGame);
-        startActivity(intent);
+    @OnClick(R.id.new_game_button)
+    void newGame(){
+        String[] items = new String[]{"4X4","5X5","6X6"};
+        AlertDialog dialog = new AlertDialog.Builder(this).setTitle("选择游戏模式")
+                .setItems(items, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int i) {
+                        switch (i){
+                            case 0:
+                                whichGame = 4;
+                                Intent intent4 = GameActivity.newIntent(MainActivity.this, whichGame);
+                                startActivity(intent4);
+                                break;
+                            case 1:
+                                whichGame = 5;
+                                Intent intent5 = GameActivity.newIntent(MainActivity.this, whichGame);
+                                startActivity(intent5);
+                                break;
+                            case 2:
+                                Toast.makeText(MainActivity.this, "6", Toast.LENGTH_SHORT).show();
+                                break;
+                        }
+                    }
+                }).create();
+        dialog.show();
     }
 
     @OnClick(R.id.continue_game_button)
@@ -267,8 +279,9 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_user) {
             Intent intent = UserEditorActivity.newIntent(this);
             startActivity(intent);
-        } else if (id == R.id.nav_gallery) {
-
+        } else if (id == R.id.nav_message) {
+            Intent intent = MessageActivity.newIntent(this);
+            startActivity(intent);
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {

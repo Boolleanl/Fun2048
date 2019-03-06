@@ -22,21 +22,12 @@
             android:textSize="112sp" />
 
         <Button
-            android:id="@+id/new_game_four_button"
+            android:id="@+id/new_game_button"
             android:layout_width="220dp"
             android:layout_height="48dp"
             android:layout_gravity="center"
             android:layout_marginTop="24dp"
-            android:text="新游戏4X4"
-            android:textSize="20sp" />
-
-        <Button
-            android:id="@+id/new_game_five_button"
-            android:layout_width="220dp"
-            android:layout_height="48dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="20dp"
-            android:text="新游戏5X5"
+            android:text="新游戏(单机)"
             android:textSize="20sp" />
 
         <Button

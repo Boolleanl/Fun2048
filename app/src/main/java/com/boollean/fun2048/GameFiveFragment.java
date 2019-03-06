@@ -14,7 +14,7 @@ public class GameFiveFragment extends MyBaseFragment {
 
     private static final String TAG = "GameFiveFragment";
 
-    private static final GameFiveFragment M_GAME_FIVE_FRAGMENT = new GameFiveFragment();
+    private static final GameFiveFragment mGameFiveFragment = new GameFiveFragment();
 
     private String s;   //游戏分数显示区域的全局变量
 
@@ -27,7 +27,7 @@ public class GameFiveFragment extends MyBaseFragment {
      * @return 获取GameFiveFragment实例。
      */
     public static GameFiveFragment getInstance() {
-        return M_GAME_FIVE_FRAGMENT;
+        return mGameFiveFragment;
     }
 
     @Override

@@ -44,7 +44,6 @@
                 android:layout_width="100dp"
                 android:layout_height="60dp"
                 android:layout_marginLeft="10dp"
-                android:checked="true"
                 android:text="保密"
                 android:textSize="20sp" />
         </RadioGroup>

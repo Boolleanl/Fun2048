@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.media.SoundPool;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 
@@ -74,7 +73,7 @@ public class GameActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_general);
+        setContentView(R.layout.activity_common);
 
         FragmentManager fm = getSupportFragmentManager();
         fm.findFragmentById(R.id.fragment_container);
@@ -162,7 +161,6 @@ public class GameActivity extends AppCompatActivity {
                     return true;
                 }
 
-                Log.d("TAG", e2.getX() + " " + e2.getY());
                 return false;
             }
         });
@@ -210,7 +208,6 @@ public class GameActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = mPreferences.edit();
         editor.putString("LAST_NUMBERS", jsonArray.toString()); //保存进SharedPreferences。
         editor.commit();
-        Log.i(TAG, jsonArray.toString());
     }
 
 //    public void showGameOverDialog() {

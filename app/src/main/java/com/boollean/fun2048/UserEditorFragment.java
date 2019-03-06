@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
@@ -42,6 +43,12 @@ public class UserEditorFragment extends Fragment {
     private static SaveInformationTask mSaveInformationTask;
     @BindView(R.id.gender_radio_group)
     RadioGroup genderRadioGroup;
+    @BindView(R.id.male_radio_button)
+    RadioButton maleRadioButton;
+    @BindView(R.id.female_radio_button)
+    RadioButton femaleRadioButton;
+    @BindView(R.id.secret_radio_button)
+    RadioButton secretRadioButton;
     @BindView(R.id.user_name_edit_text)
     EditText userNameEditText;
     @BindView(R.id.user_avatar_image_view)
@@ -74,6 +81,23 @@ public class UserEditorFragment extends Fragment {
      * @param view
      */
     private void initView(View view) {
+        switch (mUser.getGender()){
+            case 0:
+                secretRadioButton.setChecked(true);
+                maleRadioButton.setChecked(false);
+                femaleRadioButton.setChecked(false);
+                break;
+            case 1:
+                maleRadioButton.setChecked(true);
+                femaleRadioButton.setChecked(false);
+                secretRadioButton.setChecked(false);
+                break;
+            case 2:
+                femaleRadioButton.setChecked(true);
+                maleRadioButton.setChecked(false);
+                secretRadioButton.setChecked(false);
+                break;
+        }
         genderRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -93,6 +117,8 @@ public class UserEditorFragment extends Fragment {
                 }
             }
         });
+
+        userNameEditText.setText(mUser.getName());
 
         if (mUser.getAvatar() != null) {
             avatarImageView.setImageBitmap(mUser.getAvatar());
