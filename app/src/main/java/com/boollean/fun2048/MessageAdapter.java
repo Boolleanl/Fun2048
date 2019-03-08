@@ -1,5 +1,6 @@
 package com.boollean.fun2048;
 
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,9 +14,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHolder> {
 
+    //private ArrayList<Bitmap> mImageList;
+    private ArrayList<String> mNameList;
+    private ArrayList<String> mDateList;
     private ArrayList<String> mMessageList;
 
-    public MessageAdapter(ArrayList<String> messageList) {
+
+    public MessageAdapter(ArrayList<String> nameList,ArrayList<String> dateList,ArrayList<String> messageList) {
+        mNameList = nameList;
+        mDateList = dateList;
         mMessageList = messageList;
     }
 
@@ -28,23 +35,33 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        String s = mMessageList.get(position);
-        holder.textView.setText(s);
+        String name = mNameList.get(position);
+        String date = mDateList.get(position);
+        String message = mMessageList.get(position);
+        holder.nameTextView.setText(name);
+        holder.dateTextView.setText(date);
+        holder.messageTextView.setText(message);
     }
 
     @Override
     public int getItemCount() {
-        return mMessageList.size();
+        return mNameList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
-        TextView textView;
+        TextView nameTextView;
+        TextView dateTextView;
+        TextView messageTextView;
+        View view;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            imageView = itemView.findViewById(R.id.message_image_view);
-            textView = itemView.findViewById(R.id.message_text_view);
+            imageView = itemView.findViewById(R.id.message_box_image_view);
+            nameTextView = itemView.findViewById(R.id.message_box_name_text_view);
+            dateTextView = itemView.findViewById(R.id.message_box_date_text_view);
+            messageTextView = itemView.findViewById(R.id.message_box_message_text_view);
+            view = itemView.findViewById(R.id.message_box_bottom_line);
         }
     }
 }

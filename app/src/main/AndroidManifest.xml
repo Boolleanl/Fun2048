@@ -35,6 +35,10 @@
             android:name=".MessageActivity"
             android:label="留言板"
             android:parentActivityName=".MainActivity"></activity>
+        <activity
+            android:name=".RankActivity"
+            android:label="排行榜"
+            android:parentActivityName=".MainActivity"></activity>
     </application>
 
 </manifest>

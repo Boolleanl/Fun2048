@@ -282,8 +282,9 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_message) {
             Intent intent = MessageActivity.newIntent(this);
             startActivity(intent);
-        } else if (id == R.id.nav_slideshow) {
-
+        } else if (id == R.id.nav_rank) {
+            Intent intent = RankActivity.newIntent(this);
+            startActivity(intent);
         } else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_share) {

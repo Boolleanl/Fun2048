@@ -22,8 +22,8 @@ public class MessageActivity extends AppCompatActivity {
     FloatingActionButton floatingActionButton;
 
     public static Intent newIntent(Context context) {
-        Intent i = new Intent(context, MessageActivity.class);
-        return i;
+        Intent intent = new Intent(context, MessageActivity.class);
+        return intent;
     }
 
     @Override
