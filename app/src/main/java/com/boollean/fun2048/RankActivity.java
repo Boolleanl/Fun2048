@@ -54,7 +54,7 @@ public class RankActivity extends AppCompatActivity {
 
         mMyPagerAdapter = new MyPagerAdapter(getSupportFragmentManager(),mFragments,sTitles);
         mViewPager.setAdapter(mMyPagerAdapter);
-        mViewPager.setCurrentItem(1);
+        mViewPager.setCurrentItem(0);
 
         mTabLayout.setupWithViewPager(mViewPager);
     }
