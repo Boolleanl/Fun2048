@@ -4,8 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -17,7 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class RankFourFragment extends Fragment {
+public class RankFiveFragment extends Fragment {
+
     @BindView(R.id.rank_recycler_view)
     RecyclerView mRecyclerView;
 
@@ -26,8 +25,8 @@ public class RankFourFragment extends Fragment {
     private ArrayList<String> nameList;
     private ArrayList<Integer> scoreList;
 
-    public static RankFourFragment newInstance() {
-        return new RankFourFragment();
+    public static RankFiveFragment newInstance() {
+        return new RankFiveFragment();
     }
 
     @Override
@@ -41,9 +40,9 @@ public class RankFourFragment extends Fragment {
     private void initScore() {
         if(scoreList == null){
             scoreList = new ArrayList<>();
-            Integer s1 = 88888888;
-            Integer s2 = 77777;
-            Integer s3 = 333;
+            Integer s1 = 555555555;
+            Integer s2 = 555555;
+            Integer s3 = 555;
             scoreList.add(s1);
             scoreList.add(s2);
             scoreList.add(s3);
@@ -53,9 +52,9 @@ public class RankFourFragment extends Fragment {
     private void initName() {
         if(nameList == null){
             nameList = new ArrayList<>();
-            String s1 = "用户a";
-            String s2 = "用户b";
-            String s3 = "用户c";
+            String s1 = "用户55a";
+            String s2 = "用户bda3";
+            String s3 = "用户cda5d";
             nameList.add(s1);
             nameList.add(s2);
             nameList.add(s3);

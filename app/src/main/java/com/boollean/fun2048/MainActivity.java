@@ -287,8 +287,9 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
         } else if (id == R.id.nav_manage) {
 
-        } else if (id == R.id.nav_share) {
-
+        } else if (id == R.id.nav_feedback) {
+            Intent intent = FeedBackActivity.newIntent(this);
+            startActivity(intent);
         } else if (id == R.id.nav_send) {
 
         }

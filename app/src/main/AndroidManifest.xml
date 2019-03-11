@@ -39,6 +39,10 @@
             android:name=".RankActivity"
             android:label="排行榜"
             android:parentActivityName=".MainActivity"></activity>
+        <activity
+            android:name=".FeedBackActivity"
+            android:label="用户反馈"
+            android:parentActivityName=".MainActivity"></activity>
     </application>
 
 </manifest>

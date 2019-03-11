@@ -4,17 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ListView
-        android:id="@+id/rank_list_view"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rank_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    </ListView>
+        android:layout_height="match_parent"/>
 
-    <TextView
-        android:id="@+id/rank_more_text_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="查看更多"
-        android:gravity="center"/>
 </LinearLayout>

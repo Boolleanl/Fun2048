@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-class RankAdapter extends BaseAdapter {
+class RankAdapter extends RecyclerView.Adapter<RankAdapter.RankViewHolder> {
 
 //    private ArrayList<Bitmap> ImageList;
     private ArrayList<Integer> mPositionList;
@@ -28,37 +28,46 @@ class RankAdapter extends BaseAdapter {
         mScoreList = scoreList;
     }
 
+    @NonNull
     @Override
-    public int getCount() {
-        return mNameList.size();
+    public RankViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.rank_item,parent,false);
+        return new RankViewHolder(view);
     }
 
     @Override
-    public Object getItem(int position) {
-        return mNameList.get(position);
+    public void onBindViewHolder(@NonNull RankViewHolder holder, int position) {
+        Integer p = mPositionList.get(position);
+        String name = mNameList.get(position);
+        Integer score = mScoreList.get(position);
+        holder.positionTextView.setText(p+"");
+        holder.nameTextView.setText(name);
+        holder.scoreTextView.setText(score+"");
     }
 
     @Override
     public long getItemId(int position) {
-        return position;
+        return mPositionList.get(position);
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.rank_item,parent,false);
-        TextView positionTextView = view.findViewById(R.id.rank_position_text_view);
-//        ImageView imageView = view.findViewById(R.id.rank_image_view);
-        TextView nameTextView = view.findViewById(R.id.rank_name_text_view);
-        TextView scoreTextView = view.findViewById(R.id.rank_score_text_view);
+    public int getItemCount() {
+        return mPositionList.size();
+    }
 
-        Integer p = mPositionList.get(position);
-        String name = mNameList.get(position);
-        Integer score = mScoreList.get(position);
 
-        positionTextView.setText(p.toString());
-        nameTextView.setText(name);
-        scoreTextView.setText(score.toString());
+    public class RankViewHolder extends RecyclerView.ViewHolder {
+        TextView positionTextView;
+        //        ImageView imageView;
+        TextView nameTextView;
+        TextView scoreTextView;
 
-        return view;
+        public RankViewHolder(@NonNull View itemView) {
+            super(itemView);
+            positionTextView = itemView.findViewById(R.id.rank_position_text_view);
+//          imageView = view.findViewById(R.id.rank_image_view);
+            nameTextView = itemView.findViewById(R.id.rank_name_text_view);
+            scoreTextView = itemView.findViewById(R.id.rank_score_text_view);
+        }
     }
 }

@@ -19,7 +19,7 @@ public class RankActivity extends AppCompatActivity {
     private static final List<String> sTitles = new ArrayList<String>();
     private List<Fragment> mFragments = new ArrayList<Fragment>();
     private RankFourFragment mRankFourFragment;
-    private RankFourFragment mRankFourFragment1;
+    private RankFiveFragment mRankFiveFragment;
     private RankFourFragment mRankFourFragment2;
 
     private TabLayout mTabLayout;
@@ -38,11 +38,11 @@ public class RankActivity extends AppCompatActivity {
         setContentView(R.layout.activity_rank);
 
         mRankFourFragment = new RankFourFragment();
-        mRankFourFragment1 = new RankFourFragment();
+        mRankFiveFragment = new RankFiveFragment();
         mRankFourFragment2 = new RankFourFragment();
 
         mFragments.add(0,mRankFourFragment);
-        mFragments.add(1,mRankFourFragment1);
+        mFragments.add(1,mRankFiveFragment);
         mFragments.add(2,mRankFourFragment2);
 
         sTitles.add("4X4");
