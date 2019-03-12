@@ -4,15 +4,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".RankActivity">
+    tools:context=".Rank.RankActivity">
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/rank_tab_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-    
+        android:layout_height="wrap_content" />
+
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/rank_view_pager"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content" />
 </LinearLayout>

@@ -6,15 +6,15 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_user"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/ic_user_edit"
             android:title="编辑资料" />
         <item
             android:id="@+id/nav_message"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/ic_menu_message"
             android:title="玩家留言板" />
         <item
             android:id="@+id/nav_rank"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@drawable/ic_menu_rank"
             android:title="排行榜" />
         <item
             android:id="@+id/nav_manage"
@@ -26,7 +26,7 @@
         <menu>
             <item
                 android:id="@+id/nav_feedback"
-                android:icon="@drawable/ic_menu_share"
+                android:icon="@drawable/ic_menu_feedback"
                 android:title="用户反馈" />
             <item
                 android:id="@+id/nav_send"

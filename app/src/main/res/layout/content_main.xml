@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".MainActivity"
+    tools:context=".Main.MainActivity"
     tools:showIn="@layout/app_bar_main">
 
     <LinearLayout
@@ -27,6 +27,7 @@
             android:layout_height="48dp"
             android:layout_gravity="center"
             android:layout_marginTop="24dp"
+            android:background="@drawable/shape"
             android:text="新游戏(单机)"
             android:textSize="20sp" />
 
@@ -36,6 +37,7 @@
             android:layout_height="48dp"
             android:layout_gravity="center"
             android:layout_marginTop="20dp"
+            android:background="@drawable/shape"
             android:text="继续游戏"
             android:textSize="20sp" />
 
@@ -45,6 +47,7 @@
             android:layout_height="48dp"
             android:layout_gravity="center"
             android:layout_marginTop="20dp"
+            android:background="@drawable/shape"
             android:text="最高分"
             android:textSize="20sp" />
 
@@ -54,6 +57,7 @@
             android:layout_height="48dp"
             android:layout_gravity="center"
             android:layout_marginTop="20dp"
+            android:background="@drawable/shape"
             android:text="退出"
             android:textSize="20sp" />
 

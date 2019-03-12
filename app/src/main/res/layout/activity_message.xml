@@ -4,15 +4,14 @@
     android:id="@+id/fragment_message_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MessageActivity">
+    tools:context=".Message.MessageActivity">
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/message_floating_action_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="right|bottom"
         android:layout_marginRight="20dp"
         android:layout_marginBottom="20dp"
-        android:layout_gravity="right|bottom"
-        android:src="@drawable/ic_message_create"
-        />
+        android:src="@drawable/ic_message_create" />
 </FrameLayout>
