@@ -2,6 +2,7 @@ package com.boollean.fun2048.User;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -30,8 +31,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 import static android.app.Activity.RESULT_CANCELED;
+import static android.content.Context.MODE_PRIVATE;
 
 /**
  * 用户信息界面的Fragment。
@@ -57,16 +60,19 @@ public class UserEditorFragment extends Fragment {
     RadioButton secretRadioButton;
     @BindView(R.id.user_name_edit_text)
     EditText userNameEditText;
+    @BindView(R.id.user_password_edit_text)
+    EditText userPasswordEditText;
     @BindView(R.id.user_avatar_image_view)
     ImageView avatarImageView;
     @BindView(R.id.user_information_complete_button)
     Button completeButton;
-    private String mExtStorDir;
     private Uri mUriPath;
     private String name = null;
+    private String password = null;
     private int gender = 0;
     private Bitmap bitmap = null;
     private User mUser = User.getInstance();
+    private SharedPreferences mPreferences;
 
     public static UserEditorFragment newInstance() {
         return new UserEditorFragment();
@@ -77,6 +83,7 @@ public class UserEditorFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_user_editor, container, false);
         ButterKnife.bind(this, view);
+        initUser();
         initView(view);
         return view;
     }
@@ -126,29 +133,34 @@ public class UserEditorFragment extends Fragment {
 
         userNameEditText.setText(mUser.getName());
 
+        if (mUser.getPassword() != null) {
+            userPasswordEditText.setText(mUser.getPassword());
+        }
+
         if (mUser.getAvatar() != null) {
             avatarImageView.setImageBitmap(mUser.getAvatar());
         }
         avatarImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mExtStorDir = Environment.getExternalStorageDirectory().toString();
                 Intent intentFromGallery = new Intent(Intent.ACTION_PICK, null);
                 intentFromGallery.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
                 startActivityForResult(intentFromGallery, CODE_GALLERY_REQUEST);
             }
         });
+    }
 
-        completeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                name = userNameEditText.getText().toString().trim();
-                if (isAvailableName(name)) {
-                    mSaveInformationTask = new SaveInformationTask(name, gender, bitmap, getActivity());
-                    mSaveInformationTask.execute();
-                }
-            }
-        });
+    @OnClick(R.id.user_information_complete_button)
+    void Complete() {
+        name = userNameEditText.getText().toString().trim();
+        if (userPasswordEditText.getVisibility() == View.VISIBLE) {
+            password = userPasswordEditText.getText().toString().trim();
+        }
+        if (isAvailableName(name) && isAvailablePassword(password)) {
+            mSaveInformationTask = new SaveInformationTask(name, password, gender, bitmap, mUriPath, mPreferences, getActivity());
+            mSaveInformationTask.execute();
+            getActivity().finish();
+        }
     }
 
     /**
@@ -176,6 +188,31 @@ public class UserEditorFragment extends Fragment {
         return true;
     }
 
+    /**
+     * 判断密码是否可用
+     *
+     * @param s 需要判断的密码
+     * @return
+     */
+    private boolean isAvailablePassword(String s) {
+        if (s.isEmpty()) {
+            userPasswordEditText.setError("密码不能为空");
+            userPasswordEditText.setFocusable(true);
+            userPasswordEditText.setFocusableInTouchMode(true);
+            userPasswordEditText.requestFocus();
+            return false;
+        }
+        if (s.length() > 14) {
+            userPasswordEditText.setError("密码不能大于14个字");
+            userPasswordEditText.setFocusable(true);
+            userPasswordEditText.setFocusableInTouchMode(true);
+            userPasswordEditText.requestFocus();
+            return false;
+        }
+        //TODO 加入密码已存在的判断
+        return true;
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_CANCELED) {
@@ -185,7 +222,8 @@ public class UserEditorFragment extends Fragment {
 
         switch (requestCode) {
             case CODE_GALLERY_REQUEST: {
-                cropRawPhoto(data.getData());
+                Intent intent = cropRawPhoto(data.getData());
+                startActivityForResult(intent, CODE_RESULT_REQUEST);
                 break;
             }
             case CODE_RESULT_REQUEST: {
@@ -205,8 +243,9 @@ public class UserEditorFragment extends Fragment {
      * 选择用户头像
      *
      * @param uri
+     * @return intent
      */
-    private void cropRawPhoto(Uri uri) {
+    public Intent cropRawPhoto(Uri uri) {
         Intent intent = new Intent("com.android.camera.action.CROP");
         intent.setDataAndType(uri, "image/*");
 
@@ -222,15 +261,17 @@ public class UserEditorFragment extends Fragment {
         intent.putExtra("outputY", output_Y);
         intent.putExtra("return-data", true);
 
-        String mLinshi = System.currentTimeMillis() + CROP_IMAGE_FILE_NAME;
-        File mFile = new File(mExtStorDir, mLinshi);
+        String s = System.currentTimeMillis() + CROP_IMAGE_FILE_NAME;
+        String mExtStorDir = Environment.getExternalStorageDirectory().toString();
+        File mFile = new File(mExtStorDir, s);
+
         mUriPath = Uri.parse("file://" + mFile.getAbsolutePath());
 
         //将裁剪好的图输出到所建文件中
         intent.putExtra(MediaStore.EXTRA_OUTPUT, mUriPath);
         intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
         intent.putExtra("return-data", false);
-        startActivityForResult(intent, CODE_RESULT_REQUEST);
+        return intent;
     }
 
     /**
@@ -245,6 +286,21 @@ public class UserEditorFragment extends Fragment {
                 avatarImageView.setImageBitmap(bitmap);
             }
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void initUser() {
+        mPreferences = getActivity().getApplicationContext().getSharedPreferences("SAVE_DATA", MODE_PRIVATE);
+        mUser.setName(mPreferences.getString("USER_NAME", null));
+        mUser.setPassword(mPreferences.getString("USER_PASSWORD", null));
+        mUser.setGender(mPreferences.getInt("USER_GENDER", 0));
+        Uri uri = Uri.parse(mPreferences.getString("USER_BITMAP_PATH", ""));
+        mUser.setBitmapPath(uri);
+        try {
+            Bitmap bitmap = BitmapFactory.decodeStream(getContext().getContentResolver().openInputStream(uri));
+            mUser.setAvatar(bitmap);
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
     }
@@ -266,29 +322,50 @@ public class UserEditorFragment extends Fragment {
 
         private User mUser = User.getInstance();
         private String mName;
+        private String mPassword;
         private int mGender;
         private Bitmap mAvatar;
+        private Uri mBitmapPath;
         private Context context;
+        private SharedPreferences mPreferences;
 
-        public SaveInformationTask(String name, int gender, Bitmap bitmap, FragmentActivity activity) {
+        public SaveInformationTask(String name, String password, int gender, Bitmap bitmap, Uri bitmapPath, SharedPreferences preferences, FragmentActivity activity) {
             mName = name;
+            mPassword = password;
             mGender = gender;
             mAvatar = bitmap;
+            mBitmapPath = bitmapPath;
+            mPreferences = preferences;
             context = activity;
         }
 
         @Override
         protected Void doInBackground(User... users) {
             mUser.setName(mName);
+            mUser.setPassword(mPassword);
             mUser.setGender(mGender);
             mUser.setAvatar(mAvatar);
+            mUser.setBitmapPath(mBitmapPath);
+
+            saveLastMode();
             //TODO 网络数据传输
             return null;
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            Toast.makeText(context, mUser.getName(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "保存成功", Toast.LENGTH_SHORT).show();
+        }
+
+        private void saveLastMode() {
+            SharedPreferences.Editor editor = mPreferences.edit();
+            editor.putString("USER_NAME", mUser.getName()); //保存进SharedPreferences。
+            editor.putString("USER_PASSWORD", mUser.getPassword());
+            editor.putInt("USER_GENDER", mUser.getGender());
+            if (mUser.getBitmapPath() != null && mUser.getAvatar() != null) {
+                editor.putString("USER_BITMAP_PATH", mUser.getBitmapPath().toString());
+            }
+            editor.commit();
         }
     }
 }

@@ -28,7 +28,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="24dp"
             android:background="@drawable/shape"
-            android:text="新游戏(单机)"
+            android:text="@string/new_game"
             android:textSize="20sp" />
 
         <Button
@@ -38,7 +38,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="20dp"
             android:background="@drawable/shape"
-            android:text="继续游戏"
+            android:text="@string/continue_game"
             android:textSize="20sp" />
 
         <Button
@@ -48,7 +48,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="20dp"
             android:background="@drawable/shape"
-            android:text="最高分"
+            android:text="@string/best_score"
             android:textSize="20sp" />
 
         <Button
@@ -58,7 +58,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="20dp"
             android:background="@drawable/shape"
-            android:text="退出"
+            android:text="@string/quit"
             android:textSize="20sp" />
 
         <TextView
@@ -67,7 +67,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="24dp"
-            android:text="by: Boollean" />
+            android:text="@string/author" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

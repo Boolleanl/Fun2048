@@ -14,61 +14,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginLeft="20dp"
-            android:text="性别"
-            android:textSize="22sp" />
-
-        <RadioGroup
-            android:id="@+id/gender_radio_group"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <RadioButton
-                android:id="@+id/male_radio_button"
-                android:layout_width="80dp"
-                android:layout_height="60dp"
-                android:layout_marginLeft="20dp"
-                android:text="男"
-                android:textSize="20sp" />
-
-            <RadioButton
-                android:id="@+id/female_radio_button"
-                android:layout_width="80dp"
-                android:layout_height="60dp"
-                android:layout_marginLeft="10dp"
-                android:text="女"
-                android:textSize="20sp" />
-
-            <RadioButton
-                android:id="@+id/secret_radio_button"
-                android:layout_width="100dp"
-                android:layout_height="60dp"
-                android:layout_marginLeft="10dp"
-                android:text="保密"
-                android:textSize="20sp" />
-        </RadioGroup>
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginRight="10dp"
-        android:background="#999999" />
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginLeft="20dp"
-            android:text="昵称"
+            android:text="@string/user_name"
             android:textSize="22sp" />
 
         <EditText
@@ -86,7 +32,43 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="80dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="10dp"
+        android:background="#999999" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="20dp"
+            android:text="@string/password"
+            android:textSize="22sp" />
+
+        <EditText
+            android:id="@+id/user_password_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:ellipsize="end"
+            android:inputType="textPassword"
+            android:maxLength="14"
+            android:singleLine="true"
+            android:textSize="20sp" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="80dp"
         android:layout_marginTop="5dp"
         android:layout_marginRight="10dp"
         android:background="#999999" />
@@ -101,13 +83,66 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginLeft="20dp"
-            android:text="头像"
+            android:text="@string/gender"
+            android:textSize="22sp" />
+
+        <RadioGroup
+            android:id="@+id/gender_radio_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/male_radio_button"
+                android:layout_width="80dp"
+                android:layout_height="60dp"
+                android:layout_marginLeft="20dp"
+                android:text="@string/male"
+                android:textSize="20sp" />
+
+            <RadioButton
+                android:id="@+id/female_radio_button"
+                android:layout_width="80dp"
+                android:layout_height="60dp"
+                android:layout_marginLeft="10dp"
+                android:text="@string/female"
+                android:textSize="20sp" />
+
+            <RadioButton
+                android:id="@+id/secret_radio_button"
+                android:layout_width="100dp"
+                android:layout_height="60dp"
+                android:layout_marginLeft="10dp"
+                android:text="@string/secret"
+                android:textSize="20sp" />
+        </RadioGroup>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="80dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="10dp"
+        android:background="#999999" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="20dp"
+            android:text="@string/avatar"
             android:textSize="22sp" />
 
         <ImageView
             android:id="@+id/user_avatar_image_view"
-            android:layout_width="160dp"
-            android:layout_height="160dp"
+            android:layout_width="140dp"
+            android:layout_height="140dp"
             android:layout_gravity="center"
             android:layout_marginLeft="50dp"
             android:background="#aaaaaa" />
@@ -124,7 +159,7 @@
         android:layout_marginTop="40dp"
         android:layout_marginRight="20dp"
         android:background="@drawable/shape"
-        android:text="完成"
+        android:text="@string/complete"
         android:textSize="24sp" />
 
 </LinearLayout>

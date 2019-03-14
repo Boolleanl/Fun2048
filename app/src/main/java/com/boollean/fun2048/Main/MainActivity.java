@@ -3,6 +3,9 @@ package com.boollean.fun2048.Main;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -17,12 +20,15 @@ import com.boollean.fun2048.Game.GameActivity;
 import com.boollean.fun2048.Message.MessageActivity;
 import com.boollean.fun2048.R;
 import com.boollean.fun2048.Rank.RankActivity;
+import com.boollean.fun2048.User.MyPhotoFactory;
 import com.boollean.fun2048.User.User;
 import com.boollean.fun2048.User.UserEditorActivity;
 import com.google.android.material.navigation.NavigationView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+
+import java.io.FileNotFoundException;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
@@ -62,6 +68,7 @@ public class MainActivity extends AppCompatActivity
 
     private User mUser = User.getInstance();    //获取用户的单一实例
     private View headerView;    //侧滑菜单头部
+    private Button signInButton;
     private ImageView avatarImageView;      //用以显示用户头像
     private TextView nameTextView;      //用以显示用户名
 
@@ -74,6 +81,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         ButterKnife.bind(this);
+        initUser();
         initView();
     }
 
@@ -87,15 +95,34 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         headerView = navigationView.getHeaderView(0);
+        signInButton = headerView.findViewById(R.id.sign_in_button);
         avatarImageView = headerView.findViewById(R.id.round_avatar_image_view);
-        if (mUser.getAvatar() != null) {
-            avatarImageView.setImageBitmap(mUser.getAvatar());
-        } else if (mUser.getAvatar() == null) {
-            avatarImageView.setImageResource(R.mipmap.ic_launcher_round);
-        }
-
         nameTextView = headerView.findViewById(R.id.name_text_view);
+
+        signInButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = UserEditorActivity.newIntent(getApplicationContext());
+                startActivity(intent);
+            }
+        });
+
+
+        if (mUser.getAvatar() == null && mUser.getName() == null) {
+            avatarImageView.setVisibility(View.GONE);
+            nameTextView.setVisibility(View.GONE);
+            signInButton.setVisibility(View.VISIBLE);
+        }
+        if (mUser.getAvatar() != null) {
+            signInButton.setVisibility(View.GONE);
+            nameTextView.setVisibility(View.VISIBLE);
+            avatarImageView.setVisibility(View.VISIBLE);
+            avatarImageView.setImageBitmap(MyPhotoFactory.toRoundBitmap(mUser.getAvatar()));
+        }
         if (mUser.getName() != null) {
+            signInButton.setVisibility(View.GONE);
+            avatarImageView.setVisibility(View.VISIBLE);
+            nameTextView.setVisibility(View.VISIBLE);
             nameTextView.setText(mUser.getName());
         }
     }
@@ -103,13 +130,19 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onStart() {
         super.onStart();
-        if (mUser.getAvatar() != null) {
-            avatarImageView.setImageBitmap(mUser.getAvatar());
-        } else if (mUser.getAvatar() == null) {
-            avatarImageView.setImageResource(R.mipmap.ic_launcher_round);
+        if (mUser.getAvatar() == null && mUser.getName() == null) {
+            avatarImageView.setVisibility(View.GONE);
+            nameTextView.setVisibility(View.GONE);
+            signInButton.setVisibility(View.VISIBLE);
         }
-
+        if (mUser.getAvatar() != null) {
+            signInButton.setVisibility(View.GONE);
+            avatarImageView.setVisibility(View.VISIBLE);
+            avatarImageView.setImageBitmap(MyPhotoFactory.toRoundBitmap(mUser.getAvatar()));
+        }
         if (mUser.getName() != null) {
+            signInButton.setVisibility(View.GONE);
+            nameTextView.setVisibility(View.VISIBLE);
             nameTextView.setText(mUser.getName());
         }
     }
@@ -182,6 +215,22 @@ public class MainActivity extends AppCompatActivity
             e.printStackTrace();
         }
         return n;
+    }
+
+    private void initUser() {
+        mPreferences = getApplicationContext().getSharedPreferences("SAVE_DATA", MODE_PRIVATE);
+        mUser.setName(mPreferences.getString("USER_NAME", null));
+        mUser.setPassword(mPreferences.getString("USER_PASSWORD", null));
+        mUser.setGender(mPreferences.getInt("USER_GENDER", 0));
+        Uri uri = Uri.parse(mPreferences.getString("USER_BITMAP_PATH", ""));
+        mUser.setBitmapPath(uri);
+        try {
+            Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(uri));
+            mUser.setAvatar(bitmap);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        Log.i(TAG, mUser.getName() + mUser.getPassword());
     }
 
     @OnClick(R.id.score_button)

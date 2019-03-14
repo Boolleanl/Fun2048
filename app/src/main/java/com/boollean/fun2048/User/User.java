@@ -1,6 +1,7 @@
 package com.boollean.fun2048.User;
 
 import android.graphics.Bitmap;
+import android.net.Uri;
 
 /**
  * 用户类。
@@ -11,46 +12,69 @@ public class User {
 
     private static volatile User instance = null;
 
-    private String name;    //用户名
-    private int gender; //性别
-    private Bitmap avatar;  //头像
+    private String mName;    //用户名
+    private String mPassword;    //密码
+    private int mGender; //性别
+    private Bitmap mAvatar;  //头像
+    private Uri mBitmapPath;    //头像的定位符
 
-    public User(String name, int gender, Bitmap avatar) {
-        this.name = name;
-        this.gender = gender;
-        this.avatar = avatar;
+    public User(String name, String password, int gender, Bitmap avatar) {
+        mName = name;
+        mPassword = password;
+        mGender = gender;
+        mAvatar = avatar;
     }
 
     public static User getInstance() {
         synchronized (User.class) {
             if (instance == null) {
-                instance = new User(null, 0, null);
+                instance = new User(null, null, 0, null);
             }
         }
         return instance;
     }
 
+    public static void setInstance(User instance) {
+        User.instance = instance;
+    }
+
     public String getName() {
-        return name;
+        return mName;
     }
 
     public void setName(String name) {
-        this.name = name;
+        mName = name;
+    }
+
+    public String getPassword() {
+        return mPassword;
+    }
+
+    public void setPassword(String password) {
+        mPassword = password;
     }
 
     public int getGender() {
-        return gender;
+        return mGender;
     }
 
     public void setGender(int gender) {
-        this.gender = gender;
+        this.mGender = gender;
     }
 
     public Bitmap getAvatar() {
-        return avatar;
+        return mAvatar;
     }
 
     public void setAvatar(Bitmap avatar) {
-        this.avatar = avatar;
+        mAvatar = avatar;
+    }
+
+    public Uri getBitmapPath() {
+        return mBitmapPath;
+    }
+
+    public void setBitmapPath(Uri bitmapPath) {
+        mBitmapPath = bitmapPath;
     }
 }

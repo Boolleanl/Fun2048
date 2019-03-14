@@ -1,9 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Fun2048</string>
+    <string name="_2048">2048</string>
+
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_user_name">神秘人</string>
     <string name="nav_header_desc">Navigation header</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_settings">设置</string>
+    <string name="score">分数</string>
+    <string name="best_score">最高分</string>
+    <string name="new_game">新游戏</string>
+    <string name="continue_game">继续游戏</string>
+
+    <string name="user_name">用户名</string>
+    <string name="password">密码</string>
+
+    <string name="gender">性别</string>
+
+    <string name="male">男</string>
+    <string name="female">女</string>
+    <string name="secret">保密</string>
+    <string name="avatar">头像</string>
+    <string name="login">登录</string>
+    <string name="submit">提交</string>
+    <string name="complete">完成</string>
+    <string name="edit_data">编辑资料</string>
+    <string name="message_box">玩家留言板</string>
+    <string name="rank">排行榜</string>
+    <string name="user_feedback">用户反馈</string>
+    <string name="volume_on">volume on</string>
+    <string name="volume_off">volume off</string>
+
+    <string name="input_suggestion">请输入你的建议或意见(200字以内)。</string>
+    <string name="quit">退出</string>
+    <string name="author">By: Boollean</string>
+
 </resources>

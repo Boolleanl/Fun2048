@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:gravity="left"
-        android:hint="请输入你的建议或意见(200字以内)。"
+        android:hint="@string/input_suggestion"
         android:lines="6" />
 
     <Button
@@ -19,5 +19,5 @@
         android:layout_gravity="center"
         android:layout_marginTop="10dp"
         android:background="@drawable/shape"
-        android:text="提交" />
+        android:text="@string/submit" />
 </LinearLayout>

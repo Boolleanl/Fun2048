@@ -5,14 +5,14 @@
         android:id="@+id/action_volume_on"
         android:icon="@drawable/ic_volume_on"
         android:orderInCategory="100"
-        android:title="volume_on"
+        android:title="@string/volume_on"
         android:visible="true"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_volume_off"
         android:icon="@drawable/ic_volume_off"
         android:orderInCategory="100"
-        android:title="volume_off"
+        android:title="@string/volume_off"
         android:visible="false"
         app:showAsAction="ifRoom" />
 </menu>
