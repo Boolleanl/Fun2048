@@ -30,6 +30,7 @@ public class MessageFragment extends Fragment {
     private ArrayList<String> nameList = new ArrayList<>();
     private ArrayList<String> dateList = new ArrayList<>();
     private ArrayList<String> messageList = new ArrayList<>();
+    private ArrayList<Integer> genderList = new ArrayList<>();
 
     public static MessageFragment newInstance() {
         return new MessageFragment();
@@ -41,6 +42,7 @@ public class MessageFragment extends Fragment {
         initName();
         initDate();
         initMessage();
+        initGender();
     }
 
 
@@ -80,6 +82,32 @@ public class MessageFragment extends Fragment {
         nameList.add(s12);
     }
 
+    private void initGender() {
+        int g1 = 0;
+        int g2 = 1;
+        int g3 = 2;
+        int g4 = 0;
+        int g5 = 1;
+        int g6 = 1;
+        int g7 = 2;
+        int g8 = 1;
+        int g9 = 2;
+        int g10 = 0;
+        int g11 = 0;
+        int g12 = 1;
+        genderList.add(g1);
+        genderList.add(g2);
+        genderList.add(g3);
+        genderList.add(g4);
+        genderList.add(g5);
+        genderList.add(g6);
+        genderList.add(g7);
+        genderList.add(g8);
+        genderList.add(g9);
+        genderList.add(g10);
+        genderList.add(g11);
+        genderList.add(g12);
+    }
 
     private void initDate() {
         String s1 = "1/01";
@@ -138,7 +166,7 @@ public class MessageFragment extends Fragment {
     private void initView() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);
-        adapter = new MessageAdapter(nameList, dateList, messageList);
+        adapter = new MessageAdapter(nameList, dateList, messageList, genderList);
         recyclerView.setAdapter(adapter);
     }
 }

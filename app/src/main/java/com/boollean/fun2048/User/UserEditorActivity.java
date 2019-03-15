@@ -2,7 +2,6 @@ package com.boollean.fun2048.User;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.boollean.fun2048.R;
@@ -19,9 +18,6 @@ public class UserEditorActivity extends AppCompatActivity {
 
     private static final String TAG = "UserEditorActivity";
     private UserEditorFragment mUserEditorFragment;
-
-    private User mUser = User.getInstance();
-    private SharedPreferences mPreferences;
 
     public static Intent newIntent(Context context) {
         Intent i = new Intent(context, UserEditorActivity.class);

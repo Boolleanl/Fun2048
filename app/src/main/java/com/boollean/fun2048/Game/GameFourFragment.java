@@ -22,8 +22,6 @@ public class GameFourFragment extends MyBaseFragment {
 
     private static final GameFourFragment mGameFourFragment = new GameFourFragment();
 
-    private String s;      //游戏分数显示区域的全局变量
-
     private TextView[] mTextViews;
     private NumberItem mNumberItem;
 
@@ -84,7 +82,8 @@ public class GameFourFragment extends MyBaseFragment {
 
     @Override
     public void refreshView() {
-        s = String.valueOf(mNumberItem.getScore());
-        super.refreshView(s, 4, mNumberItem, mTextViews);
+        String score = String.valueOf(mNumberItem.getScore());
+        String bestScore = String.valueOf(mNumberItem.getBestScore());
+        super.refreshView(score, bestScore, 4, mNumberItem, mTextViews);
     }
 }

@@ -13,8 +13,9 @@ public class OperationFactory {
     /**
      * 新游戏4X4，初始化各个参数
      */
-    public static void newGameFour() {
+    public static void newGameFour(int bestScore) {
         mNumberItem = NumberItem.getInstanceFour();
+        mNumberItem.setBestScore(bestScore);
         numbers = createNumbers(4);
         mNumberItem.setNumbers(numbers);
         nowScore(mNumberItem.getNumbers(), 4);
@@ -23,8 +24,9 @@ public class OperationFactory {
     /**
      * 新游戏5X5，初始化各个参数
      */
-    public static void newGameFive() {
+    public static void newGameFive(int bestScore) {
         mNumberItem = NumberItem.getInstanceFive();
+        mNumberItem.setBestScore(bestScore);
         numbers = createNumbers(5);
         mNumberItem.setNumbers(numbers);
         nowScore(mNumberItem.getNumbers(), 5);
@@ -33,8 +35,9 @@ public class OperationFactory {
     /**
      * 新游戏6X6，初始化各个参数
      */
-    public static void newGameSix() {
+    public static void newGameSix(int bestScore) {
         mNumberItem = NumberItem.getInstanceSix();
+        mNumberItem.setBestScore(bestScore);
         numbers = createNumbers(6);
         mNumberItem.setNumbers(numbers);
         nowScore(mNumberItem.getNumbers(), 6);
@@ -105,7 +108,7 @@ public class OperationFactory {
         if (which == 5) {
             i = (int) (Math.random() * which * 4);
         } else if (which == 6) {
-            i = (int) (Math.random() * which * 5);
+            i = (int) (Math.random() * which * 4);
         }
         int number = 0;
         if (i == which - 2) {

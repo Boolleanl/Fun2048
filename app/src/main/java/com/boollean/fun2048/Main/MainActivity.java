@@ -71,9 +71,11 @@ public class MainActivity extends AppCompatActivity
     private Button signInButton;
     private ImageView avatarImageView;      //用以显示用户头像
     private TextView nameTextView;      //用以显示用户名
+    private ImageView genderView;
 
     private SharedPreferences mPreferences;
     private int whichGame;  //游戏模式的全局变量
+    private int bestScore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +100,7 @@ public class MainActivity extends AppCompatActivity
         signInButton = headerView.findViewById(R.id.sign_in_button);
         avatarImageView = headerView.findViewById(R.id.round_avatar_image_view);
         nameTextView = headerView.findViewById(R.id.name_text_view);
+        genderView = headerView.findViewById(R.id.main_gender_image_view);
 
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,7 +109,6 @@ public class MainActivity extends AppCompatActivity
                 startActivity(intent);
             }
         });
-
 
         if (mUser.getAvatar() == null && mUser.getName() == null) {
             avatarImageView.setVisibility(View.GONE);
@@ -124,6 +126,13 @@ public class MainActivity extends AppCompatActivity
             avatarImageView.setVisibility(View.VISIBLE);
             nameTextView.setVisibility(View.VISIBLE);
             nameTextView.setText(mUser.getName());
+        }
+        if (mUser.getGender() == 1) {
+            genderView.setImageResource(R.mipmap.ic_male);
+        } else if (mUser.getGender() == 2) {
+            genderView.setImageResource(R.mipmap.ic_female);
+        } else {
+            genderView.setImageResource(0);
         }
     }
 
@@ -145,6 +154,13 @@ public class MainActivity extends AppCompatActivity
             nameTextView.setVisibility(View.VISIBLE);
             nameTextView.setText(mUser.getName());
         }
+        if (mUser.getGender() == 1) {
+            genderView.setImageResource(R.mipmap.ic_male);
+        } else if (mUser.getGender() == 2) {
+            genderView.setImageResource(R.mipmap.ic_female);
+        } else {
+            genderView.setImageResource(0);
+        }
     }
 
     @OnClick(R.id.new_game_button)
@@ -157,17 +173,20 @@ public class MainActivity extends AppCompatActivity
                         switch (i) {
                             case 0:
                                 whichGame = 4;
-                                Intent intent4 = GameActivity.newIntent(MainActivity.this, whichGame);
+                                bestScore = getBestScore(whichGame);
+                                Intent intent4 = GameActivity.newIntent(MainActivity.this, whichGame, bestScore);
                                 startActivity(intent4);
                                 break;
                             case 1:
                                 whichGame = 5;
-                                Intent intent5 = GameActivity.newIntent(MainActivity.this, whichGame);
+                                bestScore = getBestScore(whichGame);
+                                Intent intent5 = GameActivity.newIntent(MainActivity.this, whichGame, bestScore);
                                 startActivity(intent5);
                                 break;
                             case 2:
                                 whichGame = 6;
-                                Intent intent6 = GameActivity.newIntent(MainActivity.this, whichGame);
+                                bestScore = getBestScore(whichGame);
+                                Intent intent6 = GameActivity.newIntent(MainActivity.this, whichGame, bestScore);
                                 startActivity(intent6);
                                 break;
                         }
@@ -240,7 +259,7 @@ public class MainActivity extends AppCompatActivity
                         "4X4模式最高分:" + String.valueOf(getBestScore(4))
                                 + "\n" + "5X5模式最高分:" + String.valueOf(getBestScore(5))
                                 + "\n" + "6X6模式最高分:" + String.valueOf(getBestScore(6)))
-                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                     }
@@ -265,7 +284,6 @@ public class MainActivity extends AppCompatActivity
             } else if (which == 6) {
                 s = mPreferences.getInt("BEST_SCORE_FOR_SIX", 0);
             }
-            Log.i(TAG, String.valueOf(s));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -276,12 +294,12 @@ public class MainActivity extends AppCompatActivity
     void quit() {
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setMessage("确定退出？")
-                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                     }
                 })
-                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         System.exit(0);

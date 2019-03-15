@@ -18,12 +18,15 @@ public class MyBaseFragment extends Fragment {
 
     @BindView(R.id.score_view)
     TextView scoreView;
+    @BindView(R.id.best_score_view)
+    TextView bestScoreView;
 
     /**
      * 每次滑动后调用，刷新每个TextView里的数字。
      */
-    public void refreshView(String s, int which, NumberItem item, TextView[] mTextViews) {
-        scoreView.setText(s);
+    public void refreshView(String score, String bestScore, int which, NumberItem item, TextView[] mTextViews) {
+        scoreView.setText(score);
+        bestScoreView.setText(bestScore);
         int[][] num = item.getNumbers();
         int a = 0;
         for (int i = 0; i < which; i++) {

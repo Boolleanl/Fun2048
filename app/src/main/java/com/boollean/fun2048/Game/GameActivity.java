@@ -44,16 +44,16 @@ public class GameActivity extends AppCompatActivity {
      * @param which   开启了哪个游戏模式
      * @return 游戏界面的Activity，重新初始化NumberItem。
      */
-    public static Intent newIntent(Context context, int which) {
+    public static Intent newIntent(Context context, int which, int bestScore) {
         whichGame = which;
         mHandler = new Handler();
         operationThread = new OperationThread(which);
         if (which == 4) {
-            OperationFactory.newGameFour();
+            OperationFactory.newGameFour(bestScore);
         } else if (which == 5) {
-            OperationFactory.newGameFive();
+            OperationFactory.newGameFive(bestScore);
         } else if (which == 6) {
-            OperationFactory.newGameSix();
+            OperationFactory.newGameSix(bestScore);
         }
         Intent i = new Intent(context, GameActivity.class);
         return i;
@@ -252,6 +252,28 @@ public class GameActivity extends AppCompatActivity {
             editor.putInt("BEST_SCORE_FOR_SIX", s);
             editor.commit();
         }
+    }
+
+    /**
+     * 获取最高分的记录。
+     *
+     * @return 目前所有游戏的最高分数。
+     */
+    private int getBestScore(int which) {
+        mPreferences = getApplicationContext().getSharedPreferences("SAVE_DATA", MODE_PRIVATE);
+        int s = 0;
+        try {
+            if (which == 4) {
+                s = mPreferences.getInt("BEST_SCORE_FOR_FOUR", 0);
+            } else if (which == 5) {
+                s = mPreferences.getInt("BEST_SCORE_FOR_FIVE", 0);
+            } else if (which == 6) {
+                s = mPreferences.getInt("BEST_SCORE_FOR_SIX", 0);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return s;
     }
 
     @Override

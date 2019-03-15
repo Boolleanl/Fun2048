@@ -30,6 +30,7 @@ public class RankFiveFragment extends Fragment {
     private ArrayList<Integer> positionList;
     private ArrayList<String> nameList;
     private ArrayList<Integer> scoreList;
+    private ArrayList<Integer> genderList;
 
     public static RankFiveFragment newInstance() {
         return new RankFiveFragment();
@@ -40,6 +41,7 @@ public class RankFiveFragment extends Fragment {
         super.onCreate(savedInstanceState);
         initPosition();
         initName();
+        initGender();
         initScore();
     }
 
@@ -52,6 +54,18 @@ public class RankFiveFragment extends Fragment {
             scoreList.add(s1);
             scoreList.add(s2);
             scoreList.add(s3);
+        }
+    }
+
+    private void initGender() {
+        if (genderList == null) {
+            genderList = new ArrayList<>();
+            Integer g1 = 1;
+            Integer g2 = 2;
+            Integer g3 = 0;
+            genderList.add(g1);
+            genderList.add(g2);
+            genderList.add(g3);
         }
     }
 
@@ -89,7 +103,7 @@ public class RankFiveFragment extends Fragment {
     }
 
     private void initView() {
-        adapter = new RankAdapter(positionList, nameList, scoreList);
+        adapter = new RankAdapter(positionList, nameList, scoreList, genderList);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(adapter);
     }

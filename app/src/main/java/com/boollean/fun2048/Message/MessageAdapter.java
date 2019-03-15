@@ -23,12 +23,14 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     private ArrayList<String> mNameList;
     private ArrayList<String> mDateList;
     private ArrayList<String> mMessageList;
+    private ArrayList<Integer> mGenderList;
 
 
-    public MessageAdapter(ArrayList<String> nameList, ArrayList<String> dateList, ArrayList<String> messageList) {
+    public MessageAdapter(ArrayList<String> nameList, ArrayList<String> dateList, ArrayList<String> messageList, ArrayList<Integer> genderList) {
         mNameList = nameList;
         mDateList = dateList;
         mMessageList = messageList;
+        mGenderList = genderList;
     }
 
     @NonNull
@@ -43,9 +45,17 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         String name = mNameList.get(position);
         String date = mDateList.get(position);
         String message = mMessageList.get(position);
+        Integer gender = mGenderList.get(position);
         holder.nameTextView.setText(name);
         holder.dateTextView.setText(date);
         holder.messageTextView.setText(message);
+        if (gender == 1) {
+            holder.genderImageView.setImageResource(R.mipmap.ic_male);
+        } else if (gender == 2) {
+            holder.genderImageView.setImageResource(R.mipmap.ic_female);
+        } else {
+            holder.genderImageView.setImageResource(0);
+        }
     }
 
     @Override
@@ -58,6 +68,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         TextView nameTextView;
         TextView dateTextView;
         TextView messageTextView;
+        ImageView genderImageView;
         View view;
 
         public ViewHolder(@NonNull View itemView) {
@@ -66,6 +77,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             nameTextView = itemView.findViewById(R.id.message_box_name_text_view);
             dateTextView = itemView.findViewById(R.id.message_box_date_text_view);
             messageTextView = itemView.findViewById(R.id.message_box_message_text_view);
+            genderImageView = itemView.findViewById(R.id.message_gender_image_view);
             view = itemView.findViewById(R.id.message_box_bottom_line);
         }
     }
