@@ -1,32 +1,37 @@
 package com.boollean.fun2048.Rank;
 
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.boollean.fun2048.R;
+import com.boollean.fun2048.Utils.JsonUtils;
+import com.boollean.fun2048.Utils.RankUserEntity;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+/**
+ * 6*6排行榜界面的Fragment。
+ * Created by Boollean on 2019/3/9.
+ */
 public class RankSixFragment extends Fragment {
-
     @BindView(R.id.rank_recycler_view)
     RecyclerView mRecyclerView;
 
     private RankAdapter adapter;
-    private ArrayList<Integer> positionList;
-    private ArrayList<String> nameList;
-    private ArrayList<Integer> scoreList;
-    private ArrayList<Integer> genderList;
 
     public static RankSixFragment newInstance() {
         return new RankSixFragment();
@@ -35,72 +40,71 @@ public class RankSixFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initPosition();
-        initName();
-        initGender();
-        initScore();
+        initData();
     }
 
-    private void initScore() {
-        if (scoreList == null) {
-            scoreList = new ArrayList<>();
-            Integer s1 = 666666666;
-            Integer s2 = 666666;
-            Integer s3 = 6;
-            scoreList.add(s1);
-            scoreList.add(s2);
-            scoreList.add(s3);
-        }
+    private void initData() {
+        GetData6 getData6 = new GetData6();
+        getData6.execute();
     }
 
-    private void initGender() {
-        if (genderList == null) {
-            genderList = new ArrayList<>();
-            Integer g1 = 1;
-            Integer g2 = 2;
-            Integer g3 = 0;
-            genderList.add(g1);
-            genderList.add(g2);
-            genderList.add(g3);
-        }
-    }
-
-    private void initName() {
-        if (nameList == null) {
-            nameList = new ArrayList<>();
-            String s1 = "用户666a";
-            String s2 = "用户b464653";
-            String s3 = "566366666";
-            nameList.add(s1);
-            nameList.add(s2);
-            nameList.add(s3);
-        }
-    }
-
-    private void initPosition() {
-        if (positionList == null) {
-            positionList = new ArrayList<>();
-            Integer i1 = 1;
-            Integer i2 = 2;
-            Integer i3 = 3;
-            positionList.add(i1);
-            positionList.add(i2);
-            positionList.add(i3);
-        }
-    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_rank, container, false);
         ButterKnife.bind(this, view);
-        initView();
         return view;
     }
 
-    private void initView() {
-        adapter = new RankAdapter(positionList, nameList, scoreList, genderList);
+    private void initView(List list) {
+        adapter = new RankAdapter(list);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(adapter);
+    }
+
+    private class GetData6 extends AsyncTask<Void, Void, List<RankUserEntity>> {
+
+        @RequiresApi(api = Build.VERSION_CODES.N)
+        @Override
+        protected List<RankUserEntity> doInBackground(Void... voids) {
+//            String jsonString = HttpUtils.getJsonContent(HttpUtils.BASE_URL);
+            String jsonString = "{\n" +
+                    "    \"code\": 200,\n" +
+                    "    \"mes\": \"success\",\n" +
+                    "    \"subjects\": [\n" +
+                    "        {\n" +
+                    "            \"position\": 1,\n" +
+                    "            \"name\": \"小八\",\n" +
+                    "            \"gender\": 1,\n" +
+                    "            \"score\": 66666666,\n" +
+                    "            \"avatar_path\": \"qwerasd.png\"\n" +
+                    "        },\n" +
+                    "        {\n" +
+                    "            \"position\": 2,\n" +
+                    "            \"name\": \"小那\",\n" +
+                    "            \"gender\": 2,\n" +
+                    "            \"score\": 666666,\n" +
+                    "            \"avatar_path\": \"qweradassd.png\"\n" +
+                    "        },\n" +
+                    "        {\n" +
+                    "            \"position\": 3,\n" +
+                    "            \"name\": \"小中\",\n" +
+                    "            \"gender\": 0,\n" +
+                    "            \"score\": 6,\n" +
+                    "            \"avatar_path\": \"fdfdseradassd.png\"\n" +
+                    "        }\n" +
+                    "    ]\n" +
+                    "}";
+            Log.i("Rank6:  ", jsonString);
+            List<RankUserEntity> userList = JsonUtils.toRankUserList(jsonString);
+            return userList;
+        }
+
+        @Override
+        protected void onPostExecute(List<RankUserEntity> list) {
+            Log.i("Rank6:  ", list.size() + "");
+            initView(list);
+        }
     }
 }

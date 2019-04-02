@@ -7,8 +7,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.boollean.fun2048.R;
+import com.boollean.fun2048.Utils.MessageEntity;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,18 +20,11 @@ import androidx.recyclerview.widget.RecyclerView;
  */
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHolder> {
 
-    //private ArrayList<Bitmap> mImageList;
-    private ArrayList<String> mNameList;
-    private ArrayList<String> mDateList;
-    private ArrayList<String> mMessageList;
-    private ArrayList<Integer> mGenderList;
+    private List<MessageEntity> mList;
 
 
-    public MessageAdapter(ArrayList<String> nameList, ArrayList<String> dateList, ArrayList<String> messageList, ArrayList<Integer> genderList) {
-        mNameList = nameList;
-        mDateList = dateList;
-        mMessageList = messageList;
-        mGenderList = genderList;
+    public MessageAdapter(List<MessageEntity> list) {
+        mList = list;
     }
 
     @NonNull
@@ -42,16 +36,12 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        String name = mNameList.get(position);
-        String date = mDateList.get(position);
-        String message = mMessageList.get(position);
-        Integer gender = mGenderList.get(position);
-        holder.nameTextView.setText(name);
-        holder.dateTextView.setText(date);
-        holder.messageTextView.setText(message);
-        if (gender == 1) {
+        holder.nameTextView.setText(mList.get(position).getName());
+        holder.dateTextView.setText(mList.get(position).getDate());
+        holder.messageTextView.setText(mList.get(position).getMessage());
+        if (mList.get(position).getGender() == 1) {
             holder.genderImageView.setImageResource(R.mipmap.ic_male);
-        } else if (gender == 2) {
+        } else if (mList.get(position).getGender() == 2) {
             holder.genderImageView.setImageResource(R.mipmap.ic_female);
         } else {
             holder.genderImageView.setImageResource(0);
@@ -60,7 +50,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
     @Override
     public int getItemCount() {
-        return mNameList.size();
+        return mList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

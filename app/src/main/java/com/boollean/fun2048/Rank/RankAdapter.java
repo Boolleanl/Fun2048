@@ -1,5 +1,6 @@
 package com.boollean.fun2048.Rank;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,8 +8,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.boollean.fun2048.R;
+import com.boollean.fun2048.Utils.RankUserEntity;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,18 +20,11 @@ import androidx.recyclerview.widget.RecyclerView;
  * Created by Boollean on 2019/3/8.
  */
 public class RankAdapter extends RecyclerView.Adapter<RankAdapter.RankViewHolder> {
+    private List<RankUserEntity> mList;
 
-    //    private ArrayList<Bitmap> ImageList;
-    private ArrayList<Integer> mPositionList;
-    private ArrayList<String> mNameList;
-    private ArrayList<Integer> mScoreList;
-    private ArrayList<Integer> mGenderList;
-
-    public RankAdapter(ArrayList<Integer> positionList, ArrayList<String> nameList, ArrayList<Integer> scoreList, ArrayList<Integer> genderList) {
-        mPositionList = positionList;
-        mNameList = nameList;
-        mScoreList = scoreList;
-        mGenderList = genderList;
+    public RankAdapter(List<RankUserEntity> list) {
+        mList = list;
+        Log.i("Rank4: ", mList.get(0).getName());
     }
 
     @NonNull
@@ -41,16 +36,12 @@ public class RankAdapter extends RecyclerView.Adapter<RankAdapter.RankViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull RankViewHolder holder, int position) {
-        Integer p = mPositionList.get(position);
-        String name = mNameList.get(position);
-        Integer score = mScoreList.get(position);
-        Integer gender = mGenderList.get(position);
-        holder.positionTextView.setText(p + "");
-        holder.nameTextView.setText(name);
-        holder.scoreTextView.setText(score + "");
-        if (gender == 1) {
+        holder.positionTextView.setText(mList.get(position).getPosition() + "");
+        holder.nameTextView.setText(mList.get(position).getName());
+        holder.scoreTextView.setText(mList.get(position).getScore() + "");
+        if (mList.get(position).getGender() == 1) {
             holder.genderImageView.setImageResource(R.mipmap.ic_male);
-        } else if (gender == 2) {
+        } else if (mList.get(position).getGender() == 2) {
             holder.genderImageView.setImageResource(R.mipmap.ic_female);
         } else {
             holder.genderImageView.setImageResource(0);
@@ -59,12 +50,12 @@ public class RankAdapter extends RecyclerView.Adapter<RankAdapter.RankViewHolder
 
     @Override
     public long getItemId(int position) {
-        return mPositionList.get(position);
+        return mList.get(position).getPosition();
     }
 
     @Override
     public int getItemCount() {
-        return mPositionList.size();
+        return mList.size();
     }
 
 
