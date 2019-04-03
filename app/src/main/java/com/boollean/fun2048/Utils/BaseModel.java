@@ -6,7 +6,7 @@ public class BaseModel<T> {
     private int code;
     private String msg;
     private List<T> subjects;
-    //private T data;
+    private T data;
 
     public int getCode() {
         return code;
@@ -32,11 +32,11 @@ public class BaseModel<T> {
         this.subjects = subjects;
     }
 
-//    public T getData() {
-//        return data;
-//    }
-//
-//    public void setData(T data) {
-//        this.data = data;
-//    }
+    public T getData() {
+        return data;
+    }
+
+    public void setData(T data) {
+        this.data = data;
+    }
 }

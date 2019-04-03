@@ -17,6 +17,9 @@ public class User {
     private int mGender; //性别
     private Bitmap mAvatar;  //头像
     private Uri mBitmapPath;    //头像的定位符
+    private int bestScore4;
+    private int bestScore5;
+    private int bestScore6;
 
     public User(String name, String password, int gender, Bitmap avatar) {
         mName = name;
@@ -76,5 +79,29 @@ public class User {
 
     public void setBitmapPath(Uri bitmapPath) {
         mBitmapPath = bitmapPath;
+    }
+
+    public int getBestScore4() {
+        return bestScore4;
+    }
+
+    public void setBestScore4(int bestScore4) {
+        this.bestScore4 = bestScore4;
+    }
+
+    public int getBestScore5() {
+        return bestScore5;
+    }
+
+    public void setBestScore5(int bestScore5) {
+        this.bestScore5 = bestScore5;
+    }
+
+    public int getBestScore6() {
+        return bestScore6;
+    }
+
+    public void setBestScore6(int bestScore6) {
+        this.bestScore6 = bestScore6;
     }
 }

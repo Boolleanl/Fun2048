@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,9 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.boollean.fun2048.R;
+import com.boollean.fun2048.Utils.HttpUtils;
+import com.boollean.fun2048.Utils.HttpUtils.HttpCallbackListener;
+import com.boollean.fun2048.Utils.JsonUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -67,6 +71,7 @@ public class UserEditorFragment extends Fragment {
     @BindView(R.id.user_information_complete_button)
     Button completeButton;
     private Uri mUriPath;
+    private String oldName=null;
     private String name = null;
     private String password = null;
     private int gender = 0;
@@ -157,7 +162,7 @@ public class UserEditorFragment extends Fragment {
             password = userPasswordEditText.getText().toString().trim();
         }
         if (isAvailableName(name) && isAvailablePassword(password)) {
-            mSaveInformationTask = new SaveInformationTask(name, password, gender, bitmap, mUriPath, mPreferences, getActivity());
+            mSaveInformationTask = new SaveInformationTask(oldName,name, password, gender, bitmap, mUriPath, mPreferences, getActivity());
             mSaveInformationTask.execute();
             getActivity().finish();
         }
@@ -293,6 +298,7 @@ public class UserEditorFragment extends Fragment {
     private void initUser() {
         mPreferences = getActivity().getApplicationContext().getSharedPreferences("SAVE_DATA", MODE_PRIVATE);
         mUser.setName(mPreferences.getString("USER_NAME", null));
+        oldName = mUser.getName();
         mUser.setPassword(mPreferences.getString("USER_PASSWORD", null));
         mUser.setGender(mPreferences.getInt("USER_GENDER", 0));
         Uri uri = Uri.parse(mPreferences.getString("USER_BITMAP_PATH", ""));
@@ -321,6 +327,7 @@ public class UserEditorFragment extends Fragment {
     private static class SaveInformationTask extends AsyncTask<User, Process, Void> {
 
         private User mUser = User.getInstance();
+        private String oldName;
         private String mName;
         private String mPassword;
         private int mGender;
@@ -329,7 +336,8 @@ public class UserEditorFragment extends Fragment {
         private Context context;
         private SharedPreferences mPreferences;
 
-        public SaveInformationTask(String name, String password, int gender, Bitmap bitmap, Uri bitmapPath, SharedPreferences preferences, FragmentActivity activity) {
+        public SaveInformationTask(String oldName,String name, String password, int gender, Bitmap bitmap, Uri bitmapPath, SharedPreferences preferences, FragmentActivity activity) {
+            this.oldName=oldName;
             mName = name;
             mPassword = password;
             mGender = gender;
@@ -349,6 +357,26 @@ public class UserEditorFragment extends Fragment {
 
             saveLastMode();
             //TODO 网络数据传输
+            String s= JsonUtils.userToJson(mUser);
+            Log.i("save user: ",s);
+
+            try {
+                String compeletedURL = HttpUtils.getURLWithParams(oldName,mUser);
+                Log.i("save user",compeletedURL);
+                HttpUtils.sendHttpRequest(compeletedURL, new HttpCallbackListener() {
+                    @Override
+                    public void onFinish(String response) {
+                        Log.i("save user ",response);
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        Log.i("save user ","失败");
+                    }
+                });
+            }catch (Exception e){
+                e.printStackTrace();
+            }
             return null;
         }
 

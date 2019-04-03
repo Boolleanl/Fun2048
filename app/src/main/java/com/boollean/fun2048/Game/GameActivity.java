@@ -4,13 +4,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.SoundPool;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 
 import com.boollean.fun2048.Main.MainActivity;
 import com.boollean.fun2048.R;
+import com.boollean.fun2048.User.User;
+import com.boollean.fun2048.Utils.HttpUtils;
 
 import org.json.JSONArray;
 
@@ -29,6 +33,7 @@ public class GameActivity extends AppCompatActivity {
     private static int whichGame;   //游戏模式标志
     private static Handler mHandler;
     private static OperationThread operationThread; //运算线程
+    private User mUser = User.getInstance();
     private SoundPool mSoundPool;   //用以实现音效的声音池
     private int soundID;    //音效文件的ID
     private GameFourFragment mGameFourFragment;     //点击4X4模式后的界面
@@ -237,20 +242,26 @@ public class GameActivity extends AppCompatActivity {
      * 保存此局目前的分数，因为在启动游戏时会获取以前的最高分，
      * 并预先存入NumberItem类的BestScore里，所以BestScore里永远是最目前高分。
      *
-     * @param s 目前的最高分。
+     * @param score 目前的最高分。
      */
-    private void saveBestScore(int s) {
+    private void saveBestScore(int score) {
         mPreferences = getApplicationContext().getSharedPreferences("SAVE_DATA", MODE_PRIVATE);
         SharedPreferences.Editor editor = mPreferences.edit();
         if (whichGame == 4) {
-            editor.putInt("BEST_SCORE_FOR_FOUR", s);
+            editor.putInt("BEST_SCORE_FOR_FOUR", score);
             editor.commit();
+            UpLoadBestScore upLoadBestScore = new UpLoadBestScore(whichGame,mUser.getName(),score);
+            upLoadBestScore.execute();
         } else if (whichGame == 5) {
-            editor.putInt("BEST_SCORE_FOR_FIVE", s);
+            editor.putInt("BEST_SCORE_FOR_FIVE", score);
             editor.commit();
+            UpLoadBestScore upLoadBestScore = new UpLoadBestScore(whichGame,mUser.getName(),score);
+            upLoadBestScore.execute();
         } else if (whichGame == 6) {
-            editor.putInt("BEST_SCORE_FOR_SIX", s);
+            editor.putInt("BEST_SCORE_FOR_SIX", score);
             editor.commit();
+            UpLoadBestScore upLoadBestScore = new UpLoadBestScore(whichGame,mUser.getName(),score);
+            upLoadBestScore.execute();
         }
     }
 
@@ -279,5 +290,39 @@ public class GameActivity extends AppCompatActivity {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         return mDetector.onTouchEvent(event);
+    }
+
+    private class UpLoadBestScore extends AsyncTask<Void, Void, Void> {
+        private int whichGame;
+        private String name;
+        private int score;
+
+        public UpLoadBestScore(int whichGame,String name,int score) {
+            this.whichGame = whichGame;
+            this.name = name;
+            this.score = score;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+                String compeletedURL = HttpUtils.getURLWithParams(whichGame,name, score);
+                Log.i("save score", compeletedURL);
+                HttpUtils.sendHttpRequest(compeletedURL, new HttpUtils.HttpCallbackListener() {
+                    @Override
+                    public void onFinish(String response) {
+                        Log.i("save score ", response);
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        Log.i("save score ", "失败");
+                    }
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
     }
 }

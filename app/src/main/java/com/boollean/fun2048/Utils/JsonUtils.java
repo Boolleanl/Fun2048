@@ -1,5 +1,6 @@
 package com.boollean.fun2048.Utils;
 
+import com.boollean.fun2048.User.User;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -25,5 +26,11 @@ public class JsonUtils {
         BaseModel<MessageEntity> baseModel = mGson.fromJson(jsonString, type);
         List<MessageEntity> messageList = baseModel.getSubjects();
         return messageList;
+    }
+
+    public static String userToJson(User user){
+        mGson = new Gson();
+        String result = mGson.toJson(user);
+        return result;
     }
 }
