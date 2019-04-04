@@ -1,4 +1,6 @@
-package com.boollean.fun2048.Game;
+package com.boollean.fun2048.Utils;
+
+import com.boollean.fun2048.Entity.NumberItem;
 
 /**
  * 数据加工的工厂类，包含一些运算的算法。

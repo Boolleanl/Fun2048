@@ -1,4 +1,4 @@
-package com.boollean.fun2048.User;
+package com.boollean.fun2048.Entity;
 
 import android.graphics.Bitmap;
 import android.net.Uri;

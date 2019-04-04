@@ -21,6 +21,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.boollean.fun2048.Entity.User;
 import com.boollean.fun2048.R;
 import com.boollean.fun2048.Utils.HttpUtils;
 import com.boollean.fun2048.Utils.HttpUtils.HttpCallbackListener;
@@ -71,7 +72,7 @@ public class UserEditorFragment extends Fragment {
     @BindView(R.id.user_information_complete_button)
     Button completeButton;
     private Uri mUriPath;
-    private String oldName=null;
+    private String oldName = null;
     private String name = null;
     private String password = null;
     private int gender = 0;
@@ -162,7 +163,7 @@ public class UserEditorFragment extends Fragment {
             password = userPasswordEditText.getText().toString().trim();
         }
         if (isAvailableName(name) && isAvailablePassword(password)) {
-            mSaveInformationTask = new SaveInformationTask(oldName,name, password, gender, bitmap, mUriPath, mPreferences, getActivity());
+            mSaveInformationTask = new SaveInformationTask(oldName, name, password, gender, bitmap, mUriPath, mPreferences, getActivity());
             mSaveInformationTask.execute();
             getActivity().finish();
         }
@@ -266,7 +267,7 @@ public class UserEditorFragment extends Fragment {
         intent.putExtra("outputY", output_Y);
         intent.putExtra("return-data", true);
 
-        String s = System.currentTimeMillis() + CROP_IMAGE_FILE_NAME;
+        String s = "Fun2048_" + System.currentTimeMillis() + CROP_IMAGE_FILE_NAME;
         String mExtStorDir = Environment.getExternalStorageDirectory().toString();
         File mFile = new File(mExtStorDir, s);
 
@@ -336,8 +337,8 @@ public class UserEditorFragment extends Fragment {
         private Context context;
         private SharedPreferences mPreferences;
 
-        public SaveInformationTask(String oldName,String name, String password, int gender, Bitmap bitmap, Uri bitmapPath, SharedPreferences preferences, FragmentActivity activity) {
-            this.oldName=oldName;
+        public SaveInformationTask(String oldName, String name, String password, int gender, Bitmap bitmap, Uri bitmapPath, SharedPreferences preferences, FragmentActivity activity) {
+            this.oldName = oldName;
             mName = name;
             mPassword = password;
             mGender = gender;
@@ -357,24 +358,39 @@ public class UserEditorFragment extends Fragment {
 
             saveLastMode();
             //TODO 网络数据传输
-            String s= JsonUtils.userToJson(mUser);
-            Log.i("save user: ",s);
+            String s = JsonUtils.userToJson(mUser);
+            Log.i("save user: ", s);
 
             try {
-                String compeletedURL = HttpUtils.getURLWithParams(oldName,mUser);
-                Log.i("save user",compeletedURL);
-                HttpUtils.sendHttpRequest(compeletedURL, new HttpCallbackListener() {
+                Log.i("upload ", mName);
+                Log.i("upload", mBitmapPath.toString());
+                String filePath = mBitmapPath.toString().substring(mBitmapPath.toString().lastIndexOf("//") + 1);
+                HttpUtils.upLoadFile(mName, filePath, new HttpCallbackListener() {
                     @Override
                     public void onFinish(String response) {
-                        Log.i("save user ",response);
+                        Log.i("upload  ", "成功");
                     }
 
                     @Override
                     public void onError(Exception e) {
-                        Log.i("save user ","失败");
+                        Log.i("upload ", "失败");
                     }
                 });
-            }catch (Exception e){
+
+                String compeletedURL = HttpUtils.getURLWithParams(oldName, mUser);
+                Log.i("save user", compeletedURL);
+                HttpUtils.sendHttpRequest(compeletedURL, new HttpCallbackListener() {
+                    @Override
+                    public void onFinish(String response) {
+                        Log.i("save user ", "成功");
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        Log.i("save user ", "失败");
+                    }
+                });
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             return null;

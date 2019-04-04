@@ -6,8 +6,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.boollean.fun2048.Entity.MessageEntity;
 import com.boollean.fun2048.R;
-import com.boollean.fun2048.Utils.MessageEntity;
 
 import java.util.List;
 

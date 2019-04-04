@@ -1,4 +1,4 @@
-package com.boollean.fun2048.Game;
+package com.boollean.fun2048.Entity;
 
 /**
  * 数据类。

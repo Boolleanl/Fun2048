@@ -1,4 +1,8 @@
-package com.boollean.fun2048.Game;
+package com.boollean.fun2048.Utils;
+
+import com.boollean.fun2048.Game.GameFiveFragment;
+import com.boollean.fun2048.Game.GameFourFragment;
+import com.boollean.fun2048.Game.GameSixFragment;
 
 /**
  * 运算线程类。

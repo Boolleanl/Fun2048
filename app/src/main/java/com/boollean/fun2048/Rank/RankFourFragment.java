@@ -8,9 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.boollean.fun2048.Entity.RankUserEntity;
 import com.boollean.fun2048.R;
 import com.boollean.fun2048.Utils.JsonUtils;
-import com.boollean.fun2048.Utils.RankUserEntity;
 
 import java.util.List;
 

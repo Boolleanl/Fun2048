@@ -1,6 +1,9 @@
 package com.boollean.fun2048.Utils;
 
-import com.boollean.fun2048.User.User;
+import com.boollean.fun2048.Entity.BaseModel;
+import com.boollean.fun2048.Entity.MessageEntity;
+import com.boollean.fun2048.Entity.RankUserEntity;
+import com.boollean.fun2048.Entity.User;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -28,7 +31,7 @@ public class JsonUtils {
         return messageList;
     }
 
-    public static String userToJson(User user){
+    public static String userToJson(User user) {
         mGson = new Gson();
         String result = mGson.toJson(user);
         return result;

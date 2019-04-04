@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.boollean.fun2048.Entity.NumberItem;
 import com.boollean.fun2048.R;
 
 import androidx.annotation.NonNull;

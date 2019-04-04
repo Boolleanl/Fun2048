@@ -11,10 +11,13 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 
+import com.boollean.fun2048.Entity.NumberItem;
+import com.boollean.fun2048.Entity.User;
 import com.boollean.fun2048.Main.MainActivity;
 import com.boollean.fun2048.R;
-import com.boollean.fun2048.User.User;
 import com.boollean.fun2048.Utils.HttpUtils;
+import com.boollean.fun2048.Utils.OperationFactory;
+import com.boollean.fun2048.Utils.OperationThread;
 
 import org.json.JSONArray;
 
@@ -250,17 +253,17 @@ public class GameActivity extends AppCompatActivity {
         if (whichGame == 4) {
             editor.putInt("BEST_SCORE_FOR_FOUR", score);
             editor.commit();
-            UpLoadBestScore upLoadBestScore = new UpLoadBestScore(whichGame,mUser.getName(),score);
+            UpLoadBestScore upLoadBestScore = new UpLoadBestScore(whichGame, mUser.getName(), score);
             upLoadBestScore.execute();
         } else if (whichGame == 5) {
             editor.putInt("BEST_SCORE_FOR_FIVE", score);
             editor.commit();
-            UpLoadBestScore upLoadBestScore = new UpLoadBestScore(whichGame,mUser.getName(),score);
+            UpLoadBestScore upLoadBestScore = new UpLoadBestScore(whichGame, mUser.getName(), score);
             upLoadBestScore.execute();
         } else if (whichGame == 6) {
             editor.putInt("BEST_SCORE_FOR_SIX", score);
             editor.commit();
-            UpLoadBestScore upLoadBestScore = new UpLoadBestScore(whichGame,mUser.getName(),score);
+            UpLoadBestScore upLoadBestScore = new UpLoadBestScore(whichGame, mUser.getName(), score);
             upLoadBestScore.execute();
         }
     }
@@ -297,7 +300,7 @@ public class GameActivity extends AppCompatActivity {
         private String name;
         private int score;
 
-        public UpLoadBestScore(int whichGame,String name,int score) {
+        public UpLoadBestScore(int whichGame, String name, int score) {
             this.whichGame = whichGame;
             this.name = name;
             this.score = score;
@@ -306,12 +309,12 @@ public class GameActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... voids) {
             try {
-                String compeletedURL = HttpUtils.getURLWithParams(whichGame,name, score);
+                String compeletedURL = HttpUtils.getURLWithParams(whichGame, name, score);
                 Log.i("save score", compeletedURL);
                 HttpUtils.sendHttpRequest(compeletedURL, new HttpUtils.HttpCallbackListener() {
                     @Override
                     public void onFinish(String response) {
-                        Log.i("save score ", response);
+                        Log.i("save score ", "成功");
                     }
 
                     @Override

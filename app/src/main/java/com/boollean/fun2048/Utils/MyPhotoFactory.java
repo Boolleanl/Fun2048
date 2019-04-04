@@ -1,4 +1,4 @@
-package com.boollean.fun2048.User;
+package com.boollean.fun2048.Utils;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;

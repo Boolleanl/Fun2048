@@ -15,14 +15,14 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.boollean.fun2048.Entity.User;
 import com.boollean.fun2048.FeedBack.FeedBackActivity;
 import com.boollean.fun2048.Game.GameActivity;
 import com.boollean.fun2048.Message.MessageActivity;
 import com.boollean.fun2048.R;
 import com.boollean.fun2048.Rank.RankActivity;
-import com.boollean.fun2048.User.MyPhotoFactory;
-import com.boollean.fun2048.User.User;
 import com.boollean.fun2048.User.UserEditorActivity;
+import com.boollean.fun2048.Utils.MyPhotoFactory;
 import com.google.android.material.navigation.NavigationView;
 
 import org.json.JSONArray;

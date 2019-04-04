@@ -3,6 +3,7 @@ package com.boollean.fun2048.Game;
 import android.graphics.Color;
 import android.widget.TextView;
 
+import com.boollean.fun2048.Entity.NumberItem;
 import com.boollean.fun2048.R;
 
 import androidx.fragment.app.Fragment;
