@@ -36,7 +36,7 @@
     <string name="mode4">4*4模式</string>
     <string name="mode5">5*5模式</string>
     <string name="mode6">6*6模式</string>
-    <string name="input_suggestion">请输入你的建议或意见(200字以内)。</string>
+    <string name="input_suggestion">请输入你对本软件的建议或意见(200字以内)。</string>
     <string name="quit">退出</string>
     <string name="author">By: Boollean</string>
 

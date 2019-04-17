@@ -7,9 +7,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.boollean.fun2048.Entity.RankUserEntity;
 import com.boollean.fun2048.R;
+import com.boollean.fun2048.Utils.HttpUtils;
 import com.boollean.fun2048.Utils.JsonUtils;
 
 import java.util.List;
@@ -68,43 +70,23 @@ public class RankSixFragment extends Fragment {
         @RequiresApi(api = Build.VERSION_CODES.N)
         @Override
         protected List<RankUserEntity> doInBackground(Void... voids) {
-//            String jsonString = HttpUtils.getJsonContent(HttpUtils.BASE_URL);
-            String jsonString = "{\n" +
-                    "    \"code\": 200,\n" +
-                    "    \"mes\": \"success\",\n" +
-                    "    \"subjects\": [\n" +
-                    "        {\n" +
-                    "            \"position\": 1,\n" +
-                    "            \"name\": \"小八\",\n" +
-                    "            \"gender\": 1,\n" +
-                    "            \"score\": 66666666,\n" +
-                    "            \"avatar_path\": \"qwerasd.png\"\n" +
-                    "        },\n" +
-                    "        {\n" +
-                    "            \"position\": 2,\n" +
-                    "            \"name\": \"小那\",\n" +
-                    "            \"gender\": 2,\n" +
-                    "            \"score\": 666666,\n" +
-                    "            \"avatar_path\": \"qweradassd.png\"\n" +
-                    "        },\n" +
-                    "        {\n" +
-                    "            \"position\": 3,\n" +
-                    "            \"name\": \"小中\",\n" +
-                    "            \"gender\": 0,\n" +
-                    "            \"score\": 6,\n" +
-                    "            \"avatar_path\": \"fdfdseradassd.png\"\n" +
-                    "        }\n" +
-                    "    ]\n" +
-                    "}";
-            Log.i("Rank6:  ", jsonString);
+            String jsonString = HttpUtils.getJsonContent(HttpUtils.GET_BEST_100_USERS_6);
+            Log.i("Rank6", jsonString);
+            if (jsonString.equals("fail")){
+                return null;
+            }
             List<RankUserEntity> userList = JsonUtils.toRankUserList(jsonString);
             return userList;
         }
 
         @Override
         protected void onPostExecute(List<RankUserEntity> list) {
-            Log.i("Rank6:  ", list.size() + "");
-            initView(list);
+            if(list!=null){
+                Log.i("Rank6", list.size() + "");
+                initView(list);
+            }else {
+                Toast.makeText(getActivity(), "服务器异常，无法获取信息", Toast.LENGTH_LONG).show();
+            }
         }
     }
 }

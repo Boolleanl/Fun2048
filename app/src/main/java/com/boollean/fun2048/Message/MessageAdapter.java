@@ -1,5 +1,6 @@
 package com.boollean.fun2048.Message;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.TextView;
 import com.boollean.fun2048.Entity.MessageEntity;
 import com.boollean.fun2048.R;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -37,7 +39,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.nameTextView.setText(mList.get(position).getName());
-        holder.dateTextView.setText(mList.get(position).getDate());
+        StringBuilder date = new StringBuilder(mList.get(position).getDate());
+        date.replace(10,12,"  ");
+        Log.i("Message",date.toString());
+        holder.dateTextView.setText(date.toString());
         holder.messageTextView.setText(mList.get(position).getMessage());
         if (mList.get(position).getGender() == 1) {
             holder.genderImageView.setImageResource(R.mipmap.ic_male);

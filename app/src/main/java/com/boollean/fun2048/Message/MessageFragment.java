@@ -7,10 +7,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.boollean.fun2048.Entity.MessageEntity;
 import com.boollean.fun2048.R;
+import com.boollean.fun2048.Utils.HttpUtils;
 import com.boollean.fun2048.Utils.JsonUtils;
+import com.boollean.fun2048.Utils.LoadingView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +32,8 @@ import butterknife.ButterKnife;
  * Created by Boollean on 2019/3/6.
  */
 public class MessageFragment extends Fragment {
+    @BindView(R.id.loading_view)
+    LoadingView mLoadingView;
 
     @BindView(R.id.message_recycler_view)
     RecyclerView recyclerView;
@@ -49,7 +54,7 @@ public class MessageFragment extends Fragment {
         initData();
     }
 
-    private void initData() {
+    public void initData() {
         GetMessageData getMessageData = new GetMessageData();
         getMessageData.execute();
     }
@@ -60,6 +65,13 @@ public class MessageFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_message, container, false);
         ButterKnife.bind(this, view);
+        mLoadingView.setListener(new LoadingView.LoadingViewListener() {
+            @Override
+            public void onFailedClickListener() {
+
+            }
+        });
+        mLoadingView.showLoading();
         return view;
     }
 
@@ -75,62 +87,26 @@ public class MessageFragment extends Fragment {
         @RequiresApi(api = Build.VERSION_CODES.N)
         @Override
         protected List<MessageEntity> doInBackground(Void... voids) {
-//            String jsonString = HttpUtils.getJsonContent(HttpUtils.BASE_URL);
-            String jsonString = "{\n" +
-                    "    \"code\": 200,\n" +
-                    "    \"msg\": \"success\",\n" +
-                    "    \"subjects\": [\n" +
-                    "        {\n" +
-                    "            \"name\": \"小红\",\n" +
-                    "            \"gender\": 2,\n" +
-                    "            \"date\": \"2017-2-5\",\n" +
-                    "            \"message\": \"你好码！\" ,\n" +
-                    "            \"avatar_path\": \"qwerasd.png\"\n" +
-                    "        },\n" + "        {\n" +
-                    "            \"name\": \"小明\",\n" +
-                    "            \"gender\": 1,\n" +
-                    "            \"date\": \"2018-2-5\",\n" +
-                    "            \"message\": \"你好啊！\" ,\n" +
-                    "            \"avatar_path\": \"qwerasd.png\"\n" +
-                    "        },\n" + "        {\n" +
-                    "            \"name\": \"小强\",\n" +
-                    "            \"gender\": 0,\n" +
-                    "            \"date\": \"2018-3-5\",\n" +
-                    "            \"message\": \"你好不好\" ,\n" +
-                    "            \"avatar_path\": \"qwerasd.png\"\n" +
-                    "        },\n" + "        {\n" +
-                    "            \"name\": \"小方\",\n" +
-                    "            \"gender\": 2,\n" +
-                    "            \"date\": \"2018-8-5\",\n" +
-                    "            \"message\": \"dajfnafnafasjnfan打卡机你飞机喀什妇女健康好！\" ,\n" +
-                    "            \"avatar_path\": \"qwerasd.png\"\n" +
-                    "        },\n" +
-                    "        {\n" +
-                    "            \"name\": \"小阿三\",\n" +
-                    "            \"gender\": 1,\n" +
-                    "            \"date\": \"2018-9-5\",\n" +
-                    "            \"message\": \"？？？？？？？？？？！\" ,\n" +
-                    "            \"avatar_path\": \"qwerasd.png\"\n" +
-                    "        },\n" +
-                    "        {\n" +
-                    "            \"name\": \"小去\",\n" +
-                    "            \"gender\": 0,\n" +
-                    "            \"date\": \"2018-12-5\",\n" +
-                    "            \"message\": \"你好啊！\" ,\n" +
-                    "            \"avatar_path\": \"qwerasd.png\"\n" +
-                    "        }\n" +
-                    "    ]\n" +
-                    "}";
-            Log.i("Message :  ", jsonString);
+            String jsonString = HttpUtils.getJsonContent(HttpUtils.GET_MESSAGES);
+            Log.i("Message", jsonString);
+            if (jsonString.equals("fail")){
+                return null;
+            }
             List<MessageEntity> messageList = JsonUtils.toMessageList(jsonString);
-            Log.i("Message :  ", messageList.size() + "");
+            Log.i("Message", messageList.size() + "");
             return messageList;
         }
 
         @Override
         protected void onPostExecute(List<MessageEntity> list) {
-            Log.i("Message :  ", list.size() + "");
-            initView(list);
+            if(list!=null){
+                Log.i("Message", list.size() + "");
+                mLoadingView.showContentView();
+                initView(list);
+            }else {
+                Toast.makeText(getActivity(), "服务器异常，无法获取信息", Toast.LENGTH_LONG).show();
+                mLoadingView.showFailed();
+            }
         }
     }
 }

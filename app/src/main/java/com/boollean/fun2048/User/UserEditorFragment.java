@@ -21,6 +21,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.boollean.fun2048.Entity.MessageEntity;
 import com.boollean.fun2048.Entity.User;
 import com.boollean.fun2048.R;
 import com.boollean.fun2048.Utils.HttpUtils;
@@ -29,6 +30,7 @@ import com.boollean.fun2048.Utils.JsonUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -303,6 +305,7 @@ public class UserEditorFragment extends Fragment {
         mUser.setPassword(mPreferences.getString("USER_PASSWORD", null));
         mUser.setGender(mPreferences.getInt("USER_GENDER", 0));
         Uri uri = Uri.parse(mPreferences.getString("USER_BITMAP_PATH", ""));
+
         mUser.setBitmapPath(uri);
         try {
             Bitmap bitmap = BitmapFactory.decodeStream(getContext().getContentResolver().openInputStream(uri));
@@ -359,37 +362,64 @@ public class UserEditorFragment extends Fragment {
             saveLastMode();
             //TODO 网络数据传输
             String s = JsonUtils.userToJson(mUser);
-            Log.i("save user: ", s);
+            Log.i(TAG, s);
 
             try {
-                Log.i("upload ", mName);
-                Log.i("upload", mBitmapPath.toString());
-                String filePath = mBitmapPath.toString().substring(mBitmapPath.toString().lastIndexOf("//") + 1);
-                HttpUtils.upLoadFile(mName, filePath, new HttpCallbackListener() {
-                    @Override
-                    public void onFinish(String response) {
-                        Log.i("upload  ", "成功");
-                    }
+                Log.i(TAG, mName);
+//                Log.i("upload", mBitmapPath.toString());
+//                String filePath = mBitmapPath.toString().substring(mBitmapPath.toString().lastIndexOf("//") + 1);
+//                HttpUtils.upLoadFile(mName, filePath, new HttpCallbackListener() {
+//                    @Override
+//                    public void onFinish(String response) {
+//                        Log.i("upload  ", "成功");
+//                    }
+//
+//                    @Override
+//                    public void onError(Exception e) {
+//                        Log.i("upload ", "失败");
+//                    }
+//                });
 
-                    @Override
-                    public void onError(Exception e) {
-                        Log.i("upload ", "失败");
-                    }
-                });
+                if(oldName==null){
+                    HttpUtils.addUser(mUser, new HttpUtils.HttpCallbackListener() {
+                        @Override
+                        public void onFinish(String s) {
+                            Log.i("User", "成功");
+                        }
 
-                String compeletedURL = HttpUtils.getURLWithParams(oldName, mUser);
-                Log.i("save user", compeletedURL);
-                HttpUtils.sendHttpRequest(compeletedURL, new HttpCallbackListener() {
-                    @Override
-                    public void onFinish(String response) {
-                        Log.i("save user ", "成功");
-                    }
+                        @Override
+                        public void onError(Exception e) {
+                            Log.i("User", e.getMessage());
+                        }
+                    });
+                    return null;
+                }else if(oldName.equals(mName)){
+                    HttpUtils.updateUserData(mUser, new HttpUtils.HttpCallbackListener() {
+                        @Override
+                        public void onFinish(String s) {
+                            Log.i("User", "成功");
+                        }
 
-                    @Override
-                    public void onError(Exception e) {
-                        Log.i("save user ", "失败");
-                    }
-                });
+                        @Override
+                        public void onError(Exception e) {
+                            Log.i("User", e.getMessage());
+                        }
+                    });
+                    return null;
+                } else  {
+                    HttpUtils.updateUser(oldName,mUser, new HttpUtils.HttpCallbackListener() {
+                        @Override
+                        public void onFinish(String s) {
+                            Log.i("User", "成功");
+                        }
+
+                        @Override
+                        public void onError(Exception e) {
+                            Log.i("User", e.getMessage());
+                        }
+                    });
+                    return null;
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -250,6 +250,7 @@ public class GameActivity extends AppCompatActivity {
     private void saveBestScore(int score) {
         mPreferences = getApplicationContext().getSharedPreferences("SAVE_DATA", MODE_PRIVATE);
         SharedPreferences.Editor editor = mPreferences.edit();
+        Log.i("save",String.valueOf(score));
         if (whichGame == 4) {
             editor.putInt("BEST_SCORE_FOR_FOUR", score);
             editor.commit();
@@ -314,7 +315,7 @@ public class GameActivity extends AppCompatActivity {
                 HttpUtils.sendHttpRequest(compeletedURL, new HttpUtils.HttpCallbackListener() {
                     @Override
                     public void onFinish(String response) {
-                        Log.i("save score ", "成功");
+                        Log.i("save score ", "成功:  "+response);
                     }
 
                     @Override

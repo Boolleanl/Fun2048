@@ -41,6 +41,7 @@ public class MessageActivity extends AppCompatActivity {
     @BindView(R.id.message_floating_action_button)
     FloatingActionButton floatingActionButton;
     private User mUser = User.getInstance();
+    private MessageFragment mMessageFragment;
 
     public static Intent newIntent(Context context) {
         Intent intent = new Intent(context, MessageActivity.class);
@@ -56,10 +57,9 @@ public class MessageActivity extends AppCompatActivity {
         FragmentManager fm = getSupportFragmentManager();
         fm.findFragmentById(R.id.fragment_message_container);
 
-        MessageFragment mMessageFragment = MessageFragment.newInstance();
+        mMessageFragment = MessageFragment.newInstance();
         fm.beginTransaction().add(R.id.fragment_message_container, mMessageFragment).commit();
     }
-
 
     @OnClick(R.id.message_floating_action_button)
     void writeMessage() {
@@ -86,14 +86,13 @@ public class MessageActivity extends AppCompatActivity {
                 dialog.dismiss();
                 MessageEntity messageEntity = new MessageEntity();
                 messageEntity.setName(mUser.getName());
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd   hh:mm:ss");
                 Date date = new Date(System.currentTimeMillis());
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
                 String s = dateFormat.format(date);
                 messageEntity.setDate(s);
                 messageEntity.setAvatarPath(mUser.getBitmapPath().toString());
                 messageEntity.setGender(mUser.getGender());
                 messageEntity.setMessage(editText.getText().toString());
-                Toast.makeText(getApplicationContext(), editText.getText(), Toast.LENGTH_SHORT).show();
                 PostMessageData postMessageData = new PostMessageData(messageEntity);
                 postMessageData.execute();
             }
@@ -110,16 +109,15 @@ public class MessageActivity extends AppCompatActivity {
         @RequiresApi(api = Build.VERSION_CODES.N)
         @Override
         protected Void doInBackground(Void... voids) {
-//            String jsonString = HttpUtils.getJsonContent(HttpUtils.BASE_URL);
-            HttpUtils.upLoadMessage(mUser.getName(), mMessageEntity, new HttpUtils.HttpCallbackListener() {
+            HttpUtils.addMessage(mMessageEntity, new HttpUtils.HttpCallbackListener() {
                 @Override
                 public void onFinish(String s) {
-                    Log.i("message", "成功");
+                    Log.i("Message", "成功");
                 }
 
                 @Override
                 public void onError(Exception e) {
-                    Log.i("message", e.getMessage());
+                    Log.i("Message", e.getMessage());
                 }
             });
             return null;
@@ -128,6 +126,7 @@ public class MessageActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void aVoid) {
             Toast.makeText(getApplicationContext(), "成功", Toast.LENGTH_SHORT).show();
+            mMessageFragment.initData();
         }
     }
 }
