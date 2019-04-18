@@ -44,6 +44,10 @@
             android:name=".FeedBack.FeedBackActivity"
             android:label="用户反馈"
             android:parentActivityName=".Main.MainActivity"></activity>
+        <activity
+            android:name=".About.AboutActivity"
+            android:label="软件相关"
+            android:parentActivityName=".Main.MainActivity"></activity>
     </application>
 
 </manifest>

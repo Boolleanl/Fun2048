@@ -20,9 +20,6 @@ import butterknife.ButterKnife;
  * Created by Boollean on 2019/3/11.
  */
 public class FeedBackFragment extends Fragment {
-
-    @BindView(R.id.feedback_edit_text)
-    EditText mEditText;
     @BindView(R.id.feedback_submit_button)
     Button mButton;
 

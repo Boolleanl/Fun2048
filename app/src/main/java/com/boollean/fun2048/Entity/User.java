@@ -43,6 +43,10 @@ public class User {
         User.instance = instance;
     }
 
+    public static void deleteThisUser(){
+        User.instance = null;
+    }
+
     public String getName() {
         return mName;
     }

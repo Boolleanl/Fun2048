@@ -27,6 +27,9 @@ import com.boollean.fun2048.R;
 import com.boollean.fun2048.Utils.HttpUtils;
 import com.boollean.fun2048.Utils.HttpUtils.HttpCallbackListener;
 import com.boollean.fun2048.Utils.JsonUtils;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -328,7 +331,7 @@ public class UserEditorFragment extends Fragment {
     /**
      * 保存用户信息的线程
      */
-    private static class SaveInformationTask extends AsyncTask<User, Process, Void> {
+    private static class SaveInformationTask extends AsyncTask<User, Process, String> {
 
         private User mUser = User.getInstance();
         private String oldName;
@@ -352,7 +355,8 @@ public class UserEditorFragment extends Fragment {
         }
 
         @Override
-        protected Void doInBackground(User... users) {
+        protected String doInBackground(User... users) {
+            String result = null;
             mUser.setName(mName);
             mUser.setPassword(mPassword);
             mUser.setGender(mGender);
@@ -381,7 +385,7 @@ public class UserEditorFragment extends Fragment {
 //                });
 
                 if(oldName==null){
-                    HttpUtils.addUser(mUser, new HttpUtils.HttpCallbackListener() {
+                    result = HttpUtils.addUser(mUser, new HttpUtils.HttpCallbackListener() {
                         @Override
                         public void onFinish(String s) {
                             Log.i("User", "成功");
@@ -392,9 +396,8 @@ public class UserEditorFragment extends Fragment {
                             Log.i("User", e.getMessage());
                         }
                     });
-                    return null;
                 }else if(oldName.equals(mName)){
-                    HttpUtils.updateUserData(mUser, new HttpUtils.HttpCallbackListener() {
+                    result = HttpUtils.updateUserData(mUser, new HttpUtils.HttpCallbackListener() {
                         @Override
                         public void onFinish(String s) {
                             Log.i("User", "成功");
@@ -405,9 +408,8 @@ public class UserEditorFragment extends Fragment {
                             Log.i("User", e.getMessage());
                         }
                     });
-                    return null;
                 } else  {
-                    HttpUtils.updateUser(oldName,mUser, new HttpUtils.HttpCallbackListener() {
+                    result = HttpUtils.updateUser(oldName,mUser, new HttpUtils.HttpCallbackListener() {
                         @Override
                         public void onFinish(String s) {
                             Log.i("User", "成功");
@@ -418,17 +420,29 @@ public class UserEditorFragment extends Fragment {
                             Log.i("User", e.getMessage());
                         }
                     });
-                    return null;
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            return null;
+            return result;
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
-            Toast.makeText(context, "保存成功", Toast.LENGTH_SHORT).show();
+        protected void onPostExecute(String s) {
+            if(s.equals("fail")){
+                Toast.makeText(context, "提交失败", Toast.LENGTH_SHORT).show();
+            }else {
+                //获得解析者
+                JsonParser jsonParser = new JsonParser();
+                //获得根节点元素
+                JsonElement root = jsonParser.parse(s);
+                //根据文档判断根节点属于什么类型的Gson节点对象
+                JsonObject object = root.getAsJsonObject();
+                String msg = object.get("msg").getAsString();
+                if(msg.equals("success")){
+                    Toast.makeText(context, "成功", Toast.LENGTH_SHORT).show();
+                }
+            }
         }
 
         private void saveLastMode() {

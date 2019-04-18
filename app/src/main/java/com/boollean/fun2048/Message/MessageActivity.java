@@ -19,6 +19,10 @@ import com.boollean.fun2048.Entity.User;
 import com.boollean.fun2048.R;
 import com.boollean.fun2048.Utils.HttpUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import java.sql.Date;
 import java.text.SimpleDateFormat;
@@ -99,7 +103,7 @@ public class MessageActivity extends AppCompatActivity {
         });
     }
 
-    private class PostMessageData extends AsyncTask<Void, Void, Void> {
+    private class PostMessageData extends AsyncTask<Void, Void, String> {
         private MessageEntity mMessageEntity;
 
         public PostMessageData(MessageEntity messageEntity) {
@@ -108,8 +112,8 @@ public class MessageActivity extends AppCompatActivity {
 
         @RequiresApi(api = Build.VERSION_CODES.N)
         @Override
-        protected Void doInBackground(Void... voids) {
-            HttpUtils.addMessage(mMessageEntity, new HttpUtils.HttpCallbackListener() {
+        protected String doInBackground(Void... voids) {
+            String result = HttpUtils.addMessage(mMessageEntity, new HttpUtils.HttpCallbackListener() {
                 @Override
                 public void onFinish(String s) {
                     Log.i("Message", "成功");
@@ -120,13 +124,28 @@ public class MessageActivity extends AppCompatActivity {
                     Log.i("Message", e.getMessage());
                 }
             });
-            return null;
+            Log.i("Message",result);
+            return result;
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
-            Toast.makeText(getApplicationContext(), "成功", Toast.LENGTH_SHORT).show();
-            mMessageFragment.initData();
+        protected void onPostExecute(String s) {
+            if(s.equals("fail")){
+                Toast.makeText(getApplicationContext(), "失败", Toast.LENGTH_SHORT).show();
+            }
+            else {
+                //获得解析者
+                JsonParser jsonParser = new JsonParser();
+                //获得根节点元素
+                JsonElement root = jsonParser.parse(s);
+                //根据文档判断根节点属于什么类型的Gson节点对象
+                JsonObject object = root.getAsJsonObject();
+                String msg = object.get("msg").getAsString();
+                if(msg.equals("success")){
+                    Toast.makeText(getApplicationContext(), "成功", Toast.LENGTH_SHORT).show();
+                    mMessageFragment.initData();
+                }
+            }
         }
     }
 }

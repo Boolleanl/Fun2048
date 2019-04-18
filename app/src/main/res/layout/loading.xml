@@ -4,24 +4,23 @@
     android:layout_height="match_parent">
 
     <RelativeLayout
-        android:id="@+id/rl_tv_failed"
+        android:id="@+id/failed_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/white"
         android:visibility="gone">
 
         <TextView
-            android:id="@+id/tv_failed"
+            android:id="@+id/failed_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="加载失败，点击重试"
             android:textColor="@android:color/darker_gray"
             android:textSize="20sp" />
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/rl_progress_bar"
+        android:id="@+id/progress_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/white"

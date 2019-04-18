@@ -27,6 +27,7 @@ public class HttpUtils {
     public static final String ADD_USER="addUser";
     public static final String UPDATE_USER="updateUser";
     public static final String UPDATE_USER_DATA="updateUserData";
+    public static final String DELETE_USER = "deleteUser";
     public static final String GET_BEST_100_USERS_4 = "getBest100Users4";
     public static final String GET_BEST_100_USERS_5 = "getBest100Users5";
     public static final String GET_BEST_100_USERS_6 = "getBest100Users6";
@@ -35,7 +36,7 @@ public class HttpUtils {
     public static final String UPDATE_SCORE_6 = "updateScore6";
     public static final String GET_MESSAGES = "getLatest100Messages";
     public static final String ADD_MESSAGE = "addMessage";
-    private static final int TIME_OUT = 3 * 1000;   //超时时间
+    private static final int TIME_OUT = 5 * 1000;   //超时时间
     private static final String CHARSET = "UTF-8"; //设置编码
 
     public static boolean isNetworkAvailable(Context context) {
@@ -101,6 +102,18 @@ public class HttpUtils {
         return url.toString();
     }
 
+    public static String getURLWithParams(String name,String password){
+        StringBuilder url = new StringBuilder(BASE_URL + DELETE_USER);
+        url.append("?");
+        url.append("name=");
+        url.append(name);
+        url.append("&");
+        url.append("password=");
+        url.append(password);
+
+        return url.toString();
+    }
+
     public static String getURLWithParams(String oldName, User user) {
         StringBuilder url = new StringBuilder(BASE_URL);
         url.append("?");
@@ -140,8 +153,9 @@ public class HttpUtils {
         return url.toString();
     }
 
-    public static void sendHttpRequest(String address, HttpCallbackListener listener) {
+    public static String sendHttpRequest(String address, HttpCallbackListener listener) {
         HttpURLConnection connection = null;
+        StringBuilder response = null;
         try {
             URL url = new URL(address);
             //使用HttpURLConnection
@@ -155,7 +169,7 @@ public class HttpUtils {
             //获取返回结果
             InputStream inputStream = connection.getInputStream();
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-            StringBuilder response = new StringBuilder();
+            response = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {
                 response.append(line);
@@ -165,6 +179,7 @@ public class HttpUtils {
                 listener.onFinish(response.toString());
             }
         } catch (Exception e) {
+            response = new StringBuilder("fail");
             e.printStackTrace();
             //出现异常则回调onError
             if (listener != null) {
@@ -174,6 +189,7 @@ public class HttpUtils {
             if (connection != null) {
                 connection.disconnect();
             }
+            return response.toString();
         }
     }
 
@@ -207,6 +223,7 @@ public class HttpUtils {
             URL url = new URL(BASE_URL + ADD_USER);
             // 调用URL对象的openConnection()方法，创建HttpURLConnection对象；
             connection = (HttpURLConnection) url.openConnection();
+            connection.setConnectTimeout(TIME_OUT);
             connection.setDoInput(true);
             connection.setDoOutput(true);
             connection.setRequestMethod("POST");
@@ -249,6 +266,7 @@ public class HttpUtils {
             listener.onFinish(resultBuffer.toString());
         } catch (Exception e) {
             // TODO Auto-generated catch block
+            resultBuffer = new StringBuffer("fail");
             e.printStackTrace();
             listener.onError(e);
         } finally {
@@ -321,6 +339,7 @@ public class HttpUtils {
             URL url = new URL(BASE_URL + UPDATE_USER);
             // 调用URL对象的openConnection()方法，创建HttpURLConnection对象；
             connection = (HttpURLConnection) url.openConnection();
+            connection.setConnectTimeout(TIME_OUT);
             connection.setDoInput(true);
             connection.setDoOutput(true);
             connection.setRequestMethod("POST");
@@ -363,6 +382,7 @@ public class HttpUtils {
             listener.onFinish(resultBuffer.toString());
         } catch (Exception e) {
             // TODO Auto-generated catch block
+            resultBuffer = new StringBuffer("fail");
             e.printStackTrace();
             listener.onError(e);
         } finally {
@@ -433,6 +453,7 @@ public class HttpUtils {
             URL url = new URL(BASE_URL + UPDATE_USER_DATA);
             // 调用URL对象的openConnection()方法，创建HttpURLConnection对象；
             connection = (HttpURLConnection) url.openConnection();
+            connection.setConnectTimeout(TIME_OUT);
             connection.setDoInput(true);
             connection.setDoOutput(true);
             connection.setRequestMethod("POST");
@@ -475,6 +496,7 @@ public class HttpUtils {
             listener.onFinish(resultBuffer.toString());
         } catch (Exception e) {
             // TODO Auto-generated catch block
+            resultBuffer = new StringBuffer("fail");
             e.printStackTrace();
             listener.onError(e);
         } finally {
@@ -515,14 +537,12 @@ public class HttpUtils {
         }
     }
 
-
     public static String addMessage(MessageEntity messageEntity, HttpCallbackListener listener) {
         DataOutputStream ds = null;
         InputStream inputStream = null;
         InputStreamReader inputStreamReader = null;
         BufferedReader reader = null;
         StringBuffer resultBuffer = new StringBuffer();
-
 
         Map subject = new HashMap<String,Object>();
         subject.put("name",messageEntity.getName());
@@ -536,13 +556,14 @@ public class HttpUtils {
 
         Gson gson = new Gson();
         String jsonData = gson.toJson(request);
-        Log.i("message",jsonData);
+        Log.i("Message",jsonData);
         HttpURLConnection connection = null;
         try {
             // 实例化URL对象。调用URL有参构造方法，参数是一个url地址；
             URL url = new URL(BASE_URL + ADD_MESSAGE);
             // 调用URL对象的openConnection()方法，创建HttpURLConnection对象；
             connection = (HttpURLConnection) url.openConnection();
+            connection.setConnectTimeout(TIME_OUT);
             connection.setDoInput(true);
             connection.setDoOutput(true);
             connection.setRequestMethod("POST");
@@ -562,7 +583,7 @@ public class HttpUtils {
             OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
             writer.write(jsonData);
             writer.flush();
-
+            Log.i("Message","ResponseCode= "+String.valueOf(connection.getResponseCode()));
             if (connection.getResponseCode() >= 300) {
                 throw new Exception(
                         "HTTP Request is not success, Response code is " + connection.getResponseCode());
@@ -570,7 +591,7 @@ public class HttpUtils {
 
             if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 String tempLine = null;
-                Log.i("message", connection.getResponseCode() + "");
+                Log.i("Message", connection.getResponseCode() + "");
                 inputStream = connection.getInputStream();
                 inputStreamReader = new InputStreamReader(inputStream,CHARSET);
                 reader = new BufferedReader(inputStreamReader);
@@ -586,6 +607,7 @@ public class HttpUtils {
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
+            resultBuffer = new StringBuffer("fail");
             listener.onError(e);
         } finally {
             if (ds != null) {
@@ -646,6 +668,7 @@ public class HttpUtils {
             // 调用URL对象的openConnection()方法，创建HttpURLConnection对象；
             connection = (HttpURLConnection) url.openConnection();
             // 调用HttpURLConnection对象setDoOutput(true)、setDoInput(true)、setRequestMethod("POST")；
+            connection.setConnectTimeout(TIME_OUT);
             connection.setDoInput(true);
             connection.setDoOutput(true);
             connection.setRequestMethod("POST");

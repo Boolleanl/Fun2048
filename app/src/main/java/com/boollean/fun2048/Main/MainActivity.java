@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.boollean.fun2048.About.AboutActivity;
 import com.boollean.fun2048.Entity.User;
 import com.boollean.fun2048.FeedBack.FeedBackActivity;
 import com.boollean.fun2048.Game.GameActivity;
@@ -366,8 +367,9 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_rank) {
             Intent intent = RankActivity.newIntent(this);
             startActivity(intent);
-        } else if (id == R.id.nav_manage) {
-
+        } else if (id == R.id.nav_about) {
+            Intent intent = AboutActivity.newIntent(this);
+            startActivity(intent);
         } else if (id == R.id.nav_feedback) {
             Intent intent = FeedBackActivity.newIntent(this);
             startActivity(intent);

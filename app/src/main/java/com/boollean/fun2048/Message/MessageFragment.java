@@ -32,17 +32,13 @@ import butterknife.ButterKnife;
  * Created by Boollean on 2019/3/6.
  */
 public class MessageFragment extends Fragment {
-    @BindView(R.id.loading_view)
+    @BindView(R.id.message_loading_view)
     LoadingView mLoadingView;
 
     @BindView(R.id.message_recycler_view)
     RecyclerView recyclerView;
 
     private MessageAdapter adapter;
-    private ArrayList<String> nameList = new ArrayList<>();
-    private ArrayList<String> dateList = new ArrayList<>();
-    private ArrayList<String> messageList = new ArrayList<>();
-    private ArrayList<Integer> genderList = new ArrayList<>();
 
     public static MessageFragment newInstance() {
         return new MessageFragment();
@@ -51,7 +47,9 @@ public class MessageFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initData();
+        if(HttpUtils.isNetworkAvailable(getActivity())){
+            initData();
+        }
     }
 
     public void initData() {
@@ -68,10 +66,18 @@ public class MessageFragment extends Fragment {
         mLoadingView.setListener(new LoadingView.LoadingViewListener() {
             @Override
             public void onFailedClickListener() {
-
+                if(HttpUtils.isNetworkAvailable(getActivity())){
+                    initData();
+                }else {
+                    mLoadingView.showNetworkUnavailable();
+                }
             }
         });
-        mLoadingView.showLoading();
+        if(!HttpUtils.isNetworkAvailable(getActivity())){
+            mLoadingView.showNetworkUnavailable();
+        }else {
+            mLoadingView.showLoading();
+        }
         return view;
     }
 
@@ -104,7 +110,6 @@ public class MessageFragment extends Fragment {
                 mLoadingView.showContentView();
                 initView(list);
             }else {
-                Toast.makeText(getActivity(), "服务器异常，无法获取信息", Toast.LENGTH_LONG).show();
                 mLoadingView.showFailed();
             }
         }

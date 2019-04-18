@@ -7,12 +7,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.boollean.fun2048.Entity.RankUserEntity;
 import com.boollean.fun2048.R;
 import com.boollean.fun2048.Utils.HttpUtils;
 import com.boollean.fun2048.Utils.JsonUtils;
+import com.boollean.fun2048.Utils.LoadingView;
 
 import java.util.List;
 
@@ -30,6 +30,9 @@ import butterknife.ButterKnife;
  * Created by Boollean on 2019/3/9.
  */
 public class RankSixFragment extends Fragment {
+    @BindView(R.id.rank_loading_view)
+    LoadingView mLoadingView;
+
     @BindView(R.id.rank_recycler_view)
     RecyclerView mRecyclerView;
 
@@ -42,7 +45,9 @@ public class RankSixFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initData();
+        if(HttpUtils.isNetworkAvailable(getActivity())){
+            initData();
+        }
     }
 
     private void initData() {
@@ -56,6 +61,21 @@ public class RankSixFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_rank, container, false);
         ButterKnife.bind(this, view);
+        mLoadingView.setListener(new LoadingView.LoadingViewListener() {
+            @Override
+            public void onFailedClickListener() {
+                if(HttpUtils.isNetworkAvailable(getActivity())){
+                    initData();
+                }else {
+                    mLoadingView.showNetworkUnavailable();
+                }
+            }
+        });
+        if(!HttpUtils.isNetworkAvailable(getActivity())){
+            mLoadingView.showNetworkUnavailable();
+        }else {
+            mLoadingView.showLoading();
+        }
         return view;
     }
 
@@ -83,9 +103,10 @@ public class RankSixFragment extends Fragment {
         protected void onPostExecute(List<RankUserEntity> list) {
             if(list!=null){
                 Log.i("Rank6", list.size() + "");
+                mLoadingView.showContentView();
                 initView(list);
             }else {
-                Toast.makeText(getActivity(), "服务器异常，无法获取信息", Toast.LENGTH_LONG).show();
+                mLoadingView.showFailed();
             }
         }
     }

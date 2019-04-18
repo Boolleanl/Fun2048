@@ -5,12 +5,14 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.boollean.fun2048.R;
 
 public class LoadingView extends RelativeLayout {
     private RelativeLayout mRelativeLayoutLoading;
     private RelativeLayout mRelativeLayoutFailed;
+    private TextView mTextView;
 
     private LoadingView.LoadingViewListener mListener;
 
@@ -35,9 +37,9 @@ public class LoadingView extends RelativeLayout {
 
     private void initView(Context context) {
         View view = LayoutInflater.from(context).inflate(R.layout.loading, this);
-        mRelativeLayoutLoading = view.findViewById(R.id.rl_progress_bar);
-        mRelativeLayoutFailed = view.findViewById(R.id.rl_tv_failed);
-
+        mRelativeLayoutLoading = view.findViewById(R.id.progress_bar_layout);
+        mRelativeLayoutFailed = view.findViewById(R.id.failed_layout);
+        mTextView = view.findViewById(R.id.failed_text_view);
         mRelativeLayoutFailed.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -69,6 +71,13 @@ public class LoadingView extends RelativeLayout {
      * 显示加载失败的状态
      */
     public void showFailed() {
+        mTextView.setText("加载失败，点击重试");
+        mRelativeLayoutLoading.setVisibility(View.GONE);
+        mRelativeLayoutFailed.setVisibility(View.VISIBLE);
+    }
+
+    public void showNetworkUnavailable(){
+        mTextView.setText("网络不可用");
         mRelativeLayoutLoading.setVisibility(View.GONE);
         mRelativeLayoutFailed.setVisibility(View.VISIBLE);
     }
