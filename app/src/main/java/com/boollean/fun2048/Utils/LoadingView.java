@@ -71,15 +71,15 @@ public class LoadingView extends RelativeLayout {
      * 显示加载失败的状态
      */
     public void showFailed() {
-        mTextView.setText("加载失败，点击重试");
         mRelativeLayoutLoading.setVisibility(View.GONE);
         mRelativeLayoutFailed.setVisibility(View.VISIBLE);
+        mTextView.setText("加载失败，点击重试");
     }
 
     public void showNetworkUnavailable(){
-        mTextView.setText("网络不可用");
         mRelativeLayoutLoading.setVisibility(View.GONE);
         mRelativeLayoutFailed.setVisibility(View.VISIBLE);
+        mTextView.setText("网络不可用");
     }
 
     public interface LoadingViewListener {

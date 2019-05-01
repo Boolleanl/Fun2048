@@ -113,17 +113,7 @@ public class MessageActivity extends AppCompatActivity {
         @RequiresApi(api = Build.VERSION_CODES.N)
         @Override
         protected String doInBackground(Void... voids) {
-            String result = HttpUtils.addMessage(mMessageEntity, new HttpUtils.HttpCallbackListener() {
-                @Override
-                public void onFinish(String s) {
-                    Log.i("Message", "成功");
-                }
-
-                @Override
-                public void onError(Exception e) {
-                    Log.i("Message", e.getMessage());
-                }
-            });
+            String result = HttpUtils.addMessage(mMessageEntity);
             Log.i("Message",result);
             return result;
         }

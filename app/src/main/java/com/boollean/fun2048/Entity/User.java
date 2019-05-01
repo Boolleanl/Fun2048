@@ -2,6 +2,7 @@ package com.boollean.fun2048.Entity;
 
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.util.Log;
 
 /**
  * 用户类。
@@ -45,6 +46,7 @@ public class User {
 
     public static void deleteThisUser(){
         User.instance = null;
+        Log.i("aboutF","name"+instance.getName());
     }
 
     public String getName() {

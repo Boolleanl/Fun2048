@@ -57,7 +57,6 @@ public class MessageFragment extends Fragment {
         getMessageData.execute();
     }
 
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -77,11 +76,13 @@ public class MessageFragment extends Fragment {
             mLoadingView.showNetworkUnavailable();
         }else {
             mLoadingView.showLoading();
+            Log.i("message","show loading");
         }
         return view;
     }
 
     private void initView(List list) {
+        Log.i("message","init view  "+list.size()+"");
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);
         adapter = new MessageAdapter(list);
@@ -94,22 +95,23 @@ public class MessageFragment extends Fragment {
         @Override
         protected List<MessageEntity> doInBackground(Void... voids) {
             String jsonString = HttpUtils.getJsonContent(HttpUtils.GET_MESSAGES);
-            Log.i("Message", jsonString);
+            Log.i("message", jsonString);
             if (jsonString.equals("fail")){
                 return null;
             }
             List<MessageEntity> messageList = JsonUtils.toMessageList(jsonString);
-            Log.i("Message", messageList.size() + "");
+            Log.i("message", messageList.size() + "");
             return messageList;
         }
 
         @Override
         protected void onPostExecute(List<MessageEntity> list) {
             if(list!=null){
-                Log.i("Message", list.size() + "");
+                Log.i("message", "success  "+list.size() + "");
                 mLoadingView.showContentView();
                 initView(list);
             }else {
+                Log.i("message","show failed");
                 mLoadingView.showFailed();
             }
         }

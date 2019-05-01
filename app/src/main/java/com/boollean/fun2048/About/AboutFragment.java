@@ -10,12 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
-import com.boollean.fun2048.Entity.MessageEntity;
 import com.boollean.fun2048.Entity.User;
-import com.boollean.fun2048.Message.MessageActivity;
 import com.boollean.fun2048.R;
 import com.boollean.fun2048.Utils.HttpUtils;
 import com.google.gson.JsonElement;
@@ -33,6 +30,7 @@ import butterknife.ButterKnife;
 import static android.content.Context.MODE_PRIVATE;
 
 public class AboutFragment extends Fragment {
+    private User mUser = User.getInstance();
     @BindView(R.id.about_cancellation_button)
     Button mButton;
 
@@ -56,6 +54,11 @@ public class AboutFragment extends Fragment {
     }
 
     private void initView() {
+        if(mUser.getName()==null){
+            mButton.setVisibility(View.GONE);
+        }else {
+            mButton.setVisibility(View.VISIBLE);
+        }
 
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,18 +92,17 @@ public class AboutFragment extends Fragment {
         @Override
         protected String doInBackground(Void... voids) {
             String compeletedURL = HttpUtils.getURLWithParams(user.getName(),user.getPassword());
-            Log.i("About",compeletedURL);
             String result = HttpUtils.sendHttpRequest(compeletedURL, new HttpUtils.HttpCallbackListener() {
                 @Override
                 public void onFinish(String response) {
-                    Log.i("about", "成功:  "+response);
+                    Log.i("aboutF", "成功:  "+response);
                     User.deleteThisUser();
                     deleteUserMode();
                 }
 
                 @Override
                 public void onError(Exception e) {
-                    Log.i("about", "失败");
+                    Log.i("aboutF", "失败");
                 }
             });
             return result;

@@ -21,19 +21,15 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import com.boollean.fun2048.Entity.MessageEntity;
 import com.boollean.fun2048.Entity.User;
 import com.boollean.fun2048.R;
 import com.boollean.fun2048.Utils.HttpUtils;
-import com.boollean.fun2048.Utils.HttpUtils.HttpCallbackListener;
-import com.boollean.fun2048.Utils.JsonUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -45,6 +41,7 @@ import butterknife.OnClick;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.content.Context.MODE_PRIVATE;
+
 
 /**
  * 用户信息界面的Fragment。
@@ -76,14 +73,15 @@ public class UserEditorFragment extends Fragment {
     ImageView avatarImageView;
     @BindView(R.id.user_information_complete_button)
     Button completeButton;
-    private Uri mUriPath;
-    private String oldName = null;
-    private String name = null;
-    private String password = null;
-    private int gender = 0;
-    private Bitmap bitmap = null;
     private User mUser = User.getInstance();
+    private Uri mUriPath;
+    private String oldName;
+    private String name;
+    private String password;
+    private int gender = mUser.getGender();
+    private Bitmap bitmap;
     private SharedPreferences mPreferences;
+    private static boolean ImageIsChanged;
 
     public static UserEditorFragment newInstance() {
         return new UserEditorFragment();
@@ -282,6 +280,7 @@ public class UserEditorFragment extends Fragment {
         intent.putExtra(MediaStore.EXTRA_OUTPUT, mUriPath);
         intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
         intent.putExtra("return-data", false);
+        ImageIsChanged = true;
         return intent;
     }
 
@@ -313,6 +312,7 @@ public class UserEditorFragment extends Fragment {
         try {
             Bitmap bitmap = BitmapFactory.decodeStream(getContext().getContentResolver().openInputStream(uri));
             mUser.setAvatar(bitmap);
+            ImageIsChanged = false;
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -334,7 +334,7 @@ public class UserEditorFragment extends Fragment {
     private static class SaveInformationTask extends AsyncTask<User, Process, String> {
 
         private User mUser = User.getInstance();
-        private String oldName;
+        private String mOldName;
         private String mName;
         private String mPassword;
         private int mGender;
@@ -344,7 +344,7 @@ public class UserEditorFragment extends Fragment {
         private SharedPreferences mPreferences;
 
         public SaveInformationTask(String oldName, String name, String password, int gender, Bitmap bitmap, Uri bitmapPath, SharedPreferences preferences, FragmentActivity activity) {
-            this.oldName = oldName;
+            mOldName = oldName;
             mName = name;
             mPassword = password;
             mGender = gender;
@@ -364,62 +364,37 @@ public class UserEditorFragment extends Fragment {
             mUser.setBitmapPath(mBitmapPath);
 
             saveLastMode();
-            //TODO 网络数据传输
-            String s = JsonUtils.userToJson(mUser);
-            Log.i(TAG, s);
 
             try {
-                Log.i(TAG, mName);
-//                Log.i("upload", mBitmapPath.toString());
-//                String filePath = mBitmapPath.toString().substring(mBitmapPath.toString().lastIndexOf("//") + 1);
-//                HttpUtils.upLoadFile(mName, filePath, new HttpCallbackListener() {
-//                    @Override
-//                    public void onFinish(String response) {
-//                        Log.i("upload  ", "成功");
-//                    }
-//
-//                    @Override
-//                    public void onError(Exception e) {
-//                        Log.i("upload ", "失败");
-//                    }
-//                });
-
-                if(oldName==null){
-                    result = HttpUtils.addUser(mUser, new HttpUtils.HttpCallbackListener() {
-                        @Override
-                        public void onFinish(String s) {
-                            Log.i("User", "成功");
-                        }
-
-                        @Override
-                        public void onError(Exception e) {
-                            Log.i("User", e.getMessage());
-                        }
-                    });
-                }else if(oldName.equals(mName)){
-                    result = HttpUtils.updateUserData(mUser, new HttpUtils.HttpCallbackListener() {
-                        @Override
-                        public void onFinish(String s) {
-                            Log.i("User", "成功");
-                        }
-
-                        @Override
-                        public void onError(Exception e) {
-                            Log.i("User", e.getMessage());
-                        }
-                    });
-                } else  {
-                    result = HttpUtils.updateUser(oldName,mUser, new HttpUtils.HttpCallbackListener() {
-                        @Override
-                        public void onFinish(String s) {
-                            Log.i("User", "成功");
-                        }
-
-                        @Override
-                        public void onError(Exception e) {
-                            Log.i("User", e.getMessage());
-                        }
-                    });
+                //新建账号
+                if(mOldName==null){
+                    result = HttpUtils.addUser(mUser);
+                    //修改了头像
+                    if(ImageIsChanged){
+                        String filePath = Uri.decode(mBitmapPath.getEncodedPath());
+                        HttpUtils.upLoadImage(mName,filePath);
+                        ImageIsChanged = false;
+                    }
+                }
+                //没有修改用户名
+                else if(mOldName.equals(mName)){
+                    result = HttpUtils.updateUserData(mUser);
+                    //修改了头像
+                    if(ImageIsChanged){
+                        String filePath = Uri.decode(mBitmapPath.getEncodedPath());
+                        HttpUtils.upLoadImage(mName,filePath);
+                        ImageIsChanged = false;
+                    }
+                }
+                //修改了用户名
+                else  {
+                    result = HttpUtils.updateUser(mOldName,mUser);
+                    //修改了头像
+                    if(ImageIsChanged){
+                        String filePath = Uri.decode(mBitmapPath.getEncodedPath());
+                        HttpUtils.upLoadImage(mName,filePath);
+                        ImageIsChanged = false;
+                    }
                 }
             } catch (Exception e) {
                 e.printStackTrace();

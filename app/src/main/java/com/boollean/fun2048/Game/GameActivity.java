@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.widget.Toast;
 
 import com.boollean.fun2048.Entity.NumberItem;
 import com.boollean.fun2048.Entity.User;
@@ -18,6 +19,9 @@ import com.boollean.fun2048.R;
 import com.boollean.fun2048.Utils.HttpUtils;
 import com.boollean.fun2048.Utils.OperationFactory;
 import com.boollean.fun2048.Utils.OperationThread;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import org.json.JSONArray;
 
@@ -181,9 +185,12 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
+
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
         if (whichGame == 4) {
             saveLastNumbers(NumberItem.getInstanceFour().getNumbers()); //记录最后一步的情况。
             saveBestScore(NumberItem.getInstanceFour().getBestScore()); //记录4X4模式最高分。
@@ -250,7 +257,6 @@ public class GameActivity extends AppCompatActivity {
     private void saveBestScore(int score) {
         mPreferences = getApplicationContext().getSharedPreferences("SAVE_DATA", MODE_PRIVATE);
         SharedPreferences.Editor editor = mPreferences.edit();
-        Log.i("save",String.valueOf(score));
         if (whichGame == 4) {
             editor.putInt("BEST_SCORE_FOR_FOUR", score);
             editor.commit();
@@ -296,7 +302,7 @@ public class GameActivity extends AppCompatActivity {
         return mDetector.onTouchEvent(event);
     }
 
-    private class UpLoadBestScore extends AsyncTask<Void, Void, Void> {
+    private class UpLoadBestScore extends AsyncTask<Void, Void, String> {
         private int whichGame;
         private String name;
         private int score;
@@ -308,25 +314,30 @@ public class GameActivity extends AppCompatActivity {
         }
 
         @Override
-        protected Void doInBackground(Void... voids) {
+        protected String doInBackground(Void... voids) {
+            String result = null;
             try {
                 String compeletedURL = HttpUtils.getURLWithParams(whichGame, name, score);
-                Log.i("save score", compeletedURL);
-                HttpUtils.sendHttpRequest(compeletedURL, new HttpUtils.HttpCallbackListener() {
+                result = HttpUtils.sendHttpRequest(compeletedURL, new HttpUtils.HttpCallbackListener() {
                     @Override
                     public void onFinish(String response) {
-                        Log.i("save score ", "成功:  "+response);
+                        Log.i("savescore", "成功:  "+response);
                     }
 
                     @Override
                     public void onError(Exception e) {
-                        Log.i("save score ", "失败");
+                        Log.i("savescore", "失败");
                     }
                 });
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            return null;
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+
         }
     }
 }

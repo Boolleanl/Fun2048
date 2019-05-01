@@ -12,6 +12,7 @@ import com.google.gson.Gson;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,12 +23,20 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
 public class HttpUtils {
-    public static final String BASE_URL = "http://10.15.134.221:8080/appservice/";
+    public static final String BASE_URL = "http://10.14.30.184:8080/appservice/";
     public static final String ADD_USER="addUser";
     public static final String UPDATE_USER="updateUser";
     public static final String UPDATE_USER_DATA="updateUserData";
     public static final String DELETE_USER = "deleteUser";
+    public static final String UPLOAD_IMAGE="uploadImage";
     public static final String GET_BEST_100_USERS_4 = "getBest100Users4";
     public static final String GET_BEST_100_USERS_5 = "getBest100Users5";
     public static final String GET_BEST_100_USERS_6 = "getBest100Users6";
@@ -63,7 +72,6 @@ public class HttpUtils {
             connection.setRequestMethod("GET");
             connection.setDoInput(true);
             int code = connection.getResponseCode();
-            Log.i("Json",String.valueOf(code));
             if (code == 200) {
                 return changeInputString(connection.getInputStream());
             }
@@ -74,7 +82,6 @@ public class HttpUtils {
     }
 
     private static String changeInputString(InputStream inputStream) {
-
         String jsonString = "";
         ByteArrayOutputStream outPutStream = new ByteArrayOutputStream();
         byte[] data = new byte[1024];
@@ -93,8 +100,7 @@ public class HttpUtils {
 
     public static String getURLWithParams(String name) {
         StringBuilder url = new StringBuilder();
-        url = new StringBuilder(BASE_URL);
-
+        url = new StringBuilder(BASE_URL + UPLOAD_IMAGE);
         url.append("?");
         url.append("name=");
         url.append(name);
@@ -110,24 +116,6 @@ public class HttpUtils {
         url.append("&");
         url.append("password=");
         url.append(password);
-
-        return url.toString();
-    }
-
-    public static String getURLWithParams(String oldName, User user) {
-        StringBuilder url = new StringBuilder(BASE_URL);
-        url.append("?");
-        url.append("oldName=");
-        url.append(oldName);
-        url.append("&");
-        url.append("name=");
-        url.append(user.getName());
-        url.append("&");
-        url.append("password=");
-        url.append(user.getPassword());
-        url.append("&");
-        url.append("gender=");
-        url.append(user.getGender());
 
         return url.toString();
     }
@@ -154,46 +142,29 @@ public class HttpUtils {
     }
 
     public static String sendHttpRequest(String address, HttpCallbackListener listener) {
-        HttpURLConnection connection = null;
-        StringBuilder response = null;
-        try {
-            URL url = new URL(address);
-            //使用HttpURLConnection
-            connection = (HttpURLConnection) url.openConnection();
-            //设置方法和参数
-            connection.setRequestMethod("GET");
-            connection.setConnectTimeout(TIME_OUT);
-            connection.setReadTimeout(TIME_OUT);
-            connection.setDoInput(true);
-            connection.setDoOutput(true);
-            //获取返回结果
-            InputStream inputStream = connection.getInputStream();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-            response = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                response.append(line);
-            }
-            //成功则回调onFinish
-            if (listener != null) {
-                listener.onFinish(response.toString());
+        String result = "fail";
+        OkHttpClient mOkHttpClient = new OkHttpClient();
+
+        Request.Builder reqBuilder = new Request.Builder();
+        Request request = reqBuilder
+                .url(address)
+                .build();
+
+        try{
+            Response response = mOkHttpClient.newCall(request).execute();
+            if (response.isSuccessful()) {
+                String resultValue = response.body().string();
+                listener.onFinish(resultValue);
+                return resultValue;
             }
         } catch (Exception e) {
-            response = new StringBuilder("fail");
             e.printStackTrace();
-            //出现异常则回调onError
-            if (listener != null) {
-                listener.onError(e);
-            }
-        } finally {
-            if (connection != null) {
-                connection.disconnect();
-            }
-            return response.toString();
+            listener.onError(e);
         }
+        return result;
     }
 
-    public static String addUser(User user, HttpCallbackListener listener) {
+    public static String addUser(User user) {
         DataOutputStream ds = null;
         InputStream inputStream = null;
         InputStreamReader inputStreamReader = null;
@@ -204,7 +175,7 @@ public class HttpUtils {
         subject.put("name",user.getName());
         subject.put("password",user.getPassword());
         subject.put("gender",user.getGender());
-        subject.put("avatar",user.getAvatar());
+        subject.put("avatar","avatarPath");
         subject.put("bestscore4",user.getBestScore4());
         subject.put("bestscore5",user.getBestScore5());
         subject.put("bestscore6",user.getBestScore6());
@@ -263,18 +234,14 @@ public class HttpUtils {
                     Log.i("message", resultBuffer.toString());
                 }
             }
-            listener.onFinish(resultBuffer.toString());
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             resultBuffer = new StringBuffer("fail");
             e.printStackTrace();
-            listener.onError(e);
         } finally {
             if (ds != null) {
                 try {
                     ds.close();
                 } catch (IOException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
             }
@@ -282,7 +249,6 @@ public class HttpUtils {
                 try {
                     reader.close();
                 } catch (IOException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
             }
@@ -290,7 +256,6 @@ public class HttpUtils {
                 try {
                     inputStreamReader.close();
                 } catch (IOException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
             }
@@ -298,7 +263,6 @@ public class HttpUtils {
                 try {
                     inputStream.close();
                 } catch (IOException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
             }
@@ -308,7 +272,7 @@ public class HttpUtils {
     }
 
 
-    public static String updateUser(String oldName,User user, HttpCallbackListener listener) {
+    public static String updateUser(String oldName,User user) {
         DataOutputStream ds = null;
         InputStream inputStream = null;
         InputStreamReader inputStreamReader = null;
@@ -319,8 +283,7 @@ public class HttpUtils {
         subject.put("name",user.getName());
         subject.put("password",user.getPassword());
         subject.put("gender",user.getGender());
-        //subject.put("avatar",user.getAvatar());
-        subject.put("bitmapPath",user.getBitmapPath());
+        subject.put("avatar","avatarPath");
         subject.put("bestscore4",user.getBestScore4());
         subject.put("bestscore5",user.getBestScore5());
         subject.put("bestscore6",user.getBestScore6());
@@ -379,18 +342,14 @@ public class HttpUtils {
                     Log.i("message", resultBuffer.toString());
                 }
             }
-            listener.onFinish(resultBuffer.toString());
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             resultBuffer = new StringBuffer("fail");
             e.printStackTrace();
-            listener.onError(e);
         } finally {
             if (ds != null) {
                 try {
                     ds.close();
                 } catch (IOException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
             }
@@ -398,7 +357,6 @@ public class HttpUtils {
                 try {
                     reader.close();
                 } catch (IOException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
             }
@@ -406,7 +364,6 @@ public class HttpUtils {
                 try {
                     inputStreamReader.close();
                 } catch (IOException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
             }
@@ -414,16 +371,14 @@ public class HttpUtils {
                 try {
                     inputStream.close();
                 } catch (IOException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
             }
-
             return resultBuffer.toString();
         }
     }
 
-    public static String updateUserData(User user, HttpCallbackListener listener) {
+    public static String updateUserData(User user) {
         DataOutputStream ds = null;
         InputStream inputStream = null;
         InputStreamReader inputStreamReader = null;
@@ -434,8 +389,7 @@ public class HttpUtils {
         subject.put("name",user.getName());
         subject.put("password",user.getPassword());
         subject.put("gender",user.getGender());
-        //subject.put("avatar",user.getAvatar());
-        subject.put("bitmapPath",user.getBitmapPath());
+        subject.put("avatar","avatarPath");
         subject.put("bestscore4",user.getBestScore4());
         subject.put("bestscore5",user.getBestScore5());
         subject.put("bestscore6",user.getBestScore6());
@@ -493,18 +447,14 @@ public class HttpUtils {
                     Log.i("message", resultBuffer.toString());
                 }
             }
-            listener.onFinish(resultBuffer.toString());
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             resultBuffer = new StringBuffer("fail");
             e.printStackTrace();
-            listener.onError(e);
         } finally {
             if (ds != null) {
                 try {
                     ds.close();
                 } catch (IOException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
             }
@@ -512,7 +462,6 @@ public class HttpUtils {
                 try {
                     reader.close();
                 } catch (IOException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
             }
@@ -520,7 +469,6 @@ public class HttpUtils {
                 try {
                     inputStreamReader.close();
                 } catch (IOException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
             }
@@ -528,7 +476,6 @@ public class HttpUtils {
                 try {
                     inputStream.close();
                 } catch (IOException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
             }
@@ -537,7 +484,7 @@ public class HttpUtils {
         }
     }
 
-    public static String addMessage(MessageEntity messageEntity, HttpCallbackListener listener) {
+    public static String addMessage(MessageEntity messageEntity) {
         DataOutputStream ds = null;
         InputStream inputStream = null;
         InputStreamReader inputStreamReader = null;
@@ -595,7 +542,6 @@ public class HttpUtils {
                 inputStream = connection.getInputStream();
                 inputStreamReader = new InputStreamReader(inputStream,CHARSET);
                 reader = new BufferedReader(inputStreamReader);
-                tempLine = null;
                 resultBuffer = new StringBuffer();
                 while ((tempLine = reader.readLine()) != null) {
                     resultBuffer.append(tempLine);
@@ -603,18 +549,14 @@ public class HttpUtils {
                     Log.i("message", resultBuffer.toString());
                 }
             }
-            listener.onFinish(resultBuffer.toString());
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
             resultBuffer = new StringBuffer("fail");
-            listener.onError(e);
         } finally {
             if (ds != null) {
                 try {
                     ds.close();
                 } catch (IOException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
             }
@@ -622,7 +564,6 @@ public class HttpUtils {
                 try {
                     reader.close();
                 } catch (IOException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
             }
@@ -630,7 +571,6 @@ public class HttpUtils {
                 try {
                     inputStreamReader.close();
                 } catch (IOException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
             }
@@ -638,7 +578,6 @@ public class HttpUtils {
                 try {
                     inputStream.close();
                 } catch (IOException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
             }
@@ -647,7 +586,7 @@ public class HttpUtils {
         }
     }
 
-    public static String upLoadFile(String name, String filePath, HttpCallbackListener listener) {
+    public static String upLoadFile(String name, String filePath) {
         DataOutputStream ds = null;
         InputStream inputStream = null;
         InputStreamReader inputStreamReader = null;
@@ -721,17 +660,13 @@ public class HttpUtils {
                     Log.i("upload", resultBuffer.toString());
                 }
             }
-            listener.onFinish(resultBuffer.toString());
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
-            listener.onError(e);
         } finally {
             if (ds != null) {
                 try {
                     ds.close();
                 } catch (IOException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
             }
@@ -739,7 +674,6 @@ public class HttpUtils {
                 try {
                     reader.close();
                 } catch (IOException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
             }
@@ -747,7 +681,6 @@ public class HttpUtils {
                 try {
                     inputStreamReader.close();
                 } catch (IOException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
             }
@@ -755,7 +688,6 @@ public class HttpUtils {
                 try {
                     inputStream.close();
                 } catch (IOException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
             }
@@ -764,9 +696,33 @@ public class HttpUtils {
         }
     }
 
-    public interface HttpCallbackListener {
-        void onFinish(String s);
+    public static String upLoadImage(String name,String imagePath){
+        OkHttpClient mOkHttpClient = new OkHttpClient();
 
+        String result = "fail";
+        MultipartBody.Builder builder = new MultipartBody.Builder();
+        builder.addFormDataPart("image", imagePath, RequestBody.create(MediaType.parse("image/jpg"), new File(imagePath)));
+        RequestBody requestBody = builder.build();
+        Request.Builder reqBuilder = new Request.Builder();
+        Request request = reqBuilder
+                .url(BASE_URL + UPLOAD_IMAGE+"?name="+name)
+                .post(requestBody)
+                .build();
+
+        try{
+            Response response = mOkHttpClient.newCall(request).execute();
+            if (response.isSuccessful()) {
+                String resultValue = response.body().string();
+                return resultValue;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    public interface HttpCallbackListener{
+        void onFinish(String s);
         void onError(Exception e);
     }
 }

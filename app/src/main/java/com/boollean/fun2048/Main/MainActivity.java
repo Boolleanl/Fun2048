@@ -140,6 +140,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onStart() {
         super.onStart();
+        mUser = User.getInstance();
         if (mUser.getAvatar() == null && mUser.getName() == null) {
             avatarImageView.setVisibility(View.GONE);
             nameTextView.setVisibility(View.GONE);
