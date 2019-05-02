@@ -17,7 +17,8 @@ import androidx.viewpager.widget.ViewPager;
 
 /**
  * 排行榜界面的Activity。
- * Created by Boollean on 2019/3/6.
+ *
+ * @author Boollean
  */
 public class RankActivity extends AppCompatActivity {
 

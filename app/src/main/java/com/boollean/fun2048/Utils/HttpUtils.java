@@ -1,6 +1,8 @@
 package com.boollean.fun2048.Utils;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
@@ -21,6 +23,7 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import okhttp3.MediaType;
@@ -30,8 +33,13 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+/**
+ * 网络请求工具类
+ *
+ * @author Boollean
+ */
 public class HttpUtils {
-    public static final String BASE_URL = "http://10.14.30.184:8080/appservice/";
+    public static final String BASE_URL = "http://10.15.68.54:8080/appservice/";
     public static final String ADD_USER="addUser";
     public static final String UPDATE_USER="updateUser";
     public static final String UPDATE_USER_DATA="updateUserData";
@@ -44,6 +52,7 @@ public class HttpUtils {
     public static final String UPDATE_SCORE_5 = "updateScore5";
     public static final String UPDATE_SCORE_6 = "updateScore6";
     public static final String GET_MESSAGES = "getLatest100Messages";
+    public static final String GET_IMAGE = "getImage";
     public static final String ADD_MESSAGE = "addMessage";
     private static final int TIME_OUT = 5 * 1000;   //超时时间
     private static final String CHARSET = "UTF-8"; //设置编码
@@ -79,6 +88,41 @@ public class HttpUtils {
             e.printStackTrace();
         }
         return "fail";
+    }
+
+    public static Bitmap getImage(String name) {
+        Bitmap bitmap = null;
+        Response response = null;
+        InputStream inputStream = null;
+        try {
+            URL url = new URL(BASE_URL + GET_IMAGE+"?name="+name);
+            OkHttpClient mOkHttpClient = new OkHttpClient();
+            Request.Builder reqBuilder = new Request.Builder();
+            Request request = reqBuilder
+                    .url(url)
+                    .build();
+
+            Log.i("message", url.toString());
+
+            response = mOkHttpClient.newCall(request).execute();
+
+            if (response.isSuccessful()) {
+                inputStream = response.body().byteStream();
+                bitmap = BitmapFactory.decodeStream(inputStream);
+                return bitmap;
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            try {
+                inputStream.reset();
+                inputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            response.close();
+        }
+        return bitmap;
     }
 
     private static String changeInputString(InputStream inputStream) {
@@ -552,116 +596,6 @@ public class HttpUtils {
         } catch (Exception e) {
             e.printStackTrace();
             resultBuffer = new StringBuffer("fail");
-        } finally {
-            if (ds != null) {
-                try {
-                    ds.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (inputStreamReader != null) {
-                try {
-                    inputStreamReader.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (inputStream != null) {
-                try {
-                    inputStream.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            return resultBuffer.toString();
-        }
-    }
-
-    public static String upLoadFile(String name, String filePath) {
-        DataOutputStream ds = null;
-        InputStream inputStream = null;
-        InputStreamReader inputStreamReader = null;
-        BufferedReader reader = null;
-        StringBuffer resultBuffer = new StringBuffer();
-        String tempLine = null;
-
-        // 设置三个常用字符串常量：换行、前缀、分界线（NEWLINE、PREFIX、BOUNDARY）；
-        final String NEWLINE = "\r\n"; // 换行，或者说是回车
-        final String PREFIX = "--"; // 固定的前缀
-        final String BOUNDARY = "######################"; // 分界线，就是上面提到的boundary，可以是任意字符串，建议写长一点，这里简单的写了一个#
-
-        HttpURLConnection connection = null;
-        DataOutputStream dos = null;
-        try {
-            // 实例化URL对象。调用URL有参构造方法，参数是一个url地址；
-            URL url = new URL(BASE_URL);
-            // 调用URL对象的openConnection()方法，创建HttpURLConnection对象；
-            connection = (HttpURLConnection) url.openConnection();
-            // 调用HttpURLConnection对象setDoOutput(true)、setDoInput(true)、setRequestMethod("POST")；
-            connection.setConnectTimeout(TIME_OUT);
-            connection.setDoInput(true);
-            connection.setDoOutput(true);
-            connection.setRequestMethod("POST");
-            // 设置Http请求头信息；（Accept、Connection、Accept-Encoding、Cache-Control、Content-Type、User-Agent），不重要的就不解释了，直接参考抓包的结果设置即可
-            connection.setUseCaches(false);
-            connection.setRequestProperty("Connection", "Keep-Alive");
-            connection.setRequestProperty("Accept", "*/*");
-            connection.setRequestProperty("Charset", CHARSET);
-            connection.setRequestProperty("Accept-Encoding", "gzip, deflate");
-            connection.setRequestProperty("Cache-Control", "no-cache");
-            // 这个比较重要，按照上面分析的拼装出Content-Type头的内容
-            connection.setRequestProperty("Content-Type",
-                    "multipart/form-data; boundary=" + BOUNDARY);
-            // 调用HttpURLConnection对象的connect()方法，建立与服务器的真实连接；
-            connection.connect();
-
-            Log.i("upload: ", name + "   " + filePath);
-            dos = new DataOutputStream(connection.getOutputStream());
-            String fileName = filePath.substring(filePath.lastIndexOf("Fun2048_"));
-            Log.i("upload ", fileName);
-            dos.writeBytes(PREFIX + BOUNDARY + NEWLINE);
-            dos.writeBytes("Content-Disposition: form-data; " + "name=\"" + name + "\";filename=\"" + fileName
-                    + "\"" + NEWLINE);
-            dos.writeBytes(NEWLINE);
-            FileInputStream fileInputStream = new FileInputStream(filePath);
-            int bufferSize = 1024;
-            byte[] buffer = new byte[bufferSize];
-            int length = -1;
-            while ((length = fileInputStream.read(buffer)) != -1) {
-                dos.write(buffer, 0, length);
-            }
-            dos.writeBytes(NEWLINE);
-            dos.flush();
-
-            if (connection.getResponseCode() >= 300) {
-                throw new Exception(
-                        "HTTP Request is not success, Response code is " + connection.getResponseCode());
-            }
-
-            if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                Log.i("upload", connection.getResponseCode() + "");
-                inputStream = connection.getInputStream();
-                inputStreamReader = new InputStreamReader(inputStream);
-                reader = new BufferedReader(inputStreamReader);
-                tempLine = null;
-                resultBuffer = new StringBuffer();
-                while ((tempLine = reader.readLine()) != null) {
-                    resultBuffer.append(tempLine);
-                    resultBuffer.append("\n");
-                    Log.i("upload", resultBuffer.toString());
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
         } finally {
             if (ds != null) {
                 try {

@@ -15,7 +15,8 @@ import butterknife.ButterKnife;
 
 /**
  * 6*6游戏界面的Fragment。
- * Created by Boollean on 2019/3/12.
+ *
+ * @author Boollean
  */
 public class GameSixFragment extends MyBaseFragment {
     private static final String TAG = "GameSixFragment";

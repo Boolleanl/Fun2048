@@ -30,11 +30,11 @@ import androidx.fragment.app.FragmentManager;
 
 /**
  * 游戏界面的Activity。
- * Created by Boollean on 2019/2/27.
+ *
+ * @author Boollean
  */
 
 public class GameActivity extends AppCompatActivity {
-
     private static final String TAG = "GameActivity";
     private static final float FLIP_DISTANCE = 48;      //滑动判定距离
     private static int whichGame;   //游戏模式标志

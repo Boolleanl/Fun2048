@@ -29,6 +29,9 @@ import butterknife.ButterKnife;
 
 import static android.content.Context.MODE_PRIVATE;
 
+/**
+ * @author Boollean
+ */
 public class AboutFragment extends Fragment {
     private User mUser = User.getInstance();
     @BindView(R.id.about_cancellation_button)
@@ -64,7 +67,7 @@ public class AboutFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 AlertDialog dialog = new AlertDialog.Builder(getActivity())
-                        .setMessage("注销此账号，将会删除当前账号的所有相关信息")
+                        .setMessage(R.string.delete_user_warn)
                         .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {}
@@ -82,6 +85,9 @@ public class AboutFragment extends Fragment {
         });
     }
 
+    /**
+     * 向服务器请求删除该账号数据的线程类
+     */
     private class DeleteUser extends AsyncTask<Void, Void, String> {
         private User user = User.getInstance();
         private SharedPreferences mPreferences;
@@ -108,6 +114,9 @@ public class AboutFragment extends Fragment {
             return result;
         }
 
+        /**
+         * 将本地所持久化存储的账号信息清除
+         */
         private void deleteUserMode(){
             mPreferences = getActivity().getApplicationContext().getSharedPreferences("SAVE_DATA", MODE_PRIVATE);
             SharedPreferences.Editor editor = mPreferences.edit();

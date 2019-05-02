@@ -6,7 +6,8 @@ import android.util.Log;
 
 /**
  * 用户类。
- * Created by Boollean on 2019/2/28.
+ *
+ * @author Boollean
  */
 public class User {
     private static final String TAG = "User";
@@ -18,9 +19,9 @@ public class User {
     private int mGender; //性别
     private Bitmap mAvatar;  //头像
     private Uri mBitmapPath;    //头像的定位符
-    private int bestScore4;
-    private int bestScore5;
-    private int bestScore6;
+    private int bestScore4;     //4*4模式最高分
+    private int bestScore5;     //5*5模式最高分
+    private int bestScore6;     //6*6模式最高分
 
     public User(String name, String password, int gender, Bitmap avatar) {
         mName = name;

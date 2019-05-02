@@ -22,7 +22,8 @@ import butterknife.ButterKnife;
 
 /**
  * 意见反馈界面的Fragment。
- * Created by Boollean on 2019/3/11.
+ *
+ * @author Boollean
  */
 public class FeedBackFragment extends Fragment {
     private EditText mEditText;
@@ -54,7 +55,7 @@ public class FeedBackFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 AlertDialog dialog = new AlertDialog.Builder(getActivity())
-                        .setMessage("反馈的信息将采用短信形式发送，产生的资费由运营商收取")
+                        .setMessage(R.string.user_feedback_warn)
                         .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {

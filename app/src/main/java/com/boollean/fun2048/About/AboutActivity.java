@@ -10,6 +10,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
+/**
+ * @author Boollean
+ */
 public class AboutActivity extends AppCompatActivity {
     public static Intent newIntent(Context context) {
         Intent intent = new Intent(context, AboutActivity.class);

@@ -15,7 +15,8 @@ import butterknife.ButterKnife;
 
 /**
  * 4*4游戏界面的Fragment。
- * Created by Boollean on 2019/2/27.
+ *
+ * @author Boollean
  */
 public class GameFourFragment extends MyBaseFragment {
 

@@ -37,7 +37,8 @@ import butterknife.OnClick;
 
 /**
  * 留言板界面的Activity。
- * Created by Boollean on 2019/3/6.
+ *
+ * @author Boollean
  */
 public class MessageActivity extends AppCompatActivity {
 
@@ -94,7 +95,6 @@ public class MessageActivity extends AppCompatActivity {
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
                 String s = dateFormat.format(date);
                 messageEntity.setDate(s);
-                messageEntity.setAvatarPath(mUser.getBitmapPath().toString());
                 messageEntity.setGender(mUser.getGender());
                 messageEntity.setMessage(editText.getText().toString());
                 PostMessageData postMessageData = new PostMessageData(messageEntity);

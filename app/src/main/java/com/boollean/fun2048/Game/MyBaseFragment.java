@@ -10,8 +10,9 @@ import androidx.fragment.app.Fragment;
 import butterknife.BindView;
 
 /**
- * 游戏界面的父类，定义了通用的刷新每个格子颜色和数值数据的方法
- * create by Boollean on 2019/3/2
+ * 游戏界面的父类，定义了通用的刷新每个格子颜色和数值数据的方法。
+ *
+ * @author Boollean
  */
 public class MyBaseFragment extends Fragment {
 

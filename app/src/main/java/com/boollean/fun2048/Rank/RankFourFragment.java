@@ -90,7 +90,7 @@ public class RankFourFragment extends Fragment {
         @Override
         protected List<RankUserEntity> doInBackground(Void... voids) {
             String jsonString = HttpUtils.getJsonContent(HttpUtils.GET_BEST_100_USERS_4);
-            Log.i("Rank4:  ", jsonString);
+            //如果获取Json失败，直接返回空值
             if (jsonString.equals("fail")){
                 return null;
             }

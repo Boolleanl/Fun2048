@@ -43,7 +43,8 @@ import butterknife.OnClick;
 
 /**
  * 主界面的Activity。
- * Created by Boollean on 2019/2/27.
+ *
+ * @author Boollean
  */
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {

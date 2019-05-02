@@ -1,8 +1,9 @@
 package com.boollean.fun2048.Entity;
 
 /**
- * 数据类。
- * Created by Boollean on 2019/2/28.
+ * 运算和分数相关的数据类。
+ *
+ * @author Boollean
  */
 public class NumberItem {
     private static volatile NumberItem instanceFour = null;

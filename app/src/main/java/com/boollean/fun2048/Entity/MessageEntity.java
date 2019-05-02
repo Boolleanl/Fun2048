@@ -2,6 +2,11 @@ package com.boollean.fun2048.Entity;
 
 import com.google.gson.annotations.SerializedName;
 
+/**
+ * 留言板对象基类
+ *
+ * @author Boollean
+ */
 public class MessageEntity {
     @SerializedName("name")
     private String name;
@@ -11,8 +16,6 @@ public class MessageEntity {
     private String date;
     @SerializedName("message")
     private String message;
-    @SerializedName("avatar_path")
-    private String avatarPath;    //头像的定位符
 
     public String getName() {
         return name;
@@ -44,13 +47,5 @@ public class MessageEntity {
 
     public void setMessage(String message) {
         this.message = message;
-    }
-
-    public String getAvatarPath() {
-        return avatarPath;
-    }
-
-    public void setAvatarPath(String avatarPath) {
-        this.avatarPath = avatarPath;
     }
 }

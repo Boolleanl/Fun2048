@@ -28,7 +28,8 @@ import butterknife.ButterKnife;
 
 /**
  * 5*5排行榜界面的Fragment。
- * Created by Boollean on 2019/3/9.
+ *
+ * @author Boollean
  */
 public class RankFiveFragment extends Fragment {
     @BindView(R.id.rank_loading_view)
@@ -91,7 +92,7 @@ public class RankFiveFragment extends Fragment {
         @Override
         protected List doInBackground(Void... voids) {
             String jsonString = HttpUtils.getJsonContent(HttpUtils.GET_BEST_100_USERS_5);
-            Log.i("Rank5", jsonString);
+            //如果获取Json失败，直接返回空值
             if (jsonString.equals("fail")){
                 return null;
             }
@@ -102,7 +103,6 @@ public class RankFiveFragment extends Fragment {
         @Override
         protected void onPostExecute(List list) {
             if(list!=null){
-                Log.i("Rank5", list.size() + "");
                 mLoadingView.showContentView();
                 initView(list);
             }else {

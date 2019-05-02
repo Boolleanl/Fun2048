@@ -12,7 +12,8 @@ import androidx.fragment.app.FragmentManager;
 
 /**
  * 意见反馈界面的Activity。
- * Created by Boollean on 2019/3/11.
+ *
+ * @author Boollean
  */
 public class FeedBackActivity extends AppCompatActivity {
 

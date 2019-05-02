@@ -12,7 +12,6 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
  * Created by Boollean on 2019/3/8.
  */
 class RankPagerAdapter extends FragmentStatePagerAdapter {
-
     private List<Fragment> mFragments;
     private List<String> mTitles;
 
