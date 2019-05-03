@@ -4,11 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.boollean.fun2048.R;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
+
+import com.boollean.fun2048.R;
 
 /**
  * 意见反馈界面的Activity。
@@ -17,9 +17,14 @@ import androidx.fragment.app.FragmentManager;
  */
 public class FeedBackActivity extends AppCompatActivity {
 
+    /**
+     * 获取一个新的启动FeedBackActivity的Intent
+     *
+     * @param context 上下文
+     * @return 启动FeedBackActivity的Intent
+     */
     public static Intent newIntent(Context context) {
-        Intent intent = new Intent(context, FeedBackActivity.class);
-        return intent;
+        return new Intent(context, FeedBackActivity.class);
     }
 
     @Override

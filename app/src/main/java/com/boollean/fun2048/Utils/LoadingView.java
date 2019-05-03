@@ -9,16 +9,17 @@ import android.widget.TextView;
 
 import com.boollean.fun2048.R;
 
+/**
+ * 加载框，包含进度圈和提醒文字。
+ *
+ * @author Boollean
+ */
 public class LoadingView extends RelativeLayout {
-    private RelativeLayout mRelativeLayoutLoading;
-    private RelativeLayout mRelativeLayoutFailed;
-    private TextView mTextView;
+    private RelativeLayout mRelativeLayoutLoading;  //加载时显示的圈
+    private RelativeLayout mRelativeLayoutFailed;   //加载失败显示的区域
+    private TextView mTextView; //加载失败显示的文字显示区域
 
     private LoadingView.LoadingViewListener mListener;
-
-    public void setListener(LoadingViewListener listener) {
-        this.mListener = listener;
-    }
 
     public LoadingView(Context context) {
         super(context);
@@ -35,19 +36,20 @@ public class LoadingView extends RelativeLayout {
         initView(context);
     }
 
+    public void setListener(LoadingViewListener listener) {
+        this.mListener = listener;
+    }
+
     private void initView(Context context) {
         View view = LayoutInflater.from(context).inflate(R.layout.loading, this);
         mRelativeLayoutLoading = view.findViewById(R.id.progress_bar_layout);
         mRelativeLayoutFailed = view.findViewById(R.id.failed_layout);
         mTextView = view.findViewById(R.id.failed_text_view);
-        mRelativeLayoutFailed.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // 加载失败，点击重试
-                mRelativeLayoutLoading.setVisibility(View.VISIBLE);
-                mRelativeLayoutFailed.setVisibility(View.GONE);
-                mListener.onFailedClickListener();
-            }
+        mRelativeLayoutFailed.setOnClickListener(view1 -> {
+            // 加载失败，点击重试
+            mRelativeLayoutLoading.setVisibility(View.VISIBLE);
+            mRelativeLayoutFailed.setVisibility(View.GONE);
+            mListener.onFailedClickListener();
         });
     }
 
@@ -76,7 +78,7 @@ public class LoadingView extends RelativeLayout {
         mTextView.setText("加载失败，点击重试");
     }
 
-    public void showNetworkUnavailable(){
+    public void showNetworkUnavailable() {
         mRelativeLayoutLoading.setVisibility(View.GONE);
         mRelativeLayoutFailed.setVisibility(View.VISIBLE);
         mTextView.setText("网络不可用");

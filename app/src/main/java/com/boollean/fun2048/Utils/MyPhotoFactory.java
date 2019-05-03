@@ -9,17 +9,24 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 
 /**
+ * 图像处理类。
  *
+ * @author Boollean
  */
 public class MyPhotoFactory {
 
+    /**
+     * 将Bitmap裁剪成圆形
+     * @param bitmap 需要裁剪的bitmap
+     * @return 裁剪后的bitmap
+     */
     public static Bitmap toRoundBitmap(Bitmap bitmap) {
-        int width = bitmap.getWidth();
-        int height = bitmap.getHeight();
-        float roundPx;
+        int width = bitmap.getWidth();      //原先图片的宽度
+        int height = bitmap.getHeight();    //原先图片的高度
+        float roundPx;  //圆形图片半径
         float left, top, right, bottom, dst_left, dst_top, dst_right, dst_bottom;
-        if (width <= height) {
-            roundPx = width / 2;
+        if (width <= height) {  //如果宽度比高度小
+            roundPx = width / 2;    //将宽度的一半设置为半径
             top = 0;
             bottom = width;
             left = 0;
@@ -30,7 +37,7 @@ public class MyPhotoFactory {
             dst_right = width;
             dst_bottom = width;
         } else {
-            roundPx = height / 2;
+            roundPx = height / 2;   //将高度的一半设置为半径
             float clip = (width - height) / 2;
             left = clip;
             right = width - clip;
@@ -42,8 +49,8 @@ public class MyPhotoFactory {
             dst_right = height;
             dst_bottom = height;
         }
-        Bitmap output = Bitmap.createBitmap(width,
-                height, Bitmap.Config.ARGB_8888);
+        //输出的Bitmap对象
+        Bitmap output = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(output);
         final int color = 0xff424242;
         final Paint paint = new Paint();

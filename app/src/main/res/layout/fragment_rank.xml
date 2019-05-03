@@ -7,8 +7,7 @@
     <com.boollean.fun2048.Utils.LoadingView
         android:id="@+id/rank_loading_view"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        />
+        android:layout_height="wrap_content" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rank_recycler_view"

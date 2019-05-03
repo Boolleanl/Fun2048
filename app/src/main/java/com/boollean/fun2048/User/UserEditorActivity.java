@@ -4,24 +4,29 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.boollean.fun2048.R;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
+import com.boollean.fun2048.R;
+
 /**
  * 用户信息界面的Activity。
- * Created by Boollean on 2019/2/28.
+ *
+ * @author Boollean
  */
 public class UserEditorActivity extends AppCompatActivity {
 
-    private static final String TAG = "UserEditorActivity";
-    private UserEditorFragment mUserEditorFragment;
+    private UserEditorFragment userEditorFragment;
 
+    /**
+     * 获取一个新的启动UserEditorActivity的Intent
+     *
+     * @param context 上下文
+     * @return 启动UserEditorActivity的Intent
+     */
     public static Intent newIntent(Context context) {
-        Intent i = new Intent(context, UserEditorActivity.class);
-        return i;
+        return new Intent(context, UserEditorActivity.class);
     }
 
     @Override
@@ -32,8 +37,8 @@ public class UserEditorActivity extends AppCompatActivity {
         FragmentManager fm = getSupportFragmentManager();
         fm.findFragmentById(R.id.fragment_container);
 
-        mUserEditorFragment = UserEditorFragment.newInstance();
-        fm.beginTransaction().add(R.id.fragment_container, mUserEditorFragment).commit();
+        userEditorFragment = UserEditorFragment.newInstance();
+        fm.beginTransaction().add(R.id.fragment_container, userEditorFragment).commit();
     }
 
 }

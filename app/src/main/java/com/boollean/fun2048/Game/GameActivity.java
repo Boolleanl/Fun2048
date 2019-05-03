@@ -10,7 +10,9 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
-import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 
 import com.boollean.fun2048.Entity.NumberItem;
 import com.boollean.fun2048.Entity.User;
@@ -19,23 +21,15 @@ import com.boollean.fun2048.R;
 import com.boollean.fun2048.Utils.HttpUtils;
 import com.boollean.fun2048.Utils.OperationFactory;
 import com.boollean.fun2048.Utils.OperationThread;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 import org.json.JSONArray;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
 
 /**
  * 游戏界面的Activity。
  *
  * @author Boollean
  */
-
 public class GameActivity extends AppCompatActivity {
-    private static final String TAG = "GameActivity";
     private static final float FLIP_DISTANCE = 48;      //滑动判定距离
     private static int whichGame;   //游戏模式标志
     private static Handler mHandler;
@@ -52,9 +46,9 @@ public class GameActivity extends AppCompatActivity {
     /**
      * “新游戏”启动时调用的方法。
      *
-     * @param context
+     * @param context 前文的活动
      * @param which   开启了哪个游戏模式
-     * @return 游戏界面的Activity，重新初始化NumberItem。
+     * @return 游戏活动的Intent
      */
     public static Intent newIntent(Context context, int which, int bestScore) {
         whichGame = which;
@@ -67,15 +61,16 @@ public class GameActivity extends AppCompatActivity {
         } else if (which == 6) {
             OperationFactory.newGameSix(bestScore);
         }
-        Intent i = new Intent(context, GameActivity.class);
-        return i;
+        return new Intent(context, GameActivity.class);
     }
 
     /**
-     * @param context
+     * “继续游戏”调用的方法
+     *
+     * @param context 前文的获得
      * @param which   开启了哪个游戏模式
      * @param n       从SharedPreferences处获取的上次游戏最后一步的记录。
-     * @return 游戏界面的Activity，紧接上次游戏的进程。
+     * @return 游戏活动的Intent
      */
     public static Intent newIntent(Context context, int which, int[][] n) {
         whichGame = which;
@@ -84,8 +79,7 @@ public class GameActivity extends AppCompatActivity {
             operationThread = new OperationThread(whichGame);
             OperationFactory.continueGame(whichGame, n);
         }
-        Intent i = new Intent(context, GameActivity.class);
-        return i;
+        return new Intent(context, GameActivity.class);
     }
 
     @Override
@@ -179,12 +173,14 @@ public class GameActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * 播放一次音效
+     */
     private void playVolume() {
         if (MainActivity.volumeSwitch) {
             mSoundPool.play(soundID, 0.2f, 0.2f, 0, 1, 1);
         }
     }
-
 
 
     @Override
@@ -213,7 +209,7 @@ public class GameActivity extends AppCompatActivity {
         mPreferences = getApplicationContext().getSharedPreferences("SAVE_DATA", MODE_PRIVATE);
         SharedPreferences.Editor editor = mPreferences.edit();
         editor.putInt("LAST_MODE", which); //保存进SharedPreferences。
-        editor.commit();
+        editor.apply();
     }
 
     /**
@@ -232,21 +228,8 @@ public class GameActivity extends AppCompatActivity {
 
         SharedPreferences.Editor editor = mPreferences.edit();
         editor.putString("LAST_NUMBERS", jsonArray.toString()); //保存进SharedPreferences。
-        editor.commit();
+        editor.apply();
     }
-
-//    public void showGameOverDialog() {
-//        AlertDialog dialog = new AlertDialog.Builder(this)
-//                .setMessage("GAME OVER")
-//                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialogInterface, int i) {
-//                        System.exit(0);
-//                    }
-//                })
-//                .create();
-//        dialog.show();
-//    }
 
     /**
      * 保存此局目前的分数，因为在启动游戏时会获取以前的最高分，
@@ -259,17 +242,17 @@ public class GameActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = mPreferences.edit();
         if (whichGame == 4) {
             editor.putInt("BEST_SCORE_FOR_FOUR", score);
-            editor.commit();
+            editor.apply();
             UpLoadBestScore upLoadBestScore = new UpLoadBestScore(whichGame, mUser.getName(), score);
             upLoadBestScore.execute();
         } else if (whichGame == 5) {
             editor.putInt("BEST_SCORE_FOR_FIVE", score);
-            editor.commit();
+            editor.apply();
             UpLoadBestScore upLoadBestScore = new UpLoadBestScore(whichGame, mUser.getName(), score);
             upLoadBestScore.execute();
         } else if (whichGame == 6) {
             editor.putInt("BEST_SCORE_FOR_SIX", score);
-            editor.commit();
+            editor.apply();
             UpLoadBestScore upLoadBestScore = new UpLoadBestScore(whichGame, mUser.getName(), score);
             upLoadBestScore.execute();
         }
@@ -282,19 +265,19 @@ public class GameActivity extends AppCompatActivity {
      */
     private int getBestScore(int which) {
         mPreferences = getApplicationContext().getSharedPreferences("SAVE_DATA", MODE_PRIVATE);
-        int s = 0;
         try {
             if (which == 4) {
-                s = mPreferences.getInt("BEST_SCORE_FOR_FOUR", 0);
+                return mPreferences.getInt("BEST_SCORE_FOR_FOUR", 0);
             } else if (which == 5) {
-                s = mPreferences.getInt("BEST_SCORE_FOR_FIVE", 0);
+                return mPreferences.getInt("BEST_SCORE_FOR_FIVE", 0);
             } else if (which == 6) {
-                s = mPreferences.getInt("BEST_SCORE_FOR_SIX", 0);
+                return mPreferences.getInt("BEST_SCORE_FOR_SIX", 0);
             }
         } catch (Exception e) {
             e.printStackTrace();
+            return 0;
         }
-        return s;
+        return 0;
     }
 
     @Override
@@ -302,12 +285,15 @@ public class GameActivity extends AppCompatActivity {
         return mDetector.onTouchEvent(event);
     }
 
+    /**
+     * 上传最高分的线程类
+     */
     private class UpLoadBestScore extends AsyncTask<Void, Void, String> {
         private int whichGame;
         private String name;
         private int score;
 
-        public UpLoadBestScore(int whichGame, String name, int score) {
+        UpLoadBestScore(int whichGame, String name, int score) {
             this.whichGame = whichGame;
             this.name = name;
             this.score = score;
@@ -321,7 +307,7 @@ public class GameActivity extends AppCompatActivity {
                 result = HttpUtils.sendHttpRequest(compeletedURL, new HttpUtils.HttpCallbackListener() {
                     @Override
                     public void onFinish(String response) {
-                        Log.i("savescore", "成功:  "+response);
+                        Log.i("savescore", "成功:  " + response);
                     }
 
                     @Override
@@ -333,11 +319,6 @@ public class GameActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
             return result;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-
         }
     }
 }

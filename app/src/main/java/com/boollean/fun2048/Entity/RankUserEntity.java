@@ -1,11 +1,10 @@
 package com.boollean.fun2048.Entity;
 
-import android.graphics.Bitmap;
-
 import com.google.gson.annotations.SerializedName;
 
 /**
  * 排行榜用户基类
+ *
  * @author Boollean
  */
 public class RankUserEntity {

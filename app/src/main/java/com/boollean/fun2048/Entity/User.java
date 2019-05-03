@@ -10,7 +10,6 @@ import android.util.Log;
  * @author Boollean
  */
 public class User {
-    private static final String TAG = "User";
 
     private static volatile User instance = null;
 
@@ -30,8 +29,13 @@ public class User {
         mAvatar = avatar;
     }
 
+    /**
+     * 获取唯一User对象
+     *
+     * @return User对象
+     */
     public static User getInstance() {
-        if (instance == null){
+        if (instance == null) {
             synchronized (User.class) {
                 if (instance == null) {
                     instance = new User(null, null, 0, null);
@@ -45,9 +49,9 @@ public class User {
         User.instance = instance;
     }
 
-    public static void deleteThisUser(){
+    public static void deleteThisUser() {
         User.instance = null;
-        Log.i("aboutF","name"+instance.getName());
+        Log.i("aboutF", "name" + instance.getName());
     }
 
     public String getName() {

@@ -4,19 +4,27 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.boollean.fun2048.R;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
+import com.boollean.fun2048.R;
+
 /**
+ * 游戏相关界面的Activity。
+ *
  * @author Boollean
  */
 public class AboutActivity extends AppCompatActivity {
+
+    /**
+     * 获取一个新的启动AboutActivity的Intent
+     *
+     * @param context 上下文
+     * @return 启动AboutActivity的Intent
+     */
     public static Intent newIntent(Context context) {
-        Intent intent = new Intent(context, AboutActivity.class);
-        return intent;
+        return new Intent(context, AboutActivity.class);
     }
 
     @Override

@@ -2,12 +2,14 @@ package com.boollean.fun2048.Message;
 
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.boollean.fun2048.Entity.MessageEntity;
 import com.boollean.fun2048.R;
@@ -16,19 +18,15 @@ import com.boollean.fun2048.Utils.MyPhotoFactory;
 
 import java.util.List;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
 /**
  * 留言板界面处理留言信息的Adapter。
  *
  * @author Boollean
  */
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHolder> {
-    private DownloadImage<ViewHolder> mDownloadImage;
     private List<MessageEntity> mList;
 
-    public MessageAdapter(List<MessageEntity> list) {
+    MessageAdapter(List<MessageEntity> list) {
         mList = list;
     }
 
@@ -45,8 +43,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
         holder.nameTextView.setText(messageEntity.getName());
         StringBuilder date = new StringBuilder(messageEntity.getDate());
-        date.replace(10,12,"  ");
-        Log.i("Message",date.toString());
+        date.replace(10, 12, "  ");
+
         holder.dateTextView.setText(date.toString());
         holder.messageTextView.setText(messageEntity.getMessage());
         if (mList.get(position).getGender() == 1) {
@@ -56,8 +54,8 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         } else {
             holder.genderImageView.setImageResource(0);
         }
-        mDownloadImage = new DownloadImage(holder,messageEntity.getName());
-        mDownloadImage.execute();
+        DownloadImage downloadImage = new DownloadImage(holder, messageEntity.getName());
+        downloadImage.execute();
     }
 
     @Override
@@ -65,13 +63,16 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         return mList.size();
     }
 
-    private class DownloadImage<T> extends AsyncTask<Void, Void, Bitmap>{
+    /**
+     * 下载头像的线程类
+     */
+    private class DownloadImage extends AsyncTask<Void, Void, Bitmap> {
         private String mName;
         private ViewHolder mViewHolder;
 
-        public DownloadImage(T target,String name) {
+        DownloadImage(ViewHolder holder, String name) {
             mName = name;
-            mViewHolder = (ViewHolder) target;
+            mViewHolder = holder;
         }
 
         @Override
@@ -86,7 +87,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         }
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    /**
+     * 留言板每个对象的容器
+     */
+    class ViewHolder extends RecyclerView.ViewHolder {
 
         ImageView imageView;
         TextView nameTextView;
@@ -95,7 +99,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         ImageView genderImageView;
         View view;
 
-        public ViewHolder(@NonNull View itemView) {
+        ViewHolder(@NonNull View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.message_box_image_view);
             nameTextView = itemView.findViewById(R.id.message_box_name_text_view);
@@ -105,7 +109,12 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             view = itemView.findViewById(R.id.message_box_bottom_line);
         }
 
-        public void bindBitmap(Bitmap bitmap) {
+        /**
+         * 绑定Bitmap到ImageView里面
+         *
+         * @param bitmap 需要绑定的bitmap对象
+         */
+        void bindBitmap(Bitmap bitmap) {
             imageView.setImageBitmap(bitmap);
         }
     }

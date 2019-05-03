@@ -4,11 +4,16 @@ package com.boollean.fun2048.Message;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.boollean.fun2048.Entity.MessageEntity;
 import com.boollean.fun2048.R;
@@ -17,13 +22,8 @@ import com.boollean.fun2048.Utils.JsonUtils;
 import com.boollean.fun2048.Utils.LoadingView;
 
 import java.util.List;
+import java.util.Objects;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -39,8 +39,11 @@ public class MessageFragment extends Fragment {
     @BindView(R.id.message_recycler_view)
     RecyclerView recyclerView;
 
-    private MessageAdapter adapter;
-
+    /**
+     * 获取一个新的MessageFragment对象
+     *
+     * @return 新的MessageFragment对象
+     */
     public static MessageFragment newInstance() {
         return new MessageFragment();
     }
@@ -48,12 +51,15 @@ public class MessageFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(HttpUtils.isNetworkAvailable(getActivity())){
+        if (HttpUtils.isNetworkAvailable(Objects.requireNonNull(getActivity()))) {
             initData();
         }
     }
 
-    public void initData() {
+    /**
+     * 初始化数据
+     */
+    void initData() {
         GetMessageData getMessageData = new GetMessageData();
         getMessageData.execute();
     }
@@ -63,31 +69,31 @@ public class MessageFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_message, container, false);
         ButterKnife.bind(this, view);
-        mLoadingView.setListener(new LoadingView.LoadingViewListener() {
-            @Override
-            public void onFailedClickListener() {
-                if(HttpUtils.isNetworkAvailable(getActivity())){
-                    initData();
-                }else {
-                    mLoadingView.showNetworkUnavailable();
-                }
+        mLoadingView.setListener(() -> {
+            if (HttpUtils.isNetworkAvailable(Objects.requireNonNull(getActivity()))) {
+                initData();
+            } else {
+                mLoadingView.showNetworkUnavailable();
             }
         });
-        if(!HttpUtils.isNetworkAvailable(getActivity())){
+        if (!HttpUtils.isNetworkAvailable(Objects.requireNonNull(getActivity()))) {
             mLoadingView.showNetworkUnavailable();
-        }else {
+        } else {
             mLoadingView.showLoading();
         }
         return view;
     }
 
-    private void initView(List list) {
+    private void initView(List<MessageEntity> list) {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);
-        adapter = new MessageAdapter(list);
+        MessageAdapter adapter = new MessageAdapter(list);
         recyclerView.setAdapter(adapter);
     }
 
+    /**
+     * 获取留言信息的线程类
+     */
     private class GetMessageData extends AsyncTask<Void, Void, List<MessageEntity>> {
 
         @RequiresApi(api = Build.VERSION_CODES.N)
@@ -95,20 +101,19 @@ public class MessageFragment extends Fragment {
         protected List<MessageEntity> doInBackground(Void... voids) {
             String jsonString = HttpUtils.getJsonContent(HttpUtils.GET_MESSAGES);
             //如果获取Json失败，直接返回空值
-            if (jsonString.equals("fail")){
+            if (jsonString.equals("fail")) {
                 return null;
             }
-            List<MessageEntity> messageList = JsonUtils.toMessageList(jsonString);
 
-            return messageList;
+            return JsonUtils.toMessageList(jsonString);
         }
 
         @Override
         protected void onPostExecute(List<MessageEntity> list) {
-            if(list!=null){
+            if (list != null) {
                 mLoadingView.showContentView();
                 initView(list);
-            }else {
+            } else {
                 mLoadingView.showFailed();
             }
         }

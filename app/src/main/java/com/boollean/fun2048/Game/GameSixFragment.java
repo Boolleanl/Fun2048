@@ -6,11 +6,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.boollean.fun2048.Entity.NumberItem;
 import com.boollean.fun2048.R;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import butterknife.ButterKnife;
 
 /**
@@ -19,7 +20,6 @@ import butterknife.ButterKnife;
  * @author Boollean
  */
 public class GameSixFragment extends MyBaseFragment {
-    private static final String TAG = "GameSixFragment";
 
     private static final GameSixFragment mGameSixFragment = new GameSixFragment();
 
@@ -54,7 +54,7 @@ public class GameSixFragment extends MyBaseFragment {
     /**
      * 分配好对应的TextView，由于id不同，故手动逐一绑定。
      *
-     * @param view
+     * @param view 页面底层的View
      */
     private void initView(View view) {
         mTextViews = new TextView[36];
@@ -103,9 +103,8 @@ public class GameSixFragment extends MyBaseFragment {
     }
 
     /**
-     * 每次滑动后调用，刷新每个TextView里的数字。
+     * 刷新此页面
      */
-    @Override
     public void refreshView() {
         String score = String.valueOf(mNumberItem.getScore());
         String bestScore = String.valueOf(mNumberItem.getBestScore());

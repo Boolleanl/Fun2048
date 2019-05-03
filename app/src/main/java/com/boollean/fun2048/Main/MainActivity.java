@@ -1,19 +1,25 @@
 package com.boollean.fun2048.Main;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.boollean.fun2048.About.AboutActivity;
 import com.boollean.fun2048.Entity.User;
@@ -31,12 +37,6 @@ import org.json.JSONException;
 
 import java.io.FileNotFoundException;
 
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -49,7 +49,6 @@ import butterknife.OnClick;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private static final String TAG = "MainActivity";
     public static boolean volumeSwitch = true;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -89,6 +88,9 @@ public class MainActivity extends AppCompatActivity
         initView();
     }
 
+    /**
+     * 初始化界面
+     */
     private void initView() {
         setSupportActionBar(toolbar);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -104,12 +106,9 @@ public class MainActivity extends AppCompatActivity
         nameTextView = headerView.findViewById(R.id.name_text_view);
         genderView = headerView.findViewById(R.id.main_gender_image_view);
 
-        signInButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = UserEditorActivity.newIntent(getApplicationContext());
-                startActivity(intent);
-            }
+        signInButton.setOnClickListener(v -> {
+            Intent intent = UserEditorActivity.newIntent(getApplicationContext());
+            startActivity(intent);
         });
 
         if (mUser.getAvatar() == null && mUser.getName() == null) {
@@ -170,29 +169,26 @@ public class MainActivity extends AppCompatActivity
     void newGame() {
         String[] items = new String[]{"4X4", "5X5", "6X6"};
         AlertDialog dialog = new AlertDialog.Builder(this).setTitle("选择游戏模式")
-                .setItems(items, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int i) {
-                        switch (i) {
-                            case 0:
-                                whichGame = 4;
-                                bestScore = getBestScore(whichGame);
-                                Intent intent4 = GameActivity.newIntent(MainActivity.this, whichGame, bestScore);
-                                startActivity(intent4);
-                                break;
-                            case 1:
-                                whichGame = 5;
-                                bestScore = getBestScore(whichGame);
-                                Intent intent5 = GameActivity.newIntent(MainActivity.this, whichGame, bestScore);
-                                startActivity(intent5);
-                                break;
-                            case 2:
-                                whichGame = 6;
-                                bestScore = getBestScore(whichGame);
-                                Intent intent6 = GameActivity.newIntent(MainActivity.this, whichGame, bestScore);
-                                startActivity(intent6);
-                                break;
-                        }
+                .setItems(items, (dialog1, i) -> {
+                    switch (i) {
+                        case 0:
+                            whichGame = 4;
+                            bestScore = getBestScore(whichGame);
+                            Intent intent4 = GameActivity.newIntent(MainActivity.this, whichGame, bestScore);
+                            startActivity(intent4);
+                            break;
+                        case 1:
+                            whichGame = 5;
+                            bestScore = getBestScore(whichGame);
+                            Intent intent5 = GameActivity.newIntent(MainActivity.this, whichGame, bestScore);
+                            startActivity(intent5);
+                            break;
+                        case 2:
+                            whichGame = 6;
+                            bestScore = getBestScore(whichGame);
+                            Intent intent6 = GameActivity.newIntent(MainActivity.this, whichGame, bestScore);
+                            startActivity(intent6);
+                            break;
                     }
                 }).create();
         dialog.show();
@@ -211,8 +207,7 @@ public class MainActivity extends AppCompatActivity
      */
     private int getLastMode() {
         mPreferences = getApplicationContext().getSharedPreferences("SAVE_DATA", MODE_PRIVATE);
-        int which = mPreferences.getInt("LAST_MODE", 0);
-        return which;
+        return mPreferences.getInt("LAST_MODE", 0);
     }
 
     /**
@@ -225,7 +220,6 @@ public class MainActivity extends AppCompatActivity
         int[][] n = new int[whichGame][whichGame];
         try {
             JSONArray jsonArray = new JSONArray(mPreferences.getString("LAST_NUMBERS", ""));
-            Log.i(TAG, jsonArray.toString());
             int a = 0;
             for (int i = 0; i < whichGame; i++) {
                 for (int j = 0; j < whichGame; j++) {
@@ -239,6 +233,9 @@ public class MainActivity extends AppCompatActivity
         return n;
     }
 
+    /**
+     * 从本地持久化存储中初始化用户信息
+     */
     private void initUser() {
         mPreferences = getApplicationContext().getSharedPreferences("SAVE_DATA", MODE_PRIVATE);
         mUser.setName(mPreferences.getString("USER_NAME", null));
@@ -252,20 +249,16 @@ public class MainActivity extends AppCompatActivity
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        Log.i(TAG, mUser.getName() + mUser.getPassword());
     }
 
     @OnClick(R.id.score_button)
     void score() {
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setMessage(
-                        "4X4模式最高分:" + String.valueOf(getBestScore(4))
-                                + "\n" + "5X5模式最高分:" + String.valueOf(getBestScore(5))
-                                + "\n" + "6X6模式最高分:" + String.valueOf(getBestScore(6)))
-                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                    }
+                        "4X4模式最高分:" + getBestScore(4)
+                                + "\n" + "5X5模式最高分:" + getBestScore(5)
+                                + "\n" + "6X6模式最高分:" + getBestScore(6))
+                .setPositiveButton(R.string.ok, (dialogInterface, i) -> {
                 })
                 .create();
         dialog.show();
@@ -297,17 +290,9 @@ public class MainActivity extends AppCompatActivity
     void quit() {
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setMessage("确定退出？")
-                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                    }
+                .setNegativeButton(R.string.cancel, (dialogInterface, i) -> {
                 })
-                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        System.exit(0);
-                    }
-                })
+                .setPositiveButton(R.string.ok, (dialogInterface, i) -> System.exit(0))
                 .create();
         dialog.show();
     }
@@ -356,7 +341,7 @@ public class MainActivity extends AppCompatActivity
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 

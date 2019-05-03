@@ -7,19 +7,22 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+
 import com.boollean.fun2048.Entity.MessageEntity;
 import com.boollean.fun2048.Entity.User;
 import com.boollean.fun2048.R;
 import com.boollean.fun2048.Utils.HttpUtils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -27,10 +30,6 @@ import com.google.gson.JsonParser;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -42,15 +41,19 @@ import butterknife.OnClick;
  */
 public class MessageActivity extends AppCompatActivity {
 
-    private static final String TAG = "MessageActivity";
     @BindView(R.id.message_floating_action_button)
     FloatingActionButton floatingActionButton;
     private User mUser = User.getInstance();
     private MessageFragment mMessageFragment;
 
+    /**
+     * 获取一个新的启动MessageActivity的Intent
+     *
+     * @param context 上下文
+     * @return 启动MessageActivity的Intent
+     */
     public static Intent newIntent(Context context) {
-        Intent intent = new Intent(context, MessageActivity.class);
-        return intent;
+        return new Intent(context, MessageActivity.class);
     }
 
     @Override
@@ -85,45 +88,42 @@ public class MessageActivity extends AppCompatActivity {
                 .create();
         dialog.show();
 
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-                MessageEntity messageEntity = new MessageEntity();
-                messageEntity.setName(mUser.getName());
-                Date date = new Date(System.currentTimeMillis());
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-                String s = dateFormat.format(date);
-                messageEntity.setDate(s);
-                messageEntity.setGender(mUser.getGender());
-                messageEntity.setMessage(editText.getText().toString());
-                PostMessageData postMessageData = new PostMessageData(messageEntity);
-                postMessageData.execute();
-            }
+        button.setOnClickListener(v -> {
+            dialog.dismiss();
+            MessageEntity messageEntity = new MessageEntity();
+            messageEntity.setName(mUser.getName());
+            Date date = new Date(System.currentTimeMillis());
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            String s = dateFormat.format(date);
+            messageEntity.setDate(s);
+            messageEntity.setGender(mUser.getGender());
+            messageEntity.setMessage(editText.getText().toString());
+            PostMessageData postMessageData = new PostMessageData(messageEntity);
+            postMessageData.execute();
         });
     }
 
+    /**
+     * 上传新留言的线程类
+     */
     private class PostMessageData extends AsyncTask<Void, Void, String> {
         private MessageEntity mMessageEntity;
 
-        public PostMessageData(MessageEntity messageEntity) {
+        PostMessageData(MessageEntity messageEntity) {
             mMessageEntity = messageEntity;
         }
 
         @RequiresApi(api = Build.VERSION_CODES.N)
         @Override
         protected String doInBackground(Void... voids) {
-            String result = HttpUtils.addMessage(mMessageEntity);
-            Log.i("Message",result);
-            return result;
+            return HttpUtils.addMessage(mMessageEntity);
         }
 
         @Override
         protected void onPostExecute(String s) {
-            if(s.equals("fail")){
+            if (s.equals("fail")) {
                 Toast.makeText(getApplicationContext(), "失败", Toast.LENGTH_SHORT).show();
-            }
-            else {
+            } else {
                 //获得解析者
                 JsonParser jsonParser = new JsonParser();
                 //获得根节点元素
@@ -131,7 +131,7 @@ public class MessageActivity extends AppCompatActivity {
                 //根据文档判断根节点属于什么类型的Gson节点对象
                 JsonObject object = root.getAsJsonObject();
                 String msg = object.get("msg").getAsString();
-                if(msg.equals("success")){
+                if (msg.equals("success")) {
                     Toast.makeText(getApplicationContext(), "成功", Toast.LENGTH_SHORT).show();
                     mMessageFragment.initData();
                 }

@@ -3,10 +3,11 @@ package com.boollean.fun2048.Game;
 import android.graphics.Color;
 import android.widget.TextView;
 
+import androidx.fragment.app.Fragment;
+
 import com.boollean.fun2048.Entity.NumberItem;
 import com.boollean.fun2048.R;
 
-import androidx.fragment.app.Fragment;
 import butterknife.BindView;
 
 /**
@@ -14,9 +15,7 @@ import butterknife.BindView;
  *
  * @author Boollean
  */
-public class MyBaseFragment extends Fragment {
-
-    private static final String TAG = "MyBaseFragment";
+class MyBaseFragment extends Fragment {
 
     @BindView(R.id.score_view)
     TextView scoreView;
@@ -26,7 +25,7 @@ public class MyBaseFragment extends Fragment {
     /**
      * 每次滑动后调用，刷新每个TextView里的数字。
      */
-    public void refreshView(String score, String bestScore, int which, NumberItem item, TextView[] mTextViews) {
+    void refreshView(String score, String bestScore, int which, NumberItem item, TextView[] mTextViews) {
         scoreView.setText(score);
         bestScoreView.setText(bestScore);
         int[][] num = item.getNumbers();
@@ -70,9 +69,5 @@ public class MyBaseFragment extends Fragment {
                 a++;
             }
         }
-    }
-
-    public void refreshView() {
-
     }
 }

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/about_rule_title_text_view"
@@ -11,9 +11,9 @@
         android:layout_gravity="center"
         android:layout_marginTop="12dp"
         android:text="游戏规则"
-        android:textSize="28sp"
         android:textColor="#000000"
-        />
+        android:textSize="28sp" />
+
     <TextView
         android:id="@+id/about_rule_text_view"
         android:layout_width="wrap_content"
@@ -21,14 +21,14 @@
         android:layout_gravity="center"
         android:layout_marginTop="12dp"
         android:text="        通过滑动屏幕来使相同的数字相加，当没有可以想加的数字时，可多次朝数字集中区域滑动以生成新的数字。"
-        android:textSize="22sp"
         android:textColor="#000000"
-        />
+        android:textSize="22sp" />
+
     <Button
         android:id="@+id/about_cancellation_button"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="200dp"
-        android:text="注销此账户"/>
+        android:text="注销此账户" />
 </LinearLayout>

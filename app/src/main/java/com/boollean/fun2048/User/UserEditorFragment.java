@@ -10,7 +10,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +20,12 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+
 import com.boollean.fun2048.Entity.User;
 import com.boollean.fun2048.R;
 import com.boollean.fun2048.Utils.HttpUtils;
@@ -30,11 +35,8 @@ import com.google.gson.JsonParser;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Objects;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -45,18 +47,16 @@ import static android.content.Context.MODE_PRIVATE;
 
 /**
  * 用户信息界面的Fragment。
- * Created by Boollean on 2019/2/28.
+ *
+ * @author Boollean
  */
 public class UserEditorFragment extends Fragment {
-
-    private static final String TAG = "UserEditorFragment";
 
     private static final int CODE_GALLERY_REQUEST = 0xa1;
     private static final int CODE_RESULT_REQUEST = 0xa2;
     private static final String CROP_IMAGE_FILE_NAME = "avatar.jpg";
-    private static int output_X = 160;
-    private static int output_Y = 160;
     private static SaveInformationTask mSaveInformationTask;
+    private static boolean ImageIsChanged;
     @BindView(R.id.gender_radio_group)
     RadioGroup genderRadioGroup;
     @BindView(R.id.male_radio_button)
@@ -76,13 +76,15 @@ public class UserEditorFragment extends Fragment {
     private User mUser = User.getInstance();
     private Uri mUriPath;
     private String oldName;
-    private String name;
     private String password;
     private int gender = mUser.getGender();
     private Bitmap bitmap;
     private SharedPreferences mPreferences;
-    private static boolean ImageIsChanged;
 
+    /**
+     * 获取一个新的UserEditorFragment对象
+     * @return 新的UserEditorFragment对象
+     */
     public static UserEditorFragment newInstance() {
         return new UserEditorFragment();
     }
@@ -93,16 +95,14 @@ public class UserEditorFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_user_editor, container, false);
         ButterKnife.bind(this, view);
         initUser();
-        initView(view);
+        initView();
         return view;
     }
 
     /**
      * 初始化用户信息设置界面
-     *
-     * @param view
      */
-    private void initView(View view) {
+    private void initView() {
         switch (mUser.getGender()) {
             case 0:
                 secretRadioButton.setChecked(true);
@@ -120,23 +120,20 @@ public class UserEditorFragment extends Fragment {
                 secretRadioButton.setChecked(false);
                 break;
         }
-        genderRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                int radioButtonId = group.getCheckedRadioButtonId();
-                switch (radioButtonId) {
-                    case R.id.secret_radio_button:
-                        gender = 0;
-                        break;
+        genderRadioGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            int radioButtonId = group.getCheckedRadioButtonId();
+            switch (radioButtonId) {
+                case R.id.secret_radio_button:
+                    gender = 0;
+                    break;
 
-                    case R.id.male_radio_button:
-                        gender = 1;
-                        break;
+                case R.id.male_radio_button:
+                    gender = 1;
+                    break;
 
-                    case R.id.female_radio_button:
-                        gender = 2;
-                        break;
-                }
+                case R.id.female_radio_button:
+                    gender = 2;
+                    break;
             }
         });
 
@@ -149,26 +146,31 @@ public class UserEditorFragment extends Fragment {
         if (mUser.getAvatar() != null) {
             avatarImageView.setImageBitmap(mUser.getAvatar());
         }
-        avatarImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intentFromGallery = new Intent(Intent.ACTION_PICK, null);
-                intentFromGallery.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-                startActivityForResult(intentFromGallery, CODE_GALLERY_REQUEST);
-            }
+        avatarImageView.setOnClickListener(v -> {
+            Intent intentFromGallery = new Intent(Intent.ACTION_PICK, null);
+            intentFromGallery.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+            startActivityForResult(intentFromGallery, CODE_GALLERY_REQUEST);
         });
     }
 
     @OnClick(R.id.user_information_complete_button)
     void Complete() {
-        name = userNameEditText.getText().toString().trim();
+        if(!HttpUtils.isNetworkAvailable(Objects.requireNonNull(getActivity()))){
+            AlertDialog dialog = new AlertDialog.Builder(getActivity())
+                    .setMessage("当前网络不可用,无法创建账户")
+                    .setPositiveButton(R.string.ok, (dialogInterface, i) -> Objects.requireNonNull(getActivity()).finish())
+                    .create();
+            dialog.show();
+        }
+
+        String name = userNameEditText.getText().toString().trim();
         if (userPasswordEditText.getVisibility() == View.VISIBLE) {
             password = userPasswordEditText.getText().toString().trim();
         }
         if (isAvailableName(name) && isAvailablePassword(password)) {
             mSaveInformationTask = new SaveInformationTask(oldName, name, password, gender, bitmap, mUriPath, mPreferences, getActivity());
             mSaveInformationTask.execute();
-            getActivity().finish();
+            Objects.requireNonNull(getActivity()).finish();
         }
     }
 
@@ -176,7 +178,7 @@ public class UserEditorFragment extends Fragment {
      * 判断用户名是否可用
      *
      * @param s 需要判断的用户名
-     * @return
+     * @return 用户名可用与否
      */
     private boolean isAvailableName(String s) {
         if (s.isEmpty()) {
@@ -193,7 +195,6 @@ public class UserEditorFragment extends Fragment {
             userNameEditText.requestFocus();
             return false;
         }
-        //TODO 加入用户名已存在的判断
         return true;
     }
 
@@ -201,7 +202,7 @@ public class UserEditorFragment extends Fragment {
      * 判断密码是否可用
      *
      * @param s 需要判断的密码
-     * @return
+     * @return 密码可用与否
      */
     private boolean isAvailablePassword(String s) {
         if (s.isEmpty()) {
@@ -218,7 +219,6 @@ public class UserEditorFragment extends Fragment {
             userPasswordEditText.requestFocus();
             return false;
         }
-        //TODO 加入密码已存在的判断
         return true;
     }
 
@@ -237,7 +237,7 @@ public class UserEditorFragment extends Fragment {
             }
             case CODE_RESULT_REQUEST: {
                 try {
-                    bitmap = BitmapFactory.decodeStream(getContext().getContentResolver().openInputStream(mUriPath));
+                    bitmap = BitmapFactory.decodeStream(Objects.requireNonNull(getContext()).getContentResolver().openInputStream(mUriPath));
                     setImageToHeadView(data, bitmap);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
@@ -251,10 +251,10 @@ public class UserEditorFragment extends Fragment {
     /**
      * 选择用户头像
      *
-     * @param uri
-     * @return intent
+     * @param uri 原图片文件所在的位置
+     * @return intent 包含裁剪后头像的一个新的Intent
      */
-    public Intent cropRawPhoto(Uri uri) {
+    private Intent cropRawPhoto(Uri uri) {
         Intent intent = new Intent("com.android.camera.action.CROP");
         intent.setDataAndType(uri, "image/*");
 
@@ -265,8 +265,11 @@ public class UserEditorFragment extends Fragment {
         intent.putExtra("aspectX", 1);
         intent.putExtra("aspectY", 1);
 
-        // outputX , outputY : 裁剪图片宽高
+        //输出的图片的宽度
+        int output_X = 160;
         intent.putExtra("outputX", output_X);
+        //输出的图片的高度
+        int output_Y = 160;
         intent.putExtra("outputY", output_Y);
         intent.putExtra("return-data", true);
 
@@ -287,7 +290,7 @@ public class UserEditorFragment extends Fragment {
     /**
      * 更新首页侧滑菜单栏的用户头像
      *
-     * @param intent
+     * @param intent 初始的Intent
      * @param bitmap 头像文件
      */
     private void setImageToHeadView(Intent intent, Bitmap bitmap) {
@@ -301,7 +304,7 @@ public class UserEditorFragment extends Fragment {
     }
 
     private void initUser() {
-        mPreferences = getActivity().getApplicationContext().getSharedPreferences("SAVE_DATA", MODE_PRIVATE);
+        mPreferences = Objects.requireNonNull(getActivity()).getApplicationContext().getSharedPreferences("SAVE_DATA", MODE_PRIVATE);
         mUser.setName(mPreferences.getString("USER_NAME", null));
         oldName = mUser.getName();
         mUser.setPassword(mPreferences.getString("USER_PASSWORD", null));
@@ -310,23 +313,13 @@ public class UserEditorFragment extends Fragment {
 
         mUser.setBitmapPath(uri);
         try {
-            Bitmap bitmap = BitmapFactory.decodeStream(getContext().getContentResolver().openInputStream(uri));
+            Bitmap bitmap = BitmapFactory.decodeStream(Objects.requireNonNull(getContext()).getContentResolver().openInputStream(uri));
             mUser.setAvatar(bitmap);
             ImageIsChanged = false;
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
     }
-
-//    public static boolean hasSdcard() {
-//        String state = Environment.getExternalStorageState();
-//        if (state.equals(Environment.MEDIA_MOUNTED)) {
-//            // 有存储的SDCard
-//            return true;
-//        } else {
-//            return false;
-//        }
-//    }
 
     /**
      * 保存用户信息的线程
@@ -343,7 +336,7 @@ public class UserEditorFragment extends Fragment {
         private Context context;
         private SharedPreferences mPreferences;
 
-        public SaveInformationTask(String oldName, String name, String password, int gender, Bitmap bitmap, Uri bitmapPath, SharedPreferences preferences, FragmentActivity activity) {
+        SaveInformationTask(String oldName, String name, String password, int gender, Bitmap bitmap, Uri bitmapPath, SharedPreferences preferences, FragmentActivity activity) {
             mOldName = oldName;
             mName = name;
             mPassword = password;
@@ -367,32 +360,32 @@ public class UserEditorFragment extends Fragment {
 
             try {
                 //新建账号
-                if(mOldName==null){
+                if (mOldName == null) {
                     result = HttpUtils.addUser(mUser);
                     //修改了头像
-                    if(ImageIsChanged){
+                    if (ImageIsChanged) {
                         String filePath = Uri.decode(mBitmapPath.getEncodedPath());
-                        HttpUtils.upLoadImage(mName,filePath);
+                        HttpUtils.upLoadImage(mName, filePath);
                         ImageIsChanged = false;
                     }
                 }
                 //没有修改用户名
-                else if(mOldName.equals(mName)){
+                else if (mOldName.equals(mName)) {
                     result = HttpUtils.updateUserData(mUser);
                     //修改了头像
-                    if(ImageIsChanged){
+                    if (ImageIsChanged) {
                         String filePath = Uri.decode(mBitmapPath.getEncodedPath());
-                        HttpUtils.upLoadImage(mName,filePath);
+                        HttpUtils.upLoadImage(mName, filePath);
                         ImageIsChanged = false;
                     }
                 }
                 //修改了用户名
-                else  {
-                    result = HttpUtils.updateUser(mOldName,mUser);
+                else {
+                    result = HttpUtils.updateUser(mOldName, mUser);
                     //修改了头像
-                    if(ImageIsChanged){
+                    if (ImageIsChanged) {
                         String filePath = Uri.decode(mBitmapPath.getEncodedPath());
-                        HttpUtils.upLoadImage(mName,filePath);
+                        HttpUtils.upLoadImage(mName, filePath);
                         ImageIsChanged = false;
                     }
                 }
@@ -404,9 +397,9 @@ public class UserEditorFragment extends Fragment {
 
         @Override
         protected void onPostExecute(String s) {
-            if(s.equals("fail")){
+            if (s.equals("fail")) {
                 Toast.makeText(context, "提交失败", Toast.LENGTH_SHORT).show();
-            }else {
+            } else {
                 //获得解析者
                 JsonParser jsonParser = new JsonParser();
                 //获得根节点元素
@@ -414,12 +407,15 @@ public class UserEditorFragment extends Fragment {
                 //根据文档判断根节点属于什么类型的Gson节点对象
                 JsonObject object = root.getAsJsonObject();
                 String msg = object.get("msg").getAsString();
-                if(msg.equals("success")){
+                if (msg.equals("success")) {
                     Toast.makeText(context, "成功", Toast.LENGTH_SHORT).show();
                 }
             }
         }
 
+        /**
+         * 保存最近修改的用户数据
+         */
         private void saveLastMode() {
             SharedPreferences.Editor editor = mPreferences.edit();
             editor.putString("USER_NAME", mUser.getName()); //保存进SharedPreferences。
@@ -428,7 +424,7 @@ public class UserEditorFragment extends Fragment {
             if (mUser.getBitmapPath() != null && mUser.getAvatar() != null) {
                 editor.putString("USER_BITMAP_PATH", mUser.getBitmapPath().toString());
             }
-            editor.commit();
+            editor.apply();
         }
     }
 }

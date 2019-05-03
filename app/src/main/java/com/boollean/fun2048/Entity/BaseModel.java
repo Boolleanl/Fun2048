@@ -4,15 +4,15 @@ import java.util.List;
 
 /**
  * 解析Json数据依托的基类
- * @param <T> 泛型类，由基类下的数据决定
  *
+ * @param <T> 泛型类，由基类下的数据决定
  * @author Boollean
  */
 public class BaseModel<T> {
-    private int code;
-    private String msg;
-    private List<T> subjects;
-    private T data;
+    private int code;   //Json中包含的状态标记
+    private String msg;     //Json中包含的信息
+    private List<T> subjects;   //Json中包含的主要对象链表
+    private T data;     //对象所属的类
 
     public int getCode() {
         return code;

@@ -17,6 +17,11 @@ public class NumberItem {
         numbers = new int[i][i];
     }
 
+    /**
+     * 获取唯一的4*4模式游戏数据对象
+     *
+     * @return 4*4模式的游戏数据对象
+     */
     public static NumberItem getInstanceFour() {
         synchronized (NumberItem.class) {
             if (instanceFour == null) {
@@ -26,6 +31,11 @@ public class NumberItem {
         return instanceFour;
     }
 
+    /**
+     * 获取唯一的5*5模式游戏数据对象
+     *
+     * @return 5*5模式的游戏数据对象
+     */
     public static NumberItem getInstanceFive() {
         synchronized (NumberItem.class) {
             if (instanceFive == null) {
@@ -35,6 +45,11 @@ public class NumberItem {
         return instanceFive;
     }
 
+    /**
+     * 获取唯一的6*6模式游戏数据对象
+     *
+     * @return 6*6模式的游戏数据对象
+     */
     public static NumberItem getInstanceSix() {
         synchronized (NumberItem.class) {
             if (instanceSix == null) {

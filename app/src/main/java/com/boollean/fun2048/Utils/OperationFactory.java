@@ -4,7 +4,8 @@ import com.boollean.fun2048.Entity.NumberItem;
 
 /**
  * 数据加工的工厂类，包含一些运算的算法。
- * Created by Boollean on 2019/2/27.
+ *
+ * @author Boollean
  */
 public class OperationFactory {
 
@@ -47,11 +48,10 @@ public class OperationFactory {
 
     /**
      * “新游戏”开始时，为数组填入起始数字。
-     *
      * @param which 游戏模式标志
      * @return 起始二维数组。
      */
-    public static int[][] createNumbers(int which) {
+    private static int[][] createNumbers(int which) {
         int[][] ns = new int[which][which];
         for (int i = 0; i < which; i++) {
             for (int j = 0; j < which; j++) {
@@ -63,12 +63,11 @@ public class OperationFactory {
 
     /**
      * 当前的分数，为二维数组各元素相加的总和。
-     *
-     * @param ns    当前一步的二维数组。
+     * @param ns 当前一步的二维数组。
      * @param which 游戏模式标志，决定生成的二位数组
      * @return 当前分数。
      */
-    public static int nowScore(int[][] ns, int which) {
+    private static int nowScore(int[][] ns, int which) {
         int s = 0;
         if (null != ns) {
             for (int i = 0; i < which; i++) {
@@ -84,9 +83,8 @@ public class OperationFactory {
 
     /**
      * 创建最初的几个随机数字
-     *
      * @param which 游戏模式标志，该参数决定不同模式下的刷新率
-     * @return
+     * @return 2或者4
      */
     private static int createInitialNumber(int which) {
         int i = (int) (Math.random() * which * 2);
@@ -101,11 +99,10 @@ public class OperationFactory {
 
     /**
      * 生成随机数，0、2、4三个数。在滑动后没有相加并且有空位的情况下调用。
-     *
      * @param which 游戏模式标志，该参数决定不同模式下的刷新率
      * @return 0、2或者4。
      */
-    public static int createRandomNumber(int which) {
+    private static int createRandomNumber(int which) {
         int i = (int) (Math.random() * which);
         if (which == 5) {
             i = (int) (Math.random() * which * 4);
@@ -123,10 +120,9 @@ public class OperationFactory {
 
     /**
      * 检查是否比最高分还高，若是，则设置为新的最高分。
-     *
      * @param score 当前分数。
      */
-    public static void checkAndSetBestScore(int score) {
+    private static void checkAndSetBestScore(int score) {
         if (score > mNumberItem.getBestScore()) {
             mNumberItem.setBestScore(score);
         }
@@ -134,7 +130,6 @@ public class OperationFactory {
 
     /**
      * “继续游戏”调用的构造函数。
-     *
      * @param which 游戏模式
      * @param n     上次最后一步的二维数组。
      */
@@ -152,10 +147,9 @@ public class OperationFactory {
 
     /**
      * 向上滑动时调用的方法。
-     *
      * @param which 游戏模式标志，该参数决定运算的算法
      */
-    public static void actionUp(int which) {
+    static void actionUp(int which) {
         int[][] numbers = mNumberItem.getNumbers();
         int[][] ns = null;
         if (which == 4) {
@@ -172,7 +166,6 @@ public class OperationFactory {
 
     /**
      * 5X5模式下的去除空位的算法，将所有不为0的数往一个方向依序移动
-     *
      * @param nums 需要移动的二维数组
      * @return 移动后的二维数组
      */
@@ -199,7 +192,6 @@ public class OperationFactory {
 
     /**
      * 5X5模式下的去除空位的算法，将所有不为0的数往一个方向依序移动
-     *
      * @param nums 需要移动的二维数组
      * @return 移动后的二维数组
      */
@@ -226,7 +218,6 @@ public class OperationFactory {
 
     /**
      * 5X5模式下的运算算法，若两个数相邻并相等则相加。
-     *
      * @param nums 需要运算的二维数组
      * @return 运算完成后的二维数组
      */
@@ -274,7 +265,6 @@ public class OperationFactory {
 
     /**
      * 5X5模式下的运算算法，若两个数相邻并相等则相加。
-     *
      * @param nums 需要运算的二维数组
      * @return 运算完成后的二维数组
      */
@@ -321,7 +311,6 @@ public class OperationFactory {
 
     /**
      * 运算算法，分别根据穷举的情况来选择是否相加，是否移动，是否生成新的2或4。
-     *
      * @param preNumbers 需要运算的二维数组。
      * @return 运算后的二维数组。
      */
@@ -492,7 +481,6 @@ public class OperationFactory {
                         nums[2][i] = 0;
                     } else if (preNumbers[0][i] != 0 && preNumbers[1][i] != 0 && preNumbers[2][i] != 0 && preNumbers[3][i] == 0) {
                         nums[3][i] = createRandomNumber(nums.length);
-                    } else {
                     }
                 }
             }
@@ -504,10 +492,9 @@ public class OperationFactory {
 
     /**
      * 向下滑动时调用的方法。
-     *
      * @param which 游戏模式标志
      */
-    public static void actionDown(int which) {
+    static void actionDown(int which) {
         int[][] ns = mNumberItem.getNumbers();
         int[][] numbers;
         numbers = transformDown(ns, which); //矩阵转置。
@@ -527,7 +514,6 @@ public class OperationFactory {
 
     /**
      * 从下转化成上。
-     *
      * @param n     需要转置的二维数组。
      * @param which 游戏模式标志，该参数决定生成的二维数组
      * @return 转置后的数组。
@@ -565,7 +551,7 @@ public class OperationFactory {
     /**
      * 想做滑动时调用。
      */
-    public static void actionLeft(int which) {
+    static void actionLeft(int which) {
         int[][] ns = mNumberItem.getNumbers();
         int[][] numbers;
         numbers = transformToLeft(ns, which);   //矩阵转置。
@@ -586,7 +572,6 @@ public class OperationFactory {
 
     /**
      * 从左转化成上。
-     *
      * @param n     需要转置的二维数组，
      * @param which 游戏模式标志，该标志决定生成的二维数组
      * @return 转置后的数组。
@@ -623,7 +608,6 @@ public class OperationFactory {
 
     /**
      * 从上转化成左。进过运算后，转置回来以便装入TextView显示。
-     *
      * @param n 需要转置的二维数组。
      * @return 转置后的数组。
      */
@@ -660,7 +644,7 @@ public class OperationFactory {
     /**
      * 向下滑动时调用。
      */
-    public static void actionRight(int which) {
+    static void actionRight(int which) {
         int[][] ns = mNumberItem.getNumbers();
         int[][] numbers;
         numbers = transformToRight(ns, which);  //矩阵转置
@@ -681,7 +665,6 @@ public class OperationFactory {
 
     /**
      * 从右转化成上。
-     *
      * @param n     需要转置的二维数组。
      * @param which 游戏模式标志，该参数决定了生成的二维数组。
      * @return 转置后的数组。
@@ -718,8 +701,7 @@ public class OperationFactory {
 
     /**
      * 从上转化成右。进过运算后，转置回来以便装入TextView显示。
-     *
-     * @param n     需要转置的二维数组。
+     * @param n 需要转置的二维数组。
      * @param which 游戏模式标志，该参数决定了生成的二维数组
      * @return 转置后的数组。
      */

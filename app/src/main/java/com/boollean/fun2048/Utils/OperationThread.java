@@ -6,7 +6,8 @@ import com.boollean.fun2048.Game.GameSixFragment;
 
 /**
  * 运算线程类。
- * Created by Boollean on 2019/3/3.
+ *
+ * @author Boollean
  */
 public class OperationThread extends Thread {
 

@@ -2,12 +2,14 @@ package com.boollean.fun2048.Rank;
 
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.boollean.fun2048.Entity.RankUserEntity;
 import com.boollean.fun2048.R;
@@ -16,19 +18,15 @@ import com.boollean.fun2048.Utils.MyPhotoFactory;
 
 import java.util.List;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
 /**
  * 排行榜界面每条排行信息的适配器。
  *
  * @author Boollean
  */
 public class RankAdapter extends RecyclerView.Adapter<RankAdapter.RankViewHolder> {
-    private DownloadRankImage<RankViewHolder> mDownloadRankImage;
     private List<RankUserEntity> mList;
 
-    public RankAdapter(List<RankUserEntity> list) {
+    RankAdapter(List<RankUserEntity> list) {
         mList = list;
     }
 
@@ -52,8 +50,8 @@ public class RankAdapter extends RecyclerView.Adapter<RankAdapter.RankViewHolder
         } else {
             holder.genderImageView.setImageResource(0);
         }
-        mDownloadRankImage = new DownloadRankImage<RankViewHolder>(holder,rankUserEntity.getName());
-        mDownloadRankImage.execute();
+        DownloadRankImage downloadRankImage = new DownloadRankImage(holder, rankUserEntity.getName());
+        downloadRankImage.execute();
     }
 
     @Override
@@ -66,13 +64,16 @@ public class RankAdapter extends RecyclerView.Adapter<RankAdapter.RankViewHolder
         return mList.size();
     }
 
-    private class DownloadRankImage<T> extends AsyncTask<Void, Void, Bitmap> {
+    /**
+     * 下载头像的线程类
+     */
+    private class DownloadRankImage extends AsyncTask<Void, Void, Bitmap> {
         private String mName;
         private RankViewHolder mViewHolder;
 
-        public DownloadRankImage(T target,String name) {
+        DownloadRankImage(RankViewHolder holder, String name) {
             mName = name;
-            mViewHolder = (RankViewHolder) target;
+            mViewHolder = holder;
         }
 
         @Override
@@ -87,14 +88,17 @@ public class RankAdapter extends RecyclerView.Adapter<RankAdapter.RankViewHolder
         }
     }
 
-    public class RankViewHolder extends RecyclerView.ViewHolder {
+    /**
+     * 排行榜界面每个用户对象的显示卡容器
+     */
+    class RankViewHolder extends RecyclerView.ViewHolder {
         TextView positionTextView;
         ImageView imageView;
         TextView nameTextView;
         TextView scoreTextView;
         ImageView genderImageView;
 
-        public RankViewHolder(@NonNull View itemView) {
+        RankViewHolder(@NonNull View itemView) {
             super(itemView);
             positionTextView = itemView.findViewById(R.id.rank_position_text_view);
             imageView = itemView.findViewById(R.id.rank_image_view);
@@ -103,7 +107,7 @@ public class RankAdapter extends RecyclerView.Adapter<RankAdapter.RankViewHolder
             genderImageView = itemView.findViewById(R.id.rank_gender_image_view);
         }
 
-        public void bindBitmap(Bitmap bitmap) {
+        void bindBitmap(Bitmap bitmap) {
             imageView.setImageBitmap(bitmap);
         }
     }

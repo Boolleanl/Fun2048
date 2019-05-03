@@ -6,11 +6,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.boollean.fun2048.Entity.NumberItem;
 import com.boollean.fun2048.R;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import butterknife.ButterKnife;
 
 /**
@@ -19,8 +20,6 @@ import butterknife.ButterKnife;
  * @author Boollean
  */
 public class GameFourFragment extends MyBaseFragment {
-
-    private static final String TAG = "GameFourFragment";
 
     private static final GameFourFragment mGameFourFragment = new GameFourFragment();
 
@@ -55,7 +54,7 @@ public class GameFourFragment extends MyBaseFragment {
     /**
      * 分配好对应的TextView，由于id不同，故手动逐一绑定。
      *
-     * @param view
+     * @param view 此页面底层的View
      */
     private void initView(View view) {
         mTextViews = new TextView[16];
@@ -81,8 +80,9 @@ public class GameFourFragment extends MyBaseFragment {
         mTextViews[15] = view.findViewById(R.id.num_3_3);
     }
 
-
-    @Override
+    /**
+     * 刷新此页面
+     */
     public void refreshView() {
         String score = String.valueOf(mNumberItem.getScore());
         String bestScore = String.valueOf(mNumberItem.getBestScore());
