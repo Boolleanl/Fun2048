@@ -191,7 +191,7 @@ public class OperationFactory {
     }
 
     /**
-     * 5X5模式下的去除空位的算法，将所有不为0的数往一个方向依序移动
+     * 6*6模式下的去除空位的算法，将所有不为0的数往一个方向依序移动
      * @param nums 需要移动的二维数组
      * @return 移动后的二维数组
      */
@@ -217,7 +217,7 @@ public class OperationFactory {
     }
 
     /**
-     * 5X5模式下的运算算法，若两个数相邻并相等则相加。
+     * 6*6模式下的运算算法，若两个数相邻并相等则相加。
      * @param nums 需要运算的二维数组
      * @return 运算完成后的二维数组
      */
@@ -281,11 +281,11 @@ public class OperationFactory {
                 for (int j = 0; j < 5; j++) {
                     if (nums[j][i] != 0) {
                         if (j <= 3 && nums[j][i] == nums[j + 1][i]) {
-                            result[k][i] = nums[j][i] * 2;
+                                result[k][i] = nums[j][i] * 2;  //相同则相加
                             hasDouble = true;
                             j++;
                             k++;
-                        } else {
+                        } else {    //不同则原样保存
                             result[k][i] = nums[j][i];
                             k++;
                         }
@@ -310,7 +310,7 @@ public class OperationFactory {
     }
 
     /**
-     * 运算算法，分别根据穷举的情况来选择是否相加，是否移动，是否生成新的2或4。
+     * 4*4模式运算算法，分别根据穷举的情况来选择是否相加，是否移动，是否生成新的2或4。
      * @param preNumbers 需要运算的二维数组。
      * @return 运算后的二维数组。
      */
@@ -318,168 +318,166 @@ public class OperationFactory {
         if (preNumbers != null) {
             for (int i = 0; i < 4; i++) {
                 if (preNumbers[0][i] == preNumbers[1][i] && preNumbers[2][i] == preNumbers[3][i]) {
-                    if (preNumbers[0][i] == 0) {
+                    if (preNumbers[0][i] == 0) {    //00AA
                         nums[0][i] = preNumbers[2][i] * 2;
                         nums[1][i] = 0;
                         nums[2][i] = 0;
                         nums[3][i] = 0;
-                    } else if (preNumbers[0][i] != 0 && preNumbers[2][i] != 0) {
+                    } else if (preNumbers[0][i] != 0 && preNumbers[2][i] != 0) {    //AABB、AAAA
                         nums[0][i] = preNumbers[0][i] * 2;
                         nums[1][i] = preNumbers[2][i] * 2;
                         nums[2][i] = 0;
                         nums[3][i] = 0;
-                    } else if (preNumbers[0][i] != 0 && preNumbers[2][i] == 0) {
+                    } else if (preNumbers[0][i] != 0 && preNumbers[2][i] == 0) {    //AA00
                         nums[0][i] = preNumbers[0][i] * 2;
                         nums[1][i] = 0;
                         nums[2][i] = 0;
                         nums[3][i] = 0;
                     }
                 } else if (preNumbers[0][i] == preNumbers[1][i] && preNumbers[2][i] != preNumbers[3][i]) {
-                    if (preNumbers[0][i] == 0 && preNumbers[2][i] == 0) {
+                    if (preNumbers[0][i] == 0 && preNumbers[2][i] == 0) {   //000A
                         nums[0][i] = preNumbers[3][i];
                         nums[1][i] = createRandomNumber(nums.length);
                         nums[2][i] = 0;
                         nums[3][i] = 0;
-                    } else if (preNumbers[0][i] == 0 && preNumbers[2][i] != 0 && preNumbers[3][i] == 0) {
+                    } else if (preNumbers[0][i] == 0 && preNumbers[2][i] != 0 && preNumbers[3][i] == 0) {   //00A0
                         nums[0][i] = preNumbers[2][i];
                         nums[1][i] = createRandomNumber(nums.length);
                         nums[2][i] = 0;
                         nums[3][i] = 0;
-                    } else if (preNumbers[0][i] == 0 && preNumbers[2][i] != 0 && preNumbers[3][i] != 0) {
+                    } else if (preNumbers[0][i] == 0 && preNumbers[2][i] != 0 && preNumbers[3][i] != 0) {   //00AB
                         nums[0][i] = preNumbers[2][i];
                         nums[1][i] = preNumbers[3][i];
                         nums[2][i] = 0;
                         nums[3][i] = 0;
-                    } else if (preNumbers[0][i] != 0 && preNumbers[2][i] == 0) {
+                    } else if (preNumbers[0][i] != 0 && preNumbers[2][i] == 0) {    //AA0A、AA0B
                         nums[0][i] = preNumbers[0][i] * 2;
                         nums[1][i] = preNumbers[3][i];
                         nums[2][i] = 0;
                         nums[3][i] = 0;
-                    } else if (preNumbers[0][i] != 0 && preNumbers[2][i] != 0 && preNumbers[3][i] == 0) {
+                    } else if (preNumbers[0][i] != 0 && preNumbers[2][i] != 0 && preNumbers[3][i] == 0) {   //AAA0、AAB0
                         nums[0][i] = preNumbers[0][i] * 2;
                         nums[1][i] = preNumbers[2][i];
                         nums[2][i] = 0;
                         nums[3][i] = 0;
-                    } else {
+                    } else {    //AAAB、AABA、AAB0
                         nums[0][i] = preNumbers[0][i] * 2;
                         nums[1][i] = preNumbers[2][i];
                         nums[2][i] = preNumbers[3][i];
                         nums[3][i] = 0;
                     }
                 } else if (preNumbers[0][i] != preNumbers[1][i] && preNumbers[1][i] == preNumbers[2][i]) {
-                    if (preNumbers[0][i] == 0 && preNumbers[3][i] == 0) {
+                    if (preNumbers[0][i] == 0 && preNumbers[3][i] == 0) {   //0AA0
                         nums[0][i] = preNumbers[1][i] * 2;
                         nums[1][i] = 0;
                         nums[2][i] = 0;
                         nums[3][i] = 0;
-                    } else if (preNumbers[0][i] == 0 && preNumbers[3][i] != 0) {
+                    } else if (preNumbers[0][i] == 0 && preNumbers[3][i] != 0) {    //0AAA、0AAB
                         nums[0][i] = preNumbers[1][i] * 2;
                         nums[1][i] = preNumbers[3][i];
                         nums[2][i] = 0;
                         nums[3][i] = 0;
-                    } else if (preNumbers[0][i] != 0 && preNumbers[1][i] == 0 && preNumbers[2][i] == 0 && preNumbers[3][i] == 0) {
-                        nums[1][i] = createRandomNumber(nums.length);
-                    } else if (preNumbers[0][i] != 0 && preNumbers[1][i] == 0 && preNumbers[3][i] == 0) {
+                    } else if (preNumbers[0][i] != 0 && preNumbers[1][i] == 0 && preNumbers[3][i] == 0) {   //A000
                         nums[1][i] = createRandomNumber(nums.length);
                         nums[2][i] = 0;
                         nums[3][i] = 0;
-                    } else if (preNumbers[0][i] != 0 && preNumbers[1][i] == 0 && preNumbers[0][i] == preNumbers[3][i]) {
+                    } else if (preNumbers[0][i] != 0 && preNumbers[1][i] == 0 && preNumbers[0][i] == preNumbers[3][i]) {//A00A
                         nums[0][i] = preNumbers[0][i] * 2;
                         nums[1][i] = 0;
                         nums[2][i] = 0;
                         nums[3][i] = 0;
-                    } else if (preNumbers[0][i] != 0 && preNumbers[1][i] == 0 && preNumbers[0][i] != preNumbers[3][i]) {
+                    } else if (preNumbers[0][i] != 0 && preNumbers[1][i] == 0 && preNumbers[0][i] != preNumbers[3][i]) {//A00B
                         nums[1][i] = preNumbers[3][i];
                         nums[2][i] = createRandomNumber(nums.length);
                         nums[3][i] = 0;
-                    } else if (preNumbers[0][i] != 0 && preNumbers[1][i] != 0 && preNumbers[3][i] == 0) {
+                    } else if (preNumbers[0][i] != 0 && preNumbers[1][i] != 0 && preNumbers[3][i] == 0) {//ABB0
                         nums[1][i] = preNumbers[1][i] * 2;
                         nums[2][i] = 0;
                         nums[3][i] = 0;
-                    } else {
+                    } else {    //ABBB、ABBC
                         nums[1][i] = preNumbers[1][i] * 2;
                         nums[2][i] = preNumbers[3][i];
                         nums[3][i] = 0;
                     }
                 } else if (preNumbers[0][i] != preNumbers[1][i] && preNumbers[1][i] != preNumbers[2][i]
                         && preNumbers[2][i] == preNumbers[3][i]) {
-                    if (preNumbers[0][i] == 0 && preNumbers[2][i] != 0) {
+                    if (preNumbers[0][i] == 0 && preNumbers[2][i] != 0) {   //0ABB
                         nums[0][i] = preNumbers[1][i];
                         nums[1][i] = preNumbers[2][i] * 2;
                         nums[2][i] = 0;
                         nums[3][i] = 0;
-                    } else if (preNumbers[0][i] == 0 && preNumbers[2][i] == 0) {
+                    } else if (preNumbers[0][i] == 0 && preNumbers[2][i] == 0) {    //0A00
                         nums[0][i] = preNumbers[1][i];
                         nums[1][i] = createRandomNumber(nums.length);
                         nums[2][i] = 0;
                         nums[3][i] = 0;
-                    } else if (preNumbers[0][i] != 0 && preNumbers[1][i] != 0 && preNumbers[2][i] == 0) {
+                    } else if (preNumbers[0][i] != 0 && preNumbers[1][i] != 0 && preNumbers[2][i] == 0) {   //AB00
                         nums[2][i] = createRandomNumber(nums.length);
                         nums[3][i] = 0;
-                    } else if (preNumbers[0][i] != 0 && preNumbers[1][i] != 0 && preNumbers[2][i] != 0) {
+                    } else if (preNumbers[0][i] != 0 && preNumbers[1][i] != 0 && preNumbers[2][i] != 0) {   //ABAA
                         nums[2][i] = preNumbers[2][i] * 2;
                         nums[3][i] = 0;
-                    } else if (preNumbers[0][i] == preNumbers[2][i]) {
+                    } else if (preNumbers[0][i] == preNumbers[2][i]) {  //A0AA
                         nums[0][i] = preNumbers[0][i] * 2;
                         nums[1][i] = preNumbers[3][i];
                         nums[2][i] = 0;
                         nums[3][i] = 0;
-                    } else {
+                    } else {    //A0BB
                         nums[1][i] = preNumbers[2][i] * 2;
                         nums[2][i] = 0;
                         nums[3][i] = 0;
                     }
                 } else if (preNumbers[0][i] != preNumbers[1][i] && preNumbers[1][i] != preNumbers[2][i]
                         && preNumbers[2][i] != preNumbers[3][i]) {
-                    if (preNumbers[0][i] == 0 && preNumbers[2][i] == 0 && preNumbers[1][i] == preNumbers[3][i]) {
+                    if (preNumbers[0][i] == 0 && preNumbers[2][i] == 0 && preNumbers[1][i] == preNumbers[3][i]) {//0A0A
                         nums[0][i] = preNumbers[1][i] * 2;
                         nums[1][i] = 0;
                         nums[2][i] = 0;
                         nums[3][i] = 0;
-                    } else if (preNumbers[0][i] == 0 && preNumbers[2][i] == 0 && preNumbers[1][i] != preNumbers[3][i]) {
+                    } else if (preNumbers[0][i] == 0 && preNumbers[2][i] == 0 && preNumbers[1][i] != preNumbers[3][i]) {//0A0B
                         nums[0][i] = preNumbers[1][i];
                         nums[1][i] = preNumbers[3][i];
                         nums[2][i] = 0;
                         nums[3][i] = 0;
-                    } else if (preNumbers[0][i] == 0 && preNumbers[2][i] != 0 && preNumbers[3][i] == 0) {
+                    } else if (preNumbers[0][i] == 0 && preNumbers[2][i] != 0 && preNumbers[3][i] == 0) {//0AB0
                         nums[0][i] = preNumbers[1][i];
                         nums[1][i] = preNumbers[2][i];
                         nums[2][i] = 0;
                         nums[3][i] = 0;
-                    } else if (preNumbers[0][i] == 0 && preNumbers[2][i] != 0 && preNumbers[3][i] != 0) {
+                    } else if (preNumbers[0][i] == 0 && preNumbers[2][i] != 0 && preNumbers[3][i] != 0) {//0ABA、0ABC
                         nums[0][i] = preNumbers[1][i];
                         nums[1][i] = preNumbers[2][i];
                         nums[2][i] = preNumbers[3][i];
                         nums[3][i] = 0;
-                    } else if (preNumbers[1][i] == 0 && preNumbers[0][i] == preNumbers[2][i] && preNumbers[3][i] == 0) {
+                    } else if (preNumbers[1][i] == 0 && preNumbers[0][i] == preNumbers[2][i] && preNumbers[3][i] == 0) {//A0A0
                         nums[0][i] = preNumbers[0][i] * 2;
                         nums[1][i] = 0;
                         nums[2][i] = 0;
                         nums[3][i] = 0;
-                    } else if (preNumbers[1][i] == 0 && preNumbers[0][i] == preNumbers[2][i] && preNumbers[3][i] != 0) {
+                    } else if (preNumbers[1][i] == 0 && preNumbers[0][i] == preNumbers[2][i] && preNumbers[3][i] != 0) {//A0AB
                         nums[0][i] = preNumbers[0][i] * 2;
                         nums[1][i] = preNumbers[3][i];
                         nums[2][i] = 0;
                         nums[3][i] = 0;
-                    } else if (preNumbers[1][i] == 0 && preNumbers[0][i] != preNumbers[2][i]) {
+                    } else if (preNumbers[1][i] == 0 && preNumbers[0][i] != preNumbers[2][i]) {//A0BA、A0BC
                         nums[1][i] = preNumbers[2][i];
                         nums[2][i] = preNumbers[3][i];
                         nums[3][i] = 0;
-                    } else if (preNumbers[2][i] == 0 && preNumbers[1][i] == preNumbers[3][i]) {
+                    } else if (preNumbers[2][i] == 0 && preNumbers[1][i] == preNumbers[3][i]) {//AB0B
                         nums[1][i] = preNumbers[1][i] * 2;
                         nums[2][i] = 0;
                         nums[3][i] = 0;
-                    } else if (preNumbers[2][i] == 0 && preNumbers[1][i] != preNumbers[3][i]) {
+                    } else if (preNumbers[2][i] == 0 && preNumbers[1][i] != preNumbers[3][i]) {//AB0A、AB0C
                         nums[2][i] = preNumbers[3][i];
                         nums[3][i] = createRandomNumber(nums.length);
-                    } else if (preNumbers[1][i] == 0 && preNumbers[3][i] == 0 && preNumbers[0][i] != preNumbers[2][i]) {
+                    } else if (preNumbers[1][i] == 0 && preNumbers[3][i] == 0 && preNumbers[0][i] != preNumbers[2][i]) {    //A0B0
                         nums[1][i] = preNumbers[2][i];
                         nums[2][i] = createRandomNumber(nums.length);
-                    } else if (preNumbers[0][i] == 0 && preNumbers[3][i] == 0) {
+                    } else if (preNumbers[0][i] == 0 && preNumbers[3][i] == 0) {    //0AB0
                         nums[0][i] = preNumbers[1][i];
                         nums[1][i] = preNumbers[2][i];
                         nums[2][i] = 0;
-                    } else if (preNumbers[0][i] != 0 && preNumbers[1][i] != 0 && preNumbers[2][i] != 0 && preNumbers[3][i] == 0) {
+                    } else if (preNumbers[0][i] != 0 && preNumbers[1][i] != 0 && preNumbers[2][i] != 0 && preNumbers[3][i] == 0) {//ABA0、ABC0
                         nums[3][i] = createRandomNumber(nums.length);
                     }
                 }

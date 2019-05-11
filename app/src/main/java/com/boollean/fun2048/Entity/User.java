@@ -51,7 +51,6 @@ public class User {
 
     public static void deleteThisUser() {
         User.instance = null;
-        Log.i("aboutF", "name" + instance.getName());
     }
 
     public String getName() {

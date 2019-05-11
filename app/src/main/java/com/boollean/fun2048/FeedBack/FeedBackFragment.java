@@ -66,8 +66,8 @@ public class FeedBackFragment extends Fragment {
                     })
                     .setPositiveButton(R.string.ok, (dialogInterface, i) -> {
                         android.telephony.SmsManager smsManager = android.telephony.SmsManager.getDefault();
-                        PendingIntent pi = PendingIntent.getBroadcast(getActivity(), 0, new Intent(), 0);
-                        smsManager.sendTextMessage("+86 15195869098", null, mEditText.getText().toString(), pi, null);
+                        PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, new Intent(), 0);
+                        smsManager.sendTextMessage("+86 15195869098", null, mEditText.getText().toString(), pendingIntent, null);
                     })
                     .create();
             dialog.show();

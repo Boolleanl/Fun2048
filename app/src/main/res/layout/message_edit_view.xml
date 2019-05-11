@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="160dp"
         android:gravity="top"
-        android:maxLength="60"
+        android:maxLength="139"
         android:maxLines="6" />
 
     <Button

@@ -20,7 +20,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="12dp"
-        android:text="        通过滑动屏幕来使相同的数字相加，当没有可以想加的数字时，可多次朝数字集中区域滑动以生成新的数字。"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:text="\t\t\t\t①通过上、下、左、右滑动屏幕，将相同的数字移动到一起，合并成一个新的数字。\n\t\t\t\t②空的格子会随机生成新的数字（数字2或者数字4）。\n\t\t\t\t③目标是让数字多次相加达到尽量大的数字。\n\t\t\t\t④如果不出现新的数字，可以操数字聚集方向多次滑动。"
         android:textColor="#000000"
         android:textSize="22sp" />
 
@@ -29,6 +31,6 @@
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="200dp"
-        android:text="注销此账户" />
+        android:layout_marginTop="180dp"
+        android:text="注销个人账户" />
 </LinearLayout>

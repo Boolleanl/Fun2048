@@ -12,6 +12,7 @@
     <string name="best_score">最高分</string>
     <string name="new_game">新游戏</string>
     <string name="continue_game">继续游戏</string>
+    <string name="quit_game">确定退出游戏？</string>
 
 
     <string name="user_name">用户名</string>
@@ -24,6 +25,7 @@
     <string name="secret">保密</string>
     <string name="avatar">头像</string>
     <string name="login">登录</string>
+    <string name="logon">注册</string>
     <string name="submit">提交</string>
     <string name="complete">完成</string>
     <string name="edit_data">编辑资料</string>
@@ -32,7 +34,7 @@
     <string name="about">软件相关</string>
     <string name="delete_user_warn">您将会删除当前账号的所有相关信息，确定继续吗？</string>
     <string name="user_feedback">用户反馈</string>
-    <string name="user_feedback_warn">反馈的信息将采用短信形式发送，产生的资费由运营商收取</string>
+    <string name="user_feedback_warn">反馈的信息将采用手机短信形式发送给作者，运营商可能会收取短信产生的资费。</string>
     <string name="volume_on">volume on</string>
     <string name="volume_off">volume off</string>
     <string name="ok">确定</string>

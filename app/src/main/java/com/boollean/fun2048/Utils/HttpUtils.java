@@ -41,7 +41,7 @@ public class HttpUtils {
     public static final String GET_BEST_100_USERS_5 = "getBest100Users5";
     public static final String GET_BEST_100_USERS_6 = "getBest100Users6";
     public static final String GET_MESSAGES = "getLatest100Messages";
-    private static final String BASE_URL = "http://10.14.44.165:8080/appservice/";
+    private static final String BASE_URL = "http://10.14.150.201:8080/appservice/";
     private static final String ADD_USER = "addUser";
     private static final String UPDATE_USER = "updateUser";
     private static final String UPDATE_USER_DATA = "updateUserData";

@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity
 
     private User mUser = User.getInstance();    //获取用户的单一实例
     private View headerView;    //侧滑菜单头部
-    private Button signInButton;
+    private Button signOnButton;
     private ImageView avatarImageView;      //用以显示用户头像
     private TextView nameTextView;      //用以显示用户名
     private ImageView genderView;
@@ -101,12 +101,12 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         headerView = navigationView.getHeaderView(0);
-        signInButton = headerView.findViewById(R.id.sign_in_button);
+        signOnButton = headerView.findViewById(R.id.sign_in_button);
         avatarImageView = headerView.findViewById(R.id.round_avatar_image_view);
         nameTextView = headerView.findViewById(R.id.name_text_view);
         genderView = headerView.findViewById(R.id.main_gender_image_view);
 
-        signInButton.setOnClickListener(v -> {
+        signOnButton.setOnClickListener(v -> {
             Intent intent = UserEditorActivity.newIntent(getApplicationContext());
             startActivity(intent);
         });
@@ -114,16 +114,16 @@ public class MainActivity extends AppCompatActivity
         if (mUser.getAvatar() == null && mUser.getName() == null) {
             avatarImageView.setVisibility(View.GONE);
             nameTextView.setVisibility(View.GONE);
-            signInButton.setVisibility(View.VISIBLE);
+            signOnButton.setVisibility(View.VISIBLE);
         }
         if (mUser.getAvatar() != null) {
-            signInButton.setVisibility(View.GONE);
+            signOnButton.setVisibility(View.GONE);
             nameTextView.setVisibility(View.VISIBLE);
             avatarImageView.setVisibility(View.VISIBLE);
             avatarImageView.setImageBitmap(MyPhotoFactory.toRoundBitmap(mUser.getAvatar()));
         }
         if (mUser.getName() != null) {
-            signInButton.setVisibility(View.GONE);
+            signOnButton.setVisibility(View.GONE);
             avatarImageView.setVisibility(View.VISIBLE);
             nameTextView.setVisibility(View.VISIBLE);
             nameTextView.setText(mUser.getName());
@@ -144,15 +144,15 @@ public class MainActivity extends AppCompatActivity
         if (mUser.getAvatar() == null && mUser.getName() == null) {
             avatarImageView.setVisibility(View.GONE);
             nameTextView.setVisibility(View.GONE);
-            signInButton.setVisibility(View.VISIBLE);
+            signOnButton.setVisibility(View.VISIBLE);
         }
         if (mUser.getAvatar() != null) {
-            signInButton.setVisibility(View.GONE);
+            signOnButton.setVisibility(View.GONE);
             avatarImageView.setVisibility(View.VISIBLE);
             avatarImageView.setImageBitmap(MyPhotoFactory.toRoundBitmap(mUser.getAvatar()));
         }
         if (mUser.getName() != null) {
-            signInButton.setVisibility(View.GONE);
+            signOnButton.setVisibility(View.GONE);
             nameTextView.setVisibility(View.VISIBLE);
             nameTextView.setText(mUser.getName());
         }
@@ -289,7 +289,7 @@ public class MainActivity extends AppCompatActivity
     @OnClick(R.id.quit_button)
     void quit() {
         AlertDialog dialog = new AlertDialog.Builder(this)
-                .setMessage("确定退出？")
+                .setMessage(R.string.quit_game)
                 .setNegativeButton(R.string.cancel, (dialogInterface, i) -> {
                 })
                 .setPositiveButton(R.string.ok, (dialogInterface, i) -> System.exit(0))
@@ -308,7 +308,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
 
         volumeOnItem = menu.findItem(R.id.action_volume_on);
@@ -318,12 +317,8 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_volume_on) {
             volumeSwitch = false;
             volumeOnItem.setVisible(false);

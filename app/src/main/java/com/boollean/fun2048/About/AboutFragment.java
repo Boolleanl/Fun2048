@@ -72,16 +72,20 @@ public class AboutFragment extends Fragment {
         }
 
         mButton.setOnClickListener(v -> {
-            AlertDialog dialog = new AlertDialog.Builder(Objects.requireNonNull(getActivity()))
-                    .setMessage(R.string.delete_user_warn)
-                    .setNegativeButton(R.string.cancel, (dialogInterface, i) -> {
-                    })
-                    .setPositiveButton(R.string.ok, (dialogInterface, i) -> {
-                        DeleteUser deleteUser = new DeleteUser();
-                        deleteUser.execute();
-                    })
-                    .create();
-            dialog.show();
+            if(HttpUtils.isNetworkAvailable(getActivity())){
+                AlertDialog dialog = new AlertDialog.Builder(Objects.requireNonNull(getActivity()))
+                        .setMessage(R.string.delete_user_warn)
+                        .setNegativeButton(R.string.cancel, (dialogInterface, i) -> {
+                        })
+                        .setPositiveButton(R.string.ok, (dialogInterface, i) -> {
+                            DeleteUser deleteUser = new DeleteUser();
+                            deleteUser.execute();
+                        })
+                        .create();
+                dialog.show();
+            }else {
+                Toast.makeText(getActivity(), "注销账户需要打开网络连接", Toast.LENGTH_SHORT).show();
+            }
         });
     }
 
