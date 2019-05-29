@@ -87,7 +87,7 @@ public class MessageFragment extends Fragment {
     private void initView(List<MessageEntity> list) {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);
-        MessageAdapter adapter = new MessageAdapter(list);
+        MessageAdapter adapter = new MessageAdapter(list);//留言板适配器
         recyclerView.setAdapter(adapter);
     }
 

@@ -17,8 +17,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.io.InputStreamReader;import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
@@ -41,7 +40,7 @@ public class HttpUtils {
     public static final String GET_BEST_100_USERS_5 = "getBest100Users5";
     public static final String GET_BEST_100_USERS_6 = "getBest100Users6";
     public static final String GET_MESSAGES = "getLatest100Messages";
-    private static final String BASE_URL = "http://10.14.150.201:8080/appservice/";
+    private static final String BASE_URL = "http://192.168.43.30:8080/appservice/";
     private static final String ADD_USER = "addUser";
     private static final String UPDATE_USER = "updateUser";
     private static final String UPDATE_USER_DATA = "updateUserData";
@@ -53,7 +52,7 @@ public class HttpUtils {
     private static final String GET_IMAGE = "getImage";
     private static final String ADD_MESSAGE = "addMessage";
     private static final int TIME_OUT = 5 * 1000;   //超时时间
-    private static final String CHARSET = "UTF-8"; //设置编码
+    private static final String CHARSET = "UTF-8"; //编码
 
     /**
      * 判断手机网络是否可用
@@ -209,19 +208,19 @@ public class HttpUtils {
      * @return response中的内容或者“fail”
      */
     public static String sendHttpRequest(String address, HttpCallbackListener listener) {
-        OkHttpClient mOkHttpClient = new OkHttpClient();
+        OkHttpClient okHttpClient = new OkHttpClient();
 
-        Request.Builder reqBuilder = new Request.Builder();
-        Request request = reqBuilder
+        Request.Builder builder = new Request.Builder();
+        Request request = builder
                 .url(address)
                 .build();
 
         try {
-            Response response = mOkHttpClient.newCall(request).execute();
+            Response response = okHttpClient.newCall(request).execute();
             if (response.isSuccessful() && response.body() != null) {
-                String resultValue = response.body().string();
-                listener.onFinish(resultValue);
-                return resultValue;
+                String result = response.body().string();
+                listener.onFinish(result);
+                return result;
             }
         } catch (Exception e) {
             e.printStackTrace();
