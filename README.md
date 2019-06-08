@@ -3,17 +3,22 @@
 * 使用到了很多常见的Android开发技术。
 
 ## 界面展示
-* 主界面
-* ![main.png](https://github.com/Boolleanl/Fun2048/blob/master/img/main.png)
+* 主界面 
 
-* 侧边抽屉栏
-* ![drawer.png](https://github.com/Boolleanl/Fun2048/blob/master/img/drawer.png)
+![main.png](https://github.com/Boolleanl/Fun2048/blob/master/img/main.png)
 
-* 游戏界面
-* ![game.png](https://github.com/Boolleanl/Fun2048/blob/master/img/game.png)
+* 侧边抽屉栏 
 
-* 排行榜
-* ![rank.png](https://github.com/Boolleanl/Fun2048/blob/master/img/rank.png)
+![drawer.png](https://github.com/Boolleanl/Fun2048/blob/master/img/drawer.png)
 
-* 留言板
-* ![message.png](https://github.com/Boolleanl/Fun2048/blob/master/img/message.png)
+* 游戏界面 
+
+![game.png](https://github.com/Boolleanl/Fun2048/blob/master/img/game.png)
+
+* 排行榜 
+
+![rank.png](https://github.com/Boolleanl/Fun2048/blob/master/img/rank.png)
+
+* 留言板 
+
+![message.png](https://github.com/Boolleanl/Fun2048/blob/master/img/message.png)
