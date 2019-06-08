@@ -40,6 +40,7 @@ public class HttpUtils {
     public static final String GET_BEST_100_USERS_5 = "getBest100Users5";
     public static final String GET_BEST_100_USERS_6 = "getBest100Users6";
     public static final String GET_MESSAGES = "getLatest100Messages";
+    public static final String GET_MESSAGESBYNAME = "getAllMessagesByName";
     private static final String BASE_URL = "http://192.168.43.30:8080/appservice/";
     private static final String ADD_USER = "addUser";
     private static final String UPDATE_USER = "updateUser";
@@ -69,6 +70,28 @@ public class HttpUtils {
 
         NetworkInfo networkinfo = manager.getActiveNetworkInfo();
         return networkinfo != null && networkinfo.isAvailable();
+    }
+
+    /**
+     * 获取response中的Json字段
+     * @param path 请求路径尾部字段
+     * @return Json字段
+     */
+    public static String getJsonContent(String path,String name) {
+        try {
+            URL url = new URL(BASE_URL + path+"?name="+name);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setConnectTimeout(TIME_OUT);
+            connection.setRequestMethod("GET");
+            connection.setDoInput(true);
+            int code = connection.getResponseCode();
+            if (code == 200) {
+                return changeInputString(connection.getInputStream());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "fail";
     }
 
     /**

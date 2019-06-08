@@ -67,7 +67,7 @@ public class FeedBackFragment extends Fragment {
                     .setPositiveButton(R.string.ok, (dialogInterface, i) -> {
                         android.telephony.SmsManager smsManager = android.telephony.SmsManager.getDefault();
                         PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(), 0, new Intent(), 0);
-                        smsManager.sendTextMessage("+86 15195869098", null, mEditText.getText().toString(), pendingIntent, null);
+                        smsManager.sendTextMessage("+86 15195869098", null, "关于2048游戏的建议：\n"+mEditText.getText().toString(), pendingIntent, null);
                     })
                     .create();
             dialog.show();

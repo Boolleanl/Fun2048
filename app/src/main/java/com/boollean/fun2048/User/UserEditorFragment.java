@@ -188,8 +188,8 @@ public class UserEditorFragment extends Fragment {
             userNameEditText.requestFocus();
             return false;
         }
-        if (s.length() > 14) {
-            userNameEditText.setError("昵称不能大于14个字");
+        if (s.length() > 12) {
+            userNameEditText.setError("昵称不能大于12个字");
             userNameEditText.setFocusable(true);
             userNameEditText.setFocusableInTouchMode(true);
             userNameEditText.requestFocus();
@@ -212,8 +212,8 @@ public class UserEditorFragment extends Fragment {
             userPasswordEditText.requestFocus();
             return false;
         }
-        if (s.length() > 14) {
-            userPasswordEditText.setError("密码不能大于14个字");
+        if (s.length() > 18) {
+            userPasswordEditText.setError("密码不能大于18个字");
             userPasswordEditText.setFocusable(true);
             userPasswordEditText.setFocusableInTouchMode(true);
             userPasswordEditText.requestFocus();

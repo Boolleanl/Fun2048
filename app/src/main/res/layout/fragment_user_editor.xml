@@ -24,7 +24,7 @@
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
             android:ellipsize="end"
-            android:maxLength="14"
+            android:maxLength="12"
             android:singleLine="true"
             android:textSize="20sp" />
     </LinearLayout>
@@ -59,7 +59,7 @@
             android:layout_marginRight="30dp"
             android:ellipsize="end"
             android:inputType="textPassword"
-            android:maxLength="14"
+            android:maxLength="18"
             android:singleLine="true"
             android:textSize="20sp" />
 

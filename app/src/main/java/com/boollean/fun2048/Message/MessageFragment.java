@@ -4,9 +4,14 @@ package com.boollean.fun2048.Message;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -51,6 +56,7 @@ public class MessageFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (HttpUtils.isNetworkAvailable(Objects.requireNonNull(getActivity()))) {
             initData();
         }
@@ -84,6 +90,35 @@ public class MessageFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.fragment_message_search, menu);
+
+        MenuItem searchItem = menu.findItem(R.id.menu_item_search);
+        final SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                GetMessageDataByName getMessageDataByName = new GetMessageDataByName(s);
+                getMessageDataByName.execute();
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                return false;
+            }
+        });
+
+        searchView.setOnSearchClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+    }
+
     private void initView(List<MessageEntity> list) {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(linearLayoutManager);
@@ -100,6 +135,41 @@ public class MessageFragment extends Fragment {
         @Override
         protected List<MessageEntity> doInBackground(Void... voids) {
             String jsonString = HttpUtils.getJsonContent(HttpUtils.GET_MESSAGES);
+            //如果获取Json失败，直接返回空值
+            if (jsonString.equals("fail")) {
+                return null;
+            }
+
+            return JsonUtils.toMessageList(jsonString);
+        }
+
+        @Override
+        protected void onPostExecute(List<MessageEntity> list) {
+            if (list != null) {
+                mLoadingView.showContentView();
+                initView(list);
+            } else {
+                mLoadingView.showFailed();
+            }
+        }
+    }
+
+
+    /**
+     * 获取留言信息的线程类
+     */
+    private class GetMessageDataByName extends AsyncTask<String, Void, List<MessageEntity>> {
+
+        String name;
+
+        public GetMessageDataByName(String name) {
+            this.name = name;
+        }
+
+        @RequiresApi(api = Build.VERSION_CODES.N)
+        @Override
+        protected List<MessageEntity> doInBackground(String... strings) {
+            String jsonString = HttpUtils.getJsonContent(HttpUtils.GET_MESSAGESBYNAME,name);
             //如果获取Json失败，直接返回空值
             if (jsonString.equals("fail")) {
                 return null;
